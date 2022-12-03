@@ -1,3 +1,28 @@
+import zh_CN_ISBN from "./built-temp/base-zh-CN-ISBN.json";
+import zh_CN from "./built-temp/base-zh-CN.json";
+import zh_TW from "./built-temp/base-zh-TW.json";
+import ja from "./built-temp/base-ja.json";
+import kor from "./built-temp/base-kor.json";
+import cz from "./built-temp/base-cz.json";
+import da from "./built-temp/base-da.json";
+import de from "./built-temp/base-de.json";
+import es from "./built-temp/base-es.json";
+import fr from "./built-temp/base-fr.json";
+import it from "./built-temp/base-it.json";
+import hu from "./built-temp/base-hu.json";
+import nl from "./built-temp/base-nl.json";
+import no from "./built-temp/base-no.json";
+import pl from "./built-temp/base-pl.json";
+import pt_PT from "./built-temp/base-pt-PT.json";
+import pt_BR from "./built-temp/base-pt-BR.json";
+import ro from "./built-temp/base-ro.json";
+import ru from "./built-temp/base-ru.json";
+import fi from "./built-temp/base-fi.json";
+import sv from "./built-temp/base-sv.json";
+import tr from "./built-temp/base-tr.json";
+import uk from "./built-temp/base-uk.json";
+import he from "./built-temp/base-he.json";
+
 /**
  * @type {Object<string, {name: string, data: any, code: string, region: string}>}
  */
@@ -12,9 +37,7 @@ export const LANGUAGES = {
     "zh-CN": {
         // simplified chinese
         name: "简体中文",
-        data: G_WEGAME_VERSION
-            ? require("./built-temp/base-zh-CN-ISBN.json")
-            : require("./built-temp/base-zh-CN.json"),
+        data: G_WEGAME_VERSION ? zh_CN_ISBN : zh_CN,
         code: "zh",
         region: "CN",
     },
@@ -22,7 +45,7 @@ export const LANGUAGES = {
     "zh-TW": {
         // traditional chinese
         name: "繁體中文",
-        data: require("./built-temp/base-zh-TW.json"),
+        data: zh_TW,
         code: "zh",
         region: "TW",
     },
@@ -30,7 +53,7 @@ export const LANGUAGES = {
     "ja": {
         // japanese
         name: "日本語",
-        data: require("./built-temp/base-ja.json"),
+        data: ja,
         code: "ja",
         region: "",
     },
@@ -38,7 +61,7 @@ export const LANGUAGES = {
     "kor": {
         // korean
         name: "한국어",
-        data: require("./built-temp/base-kor.json"),
+        data: kor,
         code: "ko",
         region: "",
     },
@@ -46,7 +69,7 @@ export const LANGUAGES = {
     "cs": {
         // czech
         name: "Čeština",
-        data: require("./built-temp/base-cz.json"),
+        data: cz,
         code: "cs",
         region: "",
     },
@@ -54,7 +77,7 @@ export const LANGUAGES = {
     "da": {
         // danish
         name: "Dansk",
-        data: require("./built-temp/base-da.json"),
+        data: da,
         code: "da",
         region: "",
     },
@@ -62,7 +85,7 @@ export const LANGUAGES = {
     "de": {
         // german
         name: "Deutsch",
-        data: require("./built-temp/base-de.json"),
+        data: de,
         code: "de",
         region: "",
     },
@@ -70,7 +93,7 @@ export const LANGUAGES = {
     "es-419": {
         // spanish
         name: "Español",
-        data: require("./built-temp/base-es.json"),
+        data: es,
         code: "es",
         region: "",
     },
@@ -78,7 +101,7 @@ export const LANGUAGES = {
     "fr": {
         // french
         name: "Français",
-        data: require("./built-temp/base-fr.json"),
+        data: fr,
         code: "fr",
         region: "",
     },
@@ -86,7 +109,7 @@ export const LANGUAGES = {
     "it": {
         // italian
         name: "Italiano",
-        data: require("./built-temp/base-it.json"),
+        data: it,
         code: "it",
         region: "",
     },
@@ -94,7 +117,7 @@ export const LANGUAGES = {
     "hu": {
         // hungarian
         name: "Magyar",
-        data: require("./built-temp/base-hu.json"),
+        data: hu,
         code: "hu",
         region: "",
     },
@@ -102,7 +125,7 @@ export const LANGUAGES = {
     "nl": {
         // dutch
         name: "Nederlands",
-        data: require("./built-temp/base-nl.json"),
+        data: nl,
         code: "nl",
         region: "",
     },
@@ -110,7 +133,7 @@ export const LANGUAGES = {
     "no": {
         // norwegian
         name: "Norsk",
-        data: require("./built-temp/base-no.json"),
+        data: no,
         code: "no",
         region: "",
     },
@@ -118,7 +141,7 @@ export const LANGUAGES = {
     "pl": {
         // polish
         name: "Polski",
-        data: require("./built-temp/base-pl.json"),
+        data: pl,
         code: "pl",
         region: "",
     },
@@ -126,15 +149,15 @@ export const LANGUAGES = {
     "pt-PT": {
         // portuguese
         name: "Português",
-        data: require("./built-temp/base-pt-PT.json"),
+        data: pt_PT,
         code: "pt",
         region: "PT",
     },
 
     "pt-BR": {
-        // portuguese - brazil
+        // portuguese _ brazil
         name: "Português - Brasil",
-        data: require("./built-temp/base-pt-BR.json"),
+        data: pt_BR,
         code: "pt",
         region: "BR",
     },
@@ -142,7 +165,7 @@ export const LANGUAGES = {
     "ro": {
         // romanian
         name: "Română",
-        data: require("./built-temp/base-ro.json"),
+        data: ro,
         code: "ro",
         region: "",
     },
@@ -150,7 +173,7 @@ export const LANGUAGES = {
     "ru": {
         // russian
         name: "Русский",
-        data: require("./built-temp/base-ru.json"),
+        data: ru,
         code: "ru",
         region: "",
     },
@@ -158,7 +181,7 @@ export const LANGUAGES = {
     "fi": {
         // finish
         name: "Suomi",
-        data: require("./built-temp/base-fi.json"),
+        data: fi,
         code: "fi",
         region: "",
     },
@@ -166,7 +189,7 @@ export const LANGUAGES = {
     "sv": {
         // swedish
         name: "Svenska",
-        data: require("./built-temp/base-sv.json"),
+        data: sv,
         code: "sv",
         region: "",
     },
@@ -174,7 +197,7 @@ export const LANGUAGES = {
     "tr": {
         // turkish
         name: "Türkçe",
-        data: require("./built-temp/base-tr.json"),
+        data: tr,
         code: "tr",
         region: "",
     },
@@ -182,7 +205,7 @@ export const LANGUAGES = {
     "uk": {
         // ukrainian
         name: "Українська",
-        data: require("./built-temp/base-uk.json"),
+        data: uk,
         code: "uk",
         region: "",
     },
@@ -190,7 +213,7 @@ export const LANGUAGES = {
     "he": {
         // hebrew
         name: "עברית",
-        data: require("./built-temp/base-he.json"),
+        data: he,
         code: "he",
         region: "",
     },

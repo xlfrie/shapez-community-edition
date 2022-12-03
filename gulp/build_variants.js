@@ -12,7 +12,7 @@
  *      gogVersion?: boolean
  * }}>}
  */
-const BUILD_VARIANTS = {
+export const BUILD_VARIANTS = {
     "web-localhost": {
         standalone: false,
         environment: "dev",
@@ -71,4 +71,3 @@ const BUILD_VARIANTS = {
         },
     },
 };
-module.exports = { BUILD_VARIANTS };
