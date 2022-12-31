@@ -1,4 +1,6 @@
+/* typehints:start */
 import type { Application } from "../application";
+/* typehints:end */
 
 export const IS_DEBUG =
     G_IS_DEV &&
@@ -23,6 +25,7 @@ export const THIRDPARTY_URLS = {
 
     standaloneCampaignLink: "https://get.shapez.io/bundle/$campaign",
     puzzleDlcStorePage: "https://get.shapez.io/mm_puzzle_dlc?target=dlc",
+
     levelTutorialVideos: {
         21: "https://www.youtube.com/watch?v=0nUfRLMCcgo&",
         25: "https://www.youtube.com/watch?v=7OCV1g40Iew&",

@@ -3,11 +3,13 @@ function mathPolyfills() {
     Math.radians = function (degrees) {
         return (degrees * Math.PI) / 180.0;
     };
+
     // Converts from radians to degrees.
     Math.degrees = function (radians) {
         return (radians * 180.0) / Math.PI;
     };
 }
+
 function stringPolyfills() {
     // https://github.com/uxitten/polyfill/blob/master/string.polyfill.js
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart
@@ -26,6 +28,7 @@ function stringPolyfills() {
             }
         };
     }
+
     // https://github.com/uxitten/polyfill/blob/master/string.polyfill.js
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padEnd
     if (!String.prototype.padEnd) {
@@ -44,8 +47,10 @@ function stringPolyfills() {
         };
     }
 }
+
 function objectPolyfills() {
     // https://github.com/tc39/proposal-object-values-entries/blob/master/polyfill.js
+
     // @ts-ignore
     const reduce = Function.bind.call(Function.call, Array.prototype.reduce);
     // @ts-ignore
@@ -53,6 +58,7 @@ function objectPolyfills() {
     // @ts-ignore
     const concat = Function.bind.call(Function.call, Array.prototype.concat);
     const keys = Reflect.ownKeys;
+
     // @ts-ignore
     if (!Object.values) {
         // @ts-ignore
@@ -64,6 +70,7 @@ function objectPolyfills() {
             );
         };
     }
+
     if (!Object.entries) {
         // @ts-ignore
         Object.entries = function entries(O) {
@@ -75,6 +82,7 @@ function objectPolyfills() {
         };
     }
 }
+
 function domPolyfills() {
     // from:https://github.com/jserz/js_piece/blob/master/DOM/ChildNode/remove()/remove().md
     (function (arr) {
@@ -93,18 +101,21 @@ function domPolyfills() {
         });
     })([Element.prototype, CharacterData.prototype, DocumentType.prototype]);
 }
+
 function initPolyfills() {
     mathPolyfills();
     stringPolyfills();
     objectPolyfills();
     domPolyfills();
 }
+
 function initExtensions() {
     String.prototype.replaceAll = function (search, replacement) {
         var target = this;
         return target.split(search).join(replacement);
     };
 }
+
 // Fetch polyfill
 import "whatwg-fetch";
 // Other polyfills

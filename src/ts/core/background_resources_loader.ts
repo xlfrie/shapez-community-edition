@@ -1,5 +1,6 @@
+/* typehints:start */
 import type { Application } from "../application";
-import type { HUDModalDialogs } from "../game/hud/parts/modal_dialogs";
+/* typehints:end */
 
 import { initSpriteCache } from "../game/meta_building_registry";
 import { MUSIC, SOUNDS } from "../platform/sound";
@@ -13,21 +14,14 @@ import { clamp, getLogoSprite, timeoutPromise } from "./utils";
 
 const logger = createLogger("background_loader");
 
-type Assets = {
-    sprites: string[];
-    sounds: string[];
-    atlas: AtlasDefinition[];
-    css: string[];
-};
-
-const MAIN_MENU_ASSETS: Assets = {
+const MAIN_MENU_ASSETS = {
     sprites: [getLogoSprite()],
     sounds: [SOUNDS.uiClick, SOUNDS.uiError, SOUNDS.dialogError, SOUNDS.dialogOk],
     atlas: [],
     css: [],
 };
 
-const INGAME_ASSETS: Assets = {
+const INGAME_ASSETS = {
     sprites: [],
     sounds: [
         ...Array.from(Object.values(MUSIC)),
@@ -51,21 +45,25 @@ const HARDCODED_FILE_SIZES = {
 };
 
 export class BackgroundResourcesLoader {
+    public app = app;
+
     public mainMenuPromise = null;
     public ingamePromise = null;
-    public resourceStateChangedSignal = new Signal<[{ progress: number }]>();
 
-    constructor(public app) {}
+    public resourceStateChangedSignal = new Signal();
 
-    getMainMenuPromise(): Promise<void> {
+    constructor(app) {}
+
+    getMainMenuPromise() {
         if (this.mainMenuPromise) {
             return this.mainMenuPromise;
         }
+
         logger.log("⏰ Loading main menu assets");
         return (this.mainMenuPromise = this.loadAssets(MAIN_MENU_ASSETS));
     }
 
-    getIngamePromise(): Promise<void> {
+    getIngamePromise() {
         if (this.ingamePromise) {
             return this.ingamePromise;
         }
@@ -163,10 +161,8 @@ export class BackgroundResourcesLoader {
         logger.log("⏰ Preloaded assets in", Math.round(performance.now() - start), "ms");
     }
 
-    /**
-     * Shows an error when a resource failed to load and allows to reload the game
-     */
-    showLoaderError(dialogs: HUDModalDialogs, err: string) {
+    /** Shows an error when a resource failed to load and allows to reload the game */
+    showLoaderError(dialogs, err) {
         if (G_IS_STANDALONE) {
             dialogs
                 .showWarning(
@@ -191,7 +187,7 @@ export class BackgroundResourcesLoader {
         }
     }
 
-    preloadWithProgress(src: string, progressHandler: (percent: number) => void): Promise<string> {
+    preloadWithProgress(src, progressHandler) {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             let notifiedNotComputable = false;
@@ -241,7 +237,7 @@ export class BackgroundResourcesLoader {
         });
     }
 
-    internalPreloadCss(src: string, progressHandler: (percent: number) => void) {
+    internalPreloadCss(src, progressHandler) {
         return this.preloadWithProgress(src, progressHandler).then(blobSrc => {
             var styleElement = document.createElement("link");
             styleElement.href = blobSrc;

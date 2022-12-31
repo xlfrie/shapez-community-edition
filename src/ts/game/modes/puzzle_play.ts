@@ -1,6 +1,7 @@
 /* typehints:start */
 import type { GameRoot } from "../root";
 /* typehints:end */
+
 import { enumGameModeIds } from "../game_mode";
 import { PuzzleGameMode } from "./puzzle";
 import { MetaStorageBuilding } from "../buildings/storage";
@@ -30,23 +31,29 @@ import { MetaBlockBuilding } from "../buildings/block";
 import { MetaBuilding } from "../meta_building";
 import { gMetaBuildingRegistry } from "../../core/global_registries";
 import { HUDPuzzleNextPuzzle } from "../hud/parts/next_puzzle";
+
 const logger = createLogger("puzzle-play");
 const copy = require("clipboard-copy");
+
 export class PuzzlePlayGameMode extends PuzzleGameMode {
     static getId() {
         return enumGameModeIds.puzzlePlay;
     }
+
     public hiddenBuildings = excludedBuildings;
+
     public puzzle = puzzle;
+
     public nextPuzzles: Array<number> = nextPuzzles || [];
-    
 
     constructor(root, { puzzle, nextPuzzles }) {
         super(root);
-                let excludedBuildings: Array<typeof MetaBuilding> = [
+
+        let excludedBuildings: Array<typeof MetaBuilding> = [
             MetaConstantProducerBuilding,
             MetaGoalAcceptorBuilding,
             MetaBlockBuilding,
+
             MetaStorageBuilding,
             MetaReaderBuilding,
             MetaFilterBuilding,
@@ -54,6 +61,7 @@ export class PuzzlePlayGameMode extends PuzzleGameMode {
             MetaLeverBuilding,
             MetaItemProducerBuilding,
             MetaMinerBuilding,
+
             MetaWireBuilding,
             MetaWireTunnelBuilding,
             MetaConstantSignalBuilding,
@@ -63,37 +71,43 @@ export class PuzzlePlayGameMode extends PuzzleGameMode {
             MetaComparatorBuilding,
             MetaTransistorBuilding,
         ];
-        if (puzzle.game.excludedBuildings) {
-                        const puzzleHidden: any = puzzle.game.excludedBuildings
-                .map(id => {
-                if (!gMetaBuildingRegistry.hasId(id)) {
-                    return;
-                }
 
-                return gMetaBuildingRegistry.findById(id).constructor;
-            })
+        if (puzzle.game.excludedBuildings) {
+            const puzzleHidden: any = puzzle.game.excludedBuildings
+                .map(id => {
+                    if (!gMetaBuildingRegistry.hasId(id)) {
+                        return;
+                    }
+
+                    return gMetaBuildingRegistry.findById(id).constructor;
+                })
                 .filter(x => !!x);
             excludedBuildings = excludedBuildings.concat(puzzleHidden);
         }
+
         this.additionalHudParts.puzzlePlayMetadata = HUDPuzzlePlayMetadata;
         this.additionalHudParts.puzzlePlaySettings = HUDPuzzlePlaySettings;
         this.additionalHudParts.puzzleCompleteNotification = HUDPuzzleCompleteNotification;
+
         root.signals.postLoadHook.add(this.loadPuzzle, this);
+
         if (this.nextPuzzles.length > 0) {
             this.additionalHudParts.puzzleNext = HUDPuzzleNextPuzzle;
         }
     }
+
     loadPuzzle() {
         let errorText;
         logger.log("Loading puzzle", this.puzzle);
+
         try {
             this.zoneWidth = this.puzzle.game.bounds.w;
             this.zoneHeight = this.puzzle.game.bounds.h;
             errorText = new PuzzleSerializer().deserializePuzzle(this.root, this.puzzle.game);
-        }
-        catch (ex) {
+        } catch (ex) {
             errorText = ex.message || ex;
         }
+
         if (errorText) {
             this.root.gameState.moveToState("PuzzleMenuState", {
                 error: {
@@ -108,43 +122,65 @@ export class PuzzlePlayGameMode extends PuzzleGameMode {
             // signals.ok.add(() => this.root.gameState.moveToState("PuzzleMenuState"));
         }
     }
-        trackCompleted(liked: boolean, time: number) {
+
+    trackCompleted(liked: boolean, time: number) {
         const closeLoading = this.root.hud.parts.dialogs.showLoadingDialog();
+
         return this.root.app.clientApi
             .apiCompletePuzzle(this.puzzle.meta.id, {
-            time,
-            liked,
-        })
+                time,
+                liked,
+            })
             .catch(err => {
-            logger.warn("Failed to complete puzzle:", err);
-        })
+                logger.warn("Failed to complete puzzle:", err);
+            })
             .then(() => {
-            closeLoading();
-        });
+                closeLoading();
+            });
     }
+
     sharePuzzle() {
         copy(this.puzzle.meta.shortKey);
-        this.root.hud.parts.dialogs.showInfo(T.dialogs.puzzleShare.title, T.dialogs.puzzleShare.desc.replace("<key>", this.puzzle.meta.shortKey));
+
+        this.root.hud.parts.dialogs.showInfo(
+            T.dialogs.puzzleShare.title,
+            T.dialogs.puzzleShare.desc.replace("<key>", this.puzzle.meta.shortKey)
+        );
     }
+
     reportPuzzle() {
-        const { optionSelected } = this.root.hud.parts.dialogs.showOptionChooser(T.dialogs.puzzleReport.title, {
-            options: [
-                { value: "profane", text: T.dialogs.puzzleReport.options.profane },
-                { value: "unsolvable", text: T.dialogs.puzzleReport.options.unsolvable },
-                { value: "trolling", text: T.dialogs.puzzleReport.options.trolling },
-            ],
-        });
+        const { optionSelected } = this.root.hud.parts.dialogs.showOptionChooser(
+            T.dialogs.puzzleReport.title,
+            {
+                options: [
+                    { value: "profane", text: T.dialogs.puzzleReport.options.profane },
+                    { value: "unsolvable", text: T.dialogs.puzzleReport.options.unsolvable },
+                    { value: "trolling", text: T.dialogs.puzzleReport.options.trolling },
+                ],
+            }
+        );
+
         return new Promise(resolve => {
             optionSelected.add(option => {
                 const closeLoading = this.root.hud.parts.dialogs.showLoadingDialog();
-                this.root.app.clientApi.apiReportPuzzle(this.puzzle.meta.id, option).then(() => {
-                    closeLoading();
-                    const { ok } = this.root.hud.parts.dialogs.showInfo(T.dialogs.puzzleReportComplete.title, T.dialogs.puzzleReportComplete.desc);
-                    ok.add(resolve);
-                }, err => {
-                    closeLoading();
-                    const { ok } = this.root.hud.parts.dialogs.showInfo(T.dialogs.puzzleReportError.title, T.dialogs.puzzleReportError.desc + " " + err);
-                });
+
+                this.root.app.clientApi.apiReportPuzzle(this.puzzle.meta.id, option).then(
+                    () => {
+                        closeLoading();
+                        const { ok } = this.root.hud.parts.dialogs.showInfo(
+                            T.dialogs.puzzleReportComplete.title,
+                            T.dialogs.puzzleReportComplete.desc
+                        );
+                        ok.add(resolve);
+                    },
+                    err => {
+                        closeLoading();
+                        const { ok } = this.root.hud.parts.dialogs.showInfo(
+                            T.dialogs.puzzleReportError.title,
+                            T.dialogs.puzzleReportError.desc + " " + err
+                        );
+                    }
+                );
             });
         });
     }

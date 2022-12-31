@@ -1,11 +1,11 @@
 import { THIRDPARTY_URLS } from "../../../core/config";
 import { T } from "../../../translations";
 import { BaseHUDPart } from "../base_hud_part";
-/**
- * Offers to open the tutorial video after completing a level
- */
+
+/** Offers to open the tutorial video after completing a level */
 export class HUDTutorialVideoOffer extends BaseHUDPart {
-    createElements() { }
+    createElements() {}
+
     initialize() {
         this.root.hud.signals.unlockNotificationFinished.add(() => {
             const level = this.root.hubGoals.level;
@@ -15,10 +15,12 @@ export class HUDTutorialVideoOffer extends BaseHUDPart {
                 const dialogData = isForeign
                     ? T.dialogs.tutorialVideoAvailableForeignLanguage
                     : T.dialogs.tutorialVideoAvailable;
+
                 const { ok } = this.root.hud.parts.dialogs.showInfo(dialogData.title, dialogData.desc, [
                     "cancel:bad",
                     "ok:good",
                 ]);
+
                 ok.add(() => {
                     this.root.app.platformWrapper.openExternalLink(tutorialVideoLink);
                 });

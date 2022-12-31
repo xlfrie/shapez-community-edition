@@ -1,10 +1,15 @@
-import { createLogger } from "./logging";
-import { fastArrayDeleteValueIfContained } from "./utils";
+import { createLogger } from "../core/logging";
+import { fastArrayDeleteValueIfContained } from "../core/utils";
+
 const logger = createLogger("request_channel");
+
 // Thrown when a request is aborted
 export const PROMISE_ABORTED = "promise-aborted";
+
 export class RequestChannel {
-    public pendingPromises: Array<Promise<any>> = [];
+    public pendingPromises: Array<Promise> = [];
+
+    constructor() {}
 
     watch(promise: Promise<any>): Promise<any> {
         // log(this, "Added new promise:", promise, "(pending =", this.pendingPromises.length, ")");
@@ -43,6 +48,7 @@ export class RequestChannel {
         wrappedPromise.cancel = function () {
             cancelled = true;
         };
+
         this.pendingPromises.push(wrappedPromise);
         return wrappedPromise;
     }

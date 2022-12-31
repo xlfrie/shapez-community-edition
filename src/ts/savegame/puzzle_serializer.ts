@@ -16,16 +16,18 @@ import { enumColors } from "../game/colors";
 import { COLOR_ITEM_SINGLETONS } from "../game/items/color_item";
 import { ShapeDefinition } from "../game/shape_definition";
 import { MetaBlockBuilding } from "../game/buildings/block";
+
 const logger = createLogger("puzzle-serializer");
+
 export class PuzzleSerializer {
-    
     generateDumpFromGameRoot(root: GameRoot): import("./savegame_typedefs").PuzzleGameData {
         console.log("serializing", root);
-        
+
         let buildings: import("./savegame_typedefs").PuzzleGameData["buildings"] = [];
         for (const entity of root.entityMgr.getAllWithComponent(StaticMapEntityComponent)) {
             const staticComp = entity.components.StaticMapEntity;
             const signalComp = entity.components.ConstantSignal;
+
             if (signalComp) {
                 assert(["shape", "color"].includes(signalComp.signal.getItemType()), "not a shape signal");
                 buildings.push({
@@ -39,6 +41,7 @@ export class PuzzleSerializer {
                 });
                 continue;
             }
+
             const goalComp = entity.components.GoalAcceptor;
             if (goalComp) {
                 assert(goalComp.item, "goals is missing item");
@@ -54,6 +57,7 @@ export class PuzzleSerializer {
                 });
                 continue;
             }
+
             if (staticComp.getMetaBuilding().id === gMetaBuildingRegistry.findByClass(MetaBlockBuilding).id) {
                 buildings.push({
                     type: "block",
@@ -65,10 +69,13 @@ export class PuzzleSerializer {
                 });
             }
         }
-        const mode = root.gameMode as PuzzleGameMode);
+
+        const mode = root.gameMode as PuzzleGameMode;
+
         const handles = root.hud.parts.buildingsToolbar.buildingHandles;
         const ids = gMetaBuildingRegistry.getAllIds();
-                let excludedBuildings: Array<string> = [];
+
+        let excludedBuildings: Array<string> = [];
         for (let i = 0; i < ids.length; ++i) {
             const handle = handles[ids[i]];
             if (handle && handle.puzzleLocked) {
@@ -76,6 +83,7 @@ export class PuzzleSerializer {
                 excludedBuildings.push(handle.metaBuilding.getId());
             }
         }
+
         return {
             version: 1,
             buildings,
@@ -87,30 +95,33 @@ export class PuzzleSerializer {
             excludedBuildings,
         };
     }
-    /**
-     * Tries to parse a signal code
-     * {}
-     */
+
+    /** Tries to parse a signal code */
     parseItemCode(root: GameRoot, code: string): BaseItem {
         if (!root || !root.shapeDefinitionMgr) {
             // Stale reference
             return null;
         }
+
         code = trim(code);
         const codeLower = code.toLowerCase();
+
         if (enumColors[codeLower]) {
             return COLOR_ITEM_SINGLETONS[codeLower];
         }
+
         if (ShapeDefinition.isValidShortKey(code)) {
             return root.shapeDefinitionMgr.getShapeItemFromShortKey(code);
         }
+
         return null;
     }
-    
+
     deserializePuzzle(root: GameRoot, puzzle: import("./savegame_typedefs").PuzzleGameData) {
         if (puzzle.version !== 1) {
             return "invalid-version";
         }
+
         for (const building of puzzle.buildings) {
             switch (building.type) {
                 case "emitter": {
@@ -118,6 +129,7 @@ export class PuzzleSerializer {
                     if (!item) {
                         return "bad-item:" + building.item;
                     }
+
                     const entity = root.logic.tryPlaceBuilding({
                         origin: new Vector(building.pos.x, building.pos.y),
                         building: gMetaBuildingRegistry.findByClass(MetaConstantProducerBuilding),
@@ -130,6 +142,7 @@ export class PuzzleSerializer {
                         logger.warn("Failed to place emitter:", building);
                         return "failed-to-place-emitter";
                     }
+
                     entity.components.ConstantSignal.signal = item;
                     break;
                 }
@@ -150,6 +163,7 @@ export class PuzzleSerializer {
                         logger.warn("Failed to place goal:", building);
                         return "failed-to-place-goal";
                     }
+
                     entity.components.GoalAcceptor.item = item;
                     break;
                 }

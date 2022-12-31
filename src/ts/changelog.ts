@@ -1,9 +1,4 @@
-export const CHANGELOG: {
-    version: string,
-    date: string,
-    entries: string[],
-    skin?: string
-}[] = [
+export const CHANGELOG = [
     {
         version: "1.5.6",
         date: "09.12.2022",
@@ -326,6 +321,7 @@ export const CHANGELOG: {
             "Web version: Fixed firefox not loading the game when browsing in private mode",
         ],
     },
+
     {
         version: "1.1.5",
         date: "03.06.2020",

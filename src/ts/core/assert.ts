@@ -5,9 +5,7 @@ const logger = createLogger("assert");
 let assertionErrorShown = false;
 
 function initAssert() {
-    /**
-     * Expects a given condition to be true
-     */
+    /** Expects a given condition to be true */
     // @ts-ignore
     window.assert = function (condition: boolean, ...failureMessage: string[]) {
         if (!condition) {

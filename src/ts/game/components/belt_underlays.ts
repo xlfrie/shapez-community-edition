@@ -1,13 +1,13 @@
 import { enumDirection, Vector } from "../../core/vector";
 import { Component } from "../component";
+
 /**
  * Store which type an underlay is, this is cached so we can easily
  * render it.
- *
  * Full: Render underlay at top and bottom of tile
  * Bottom Only: Only render underlay at the bottom half
  * Top Only:
- * @enum {string}
+ * @enum
  */
 export const enumClippedBeltUnderlayType = {
     full: "full",
@@ -15,6 +15,7 @@ export const enumClippedBeltUnderlayType = {
     topOnly: "topOnly",
     none: "none",
 };
+
 export type BeltUnderlayTile = {
     pos: Vector;
     direction: enumDirection;
@@ -27,7 +28,9 @@ export class BeltUnderlaysComponent extends Component {
     }
     public underlays = underlays;
 
-        constructor({ underlays = [] }) {
+    /** @param param0.underlays Where to render belt underlays */
+
+    constructor({ underlays = [] }) {
         super();
     }
 }

@@ -14,17 +14,18 @@ const logger = createLogger("buffers");
 const bufferGcDurationSeconds = 0.5;
 
 export class BufferMaintainer {
+    public root = root;
+
     public cache: Map<string, Map<string, CacheEntry>> = new Map();
+
     public iterationIndex = 1;
     public lastIteration = 0;
 
-    constructor(public root) {
+    constructor(root) {
         this.root.signals.gameFrameStarted.add(this.update, this);
     }
 
-    /**
-     * Returns the buffer stats
-     */
+    /** Returns the buffer stats */
     getStats() {
         let stats = {
             rootKeys: 0,
@@ -93,10 +94,12 @@ export class BufferMaintainer {
         //         (bufferStats.bufferCount + "").padStart(4),
         //         "total",
         //         ")",
+
         //         "(",
         //         (bufferStats.backlogSize + "").padStart(4),
         //         "backlog",
         //         ")",
+
         //         "VRAM:",
         //         mbUsed,
         //         "MB"
@@ -114,30 +117,32 @@ export class BufferMaintainer {
         }
     }
 
-    getForKey({
-        key,
-        subKey,
-        w,
-        h,
-        dpi,
-        redrawMethod,
-        additionalParams = {},
-    }: {
-        key: string;
-        subKey: string;
-        w: number;
-        h: number;
-        dpi: number;
-        redrawMethod: (
-            canvas: HTMLCanvasElement,
-            context: CanvasRenderingContext2D,
-            w: number,
-            h: number,
-            dpi: number,
-            addParams?: object
-        ) => void;
-        additionalParams: object;
-    }): HTMLCanvasElement {
+    getForKey(
+        {
+            key,
+            subKey,
+            w,
+            h,
+            dpi,
+            redrawMethod,
+            additionalParams,
+        }: {
+            key: string;
+            subKey: string;
+            w: number;
+            h: number;
+            dpi: number;
+            redrawMethod: (
+                canvas: HTMLCanvasElement,
+                context: CanvasRenderingContext2D,
+                w: number,
+                h: number,
+                dpi: number,
+                additionalParams?: any
+            ) => void;
+            additionalParams?: object;
+        } /*--REMOVE_PREV--*/
+    ): HTMLCanvasElement {
         // First, create parent key
         let parent = this.cache.get(key);
         if (!parent) {
@@ -177,6 +182,7 @@ export class BufferMaintainer {
         if (!parent) {
             return null;
         }
+
         // Now search for sub key
         const cacheHit = parent.get(subKey);
         if (cacheHit) {

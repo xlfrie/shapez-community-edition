@@ -1,20 +1,22 @@
 import { createLogger } from "./logging";
 
 const logger = createLogger("singleton_factory");
-// simple factory pattern
-export class SingletonFactory<T extends { getId(): string }> {
-    public entries: T[] = [];
-    public idToEntry: {
-        [id: string]: T;
-    } = {};
 
-    constructor(public id?: string) {}
+// simple factory pattern
+export class SingletonFactory {
+    public id = id;
+
+    //// Store array as well as dictionary, to speed up lookups
+    public entries = [];
+    public idToEntry = {};
+
+    constructor(id) {}
 
     getId() {
         return this.id;
     }
 
-    register(classHandle: Class<T>) {
+    register(classHandle) {
         // First, construct instance
         const instance = new classHandle();
 
@@ -30,17 +32,13 @@ export class SingletonFactory<T extends { getId(): string }> {
         this.idToEntry[id] = instance;
     }
 
-    /**
-     * Checks if a given id is registered
-     */
+    /** Checks if a given id is registered */
     hasId(id: string): boolean {
         return !!this.idToEntry[id];
     }
 
-    /**
-     * Finds an instance by a given id
-     */
-    findById(id: string): T {
+    /** Finds an instance by a given id */
+    findById(id: string): object {
         const entry = this.idToEntry[id];
         if (!entry) {
             logger.error("Object with id", id, "is not registered!");
@@ -50,10 +48,8 @@ export class SingletonFactory<T extends { getId(): string }> {
         return entry;
     }
 
-    /**
-     * Finds an instance by its constructor (The class handle)
-     */
-    findByClass(classHandle: Class<T>): T {
+    /** Finds an instance by its constructor (The class handle) */
+    findByClass(classHandle: object): object {
         for (let i = 0; i < this.entries.length; ++i) {
             if (this.entries[i] instanceof classHandle) {
                 return this.entries[i];
@@ -63,23 +59,17 @@ export class SingletonFactory<T extends { getId(): string }> {
         return null;
     }
 
-    /**
-     * Returns all entries
-     */
-    getEntries(): Array<T> {
+    /** Returns all entries */
+    getEntries(): Array<object> {
         return this.entries;
     }
 
-    /**
-     * Returns all registered ids
-     */
+    /** Returns all registered ids */
     getAllIds(): Array<string> {
         return Object.keys(this.idToEntry);
     }
 
-    /**
-     * Returns amount of stored entries
-     */
+    /** Returns amount of stored entries */
     getNumEntries(): number {
         return this.entries.length;
     }

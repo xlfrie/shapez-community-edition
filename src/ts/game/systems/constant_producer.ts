@@ -5,11 +5,12 @@ import { ConstantSignalComponent } from "../components/constant_signal";
 import { ItemProducerComponent } from "../components/item_producer";
 import { GameSystemWithFilter } from "../game_system_with_filter";
 import { MapChunk } from "../map_chunk";
-export class ConstantProducerSystem extends GameSystemWithFilter {
 
+export class ConstantProducerSystem extends GameSystemWithFilter {
     constructor(root) {
         super(root, [ConstantSignalComponent, ItemProducerComponent]);
     }
+
     update() {
         for (let i = 0; i < this.allEntities.length; ++i) {
             const entity = this.allEntities[i];
@@ -21,104 +22,33 @@ export class ConstantProducerSystem extends GameSystemWithFilter {
             ejectorComp.tryEject(0, signalComp.signal);
         }
     }
-    /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @param {} parameters
-     * @par@ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @param {DrawParameters} parameters
-     * @par@returns
-     */
-    drawChDra /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @param {} parameters
-     * @param {} @ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @param {DrawParameters} parameters
-     * @param {MapChunk} @returns
-     */
-    drawChmeters: DrawParam /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @param {} parameters
-     * @param {} @ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @param {DrawParameters} parameters
-     * @param {MapChunk} @returns
-     */
-    drawChmeters: DrawParam /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @param {} parameters
-     * @param {} chunk
-     * @ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @ /**
-     *
-     * @param {DrawParameters} parameters
-     * @param {MapChunk} chunk
-     * @returns
-     */
+
     drawChunk(parameters: DrawParameters, chunk: MapChunk) {
         const contents = chunk.containedEntitiesByLayer.regular;
         for (let i = 0; i < contents.length; ++i) {
             const producerComp = contents[i].components.ItemProducer;
             const signalComp = contents[i].components.ConstantSignal;
+
             if (!producerComp || !signalComp) {
                 continue;
             }
+
             const staticComp = contents[i].components.StaticMapEntity;
             const item = signalComp.signal;
+
             if (!item) {
                 continue;
             }
+
             const center = staticComp.getTileSpaceBounds().getCenter().toWorldSpace();
+
             const localOffset = new Vector(0, 1).rotateFastMultipleOf90(staticComp.rotation);
-            item.drawItemCenteredClipped(center.x + localOffset.x, center.y + localOffset.y, parameters, globalConfig.tileSize * 0.65);
+            item.drawItemCenteredClipped(
+                center.x + localOffset.x,
+                center.y + localOffset.y,
+                parameters,
+                globalConfig.tileSize * 0.65
+            );
         }
     }
 }

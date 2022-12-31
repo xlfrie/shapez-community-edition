@@ -4,20 +4,23 @@ import { drawSpriteClipped } from "../core/draw_utils";
 import { safeModulo } from "../core/utils";
 import { CHUNK_OVERLAY_RES } from "./map_chunk_view";
 import { GameRoot } from "./root";
+
 export class MapChunkAggregate {
     public root = root;
     public x = x;
     public y = y;
+
+    /** Whenever something changes, we increase this number - so we know we need to redraw */
     public renderIteration = 0;
     public dirty = false;
+
     public dirtyList: Array<boolean> = new Array(globalConfig.chunkAggregateSize ** 2).fill(true);
 
-        constructor(root, x, y) {
+    constructor(root, x, y) {
         this.markDirty(0, 0);
     }
-    /**
-     * Marks this chunk as dirty, rerendering all caches
-     */
+
+    /** Marks this chunk as dirty, rerendering all caches */
     markDirty(chunkX: number, chunkY: number) {
         const relX = safeModulo(chunkX, globalConfig.chunkAggregateSize);
         const relY = safeModulo(chunkY, globalConfig.chunkAggregateSize);
@@ -29,35 +32,54 @@ export class MapChunkAggregate {
         ++this.renderIteration;
         this.renderKey = this.x + "/" + this.y + "@" + this.renderIteration;
     }
-        generateOverlayBuffer(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, w: number, h: number, dpi: number) {
+
+    generateOverlayBuffer(
+        canvas: HTMLCanvasElement,
+        context: CanvasRenderingContext2D,
+        w: number,
+        h: number,
+        dpi: number
+    ) {
         const prevKey = this.x + "/" + this.y + "@" + (this.renderIteration - 1);
         const prevBuffer = this.root.buffers.getForKeyOrNullNoUpdate({
             key: "agg@" + this.root.currentLayer,
             subKey: prevKey,
         });
+
         const overlaySize = globalConfig.mapChunkSize * CHUNK_OVERLAY_RES;
         let onlyDirty = false;
         if (prevBuffer) {
             context.drawImage(prevBuffer, 0, 0);
             onlyDirty = true;
         }
+
         for (let x = 0; x < globalConfig.chunkAggregateSize; x++) {
             for (let y = 0; y < globalConfig.chunkAggregateSize; y++) {
-                if (onlyDirty && !this.dirtyList[globalConfig.chunkAggregateSize * y + x])
-                    continue;
+                if (onlyDirty && !this.dirtyList[globalConfig.chunkAggregateSize * y + x]) continue;
                 this.root.map
-                    .getChunk(this.x * globalConfig.chunkAggregateSize + x, this.y * globalConfig.chunkAggregateSize + y, true)
-                    .generateOverlayBuffer(context, overlaySize, overlaySize, x * overlaySize, y * overlaySize);
+                    .getChunk(
+                        this.x * globalConfig.chunkAggregateSize + x,
+                        this.y * globalConfig.chunkAggregateSize + y,
+                        true
+                    )
+                    .generateOverlayBuffer(
+                        context,
+                        overlaySize,
+                        overlaySize,
+                        x * overlaySize,
+                        y * overlaySize
+                    );
             }
         }
+
         this.dirty = false;
         this.dirtyList.fill(false);
     }
-    /**
-     * Overlay
-     */
+
+    /** Overlay */
     drawOverlay(parameters: DrawParameters) {
-        const aggregateOverlaySize = globalConfig.mapChunkSize * globalConfig.chunkAggregateSize * CHUNK_OVERLAY_RES;
+        const aggregateOverlaySize =
+            globalConfig.mapChunkSize * globalConfig.chunkAggregateSize * CHUNK_OVERLAY_RES;
         const sprite = this.root.buffers.getForKey({
             key: "agg@" + this.root.currentLayer,
             subKey: this.renderKey,
@@ -66,8 +88,10 @@ export class MapChunkAggregate {
             dpi: 1,
             redrawMethod: this.generateOverlayBuffer.bind(this),
         });
+
         const dims = globalConfig.mapChunkWorldSize * globalConfig.chunkAggregateSize;
         const extrude = 0.05;
+
         // Draw chunk "pixel" art
         parameters.context.imageSmoothingEnabled = false;
         drawSpriteClipped({
@@ -80,18 +104,32 @@ export class MapChunkAggregate {
             originalW: aggregateOverlaySize,
             originalH: aggregateOverlaySize,
         });
+
         parameters.context.imageSmoothingEnabled = true;
         const resourcesScale = this.root.app.settings.getAllSettings().mapResourcesScale;
+
         // Draw patch items
-        if (this.root.currentLayer === "regular" &&
+        if (
+            this.root.currentLayer === "regular" &&
             resourcesScale > 0.05 &&
-            this.root.camera.zoomLevel > 0.1) {
+            this.root.camera.zoomLevel > 0.1
+        ) {
             const diameter = (70 / Math.pow(parameters.zoomLevel, 0.35)) * (0.2 + 2 * resourcesScale);
+
             for (let x = 0; x < globalConfig.chunkAggregateSize; x++) {
                 for (let y = 0; y < globalConfig.chunkAggregateSize; y++) {
                     this.root.map
-                        .getChunk(this.x * globalConfig.chunkAggregateSize + x, this.y * globalConfig.chunkAggregateSize + y, true)
-                        .drawOverlayPatches(parameters, this.x * dims + x * globalConfig.mapChunkWorldSize, this.y * dims + y * globalConfig.mapChunkWorldSize, diameter);
+                        .getChunk(
+                            this.x * globalConfig.chunkAggregateSize + x,
+                            this.y * globalConfig.chunkAggregateSize + y,
+                            true
+                        )
+                        .drawOverlayPatches(
+                            parameters,
+                            this.x * dims + x * globalConfig.mapChunkWorldSize,
+                            this.y * dims + y * globalConfig.mapChunkWorldSize,
+                            diameter
+                        );
                 }
             }
         }

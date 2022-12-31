@@ -1,4 +1,6 @@
+/* typehints:start */
 import type { Application } from "../application";
+/* typehints:end */
 
 import { sha1, CRC_PREFIX, computeCrc } from "./sensitive_utils.encrypt";
 import { createLogger } from "./logging";
@@ -9,16 +11,25 @@ import { ExplainedResult } from "./explained_result";
 import { decompressX64, compressX64 } from "./lzstring";
 import { asyncCompressor, compressionPrefix } from "./async_compression";
 import { compressObject, decompressObject } from "../savegame/savegame_compressor";
-const debounce = require("debounce-promise");
-const logger = createLogger("read_write_proxy");
-const salt = accessNestedPropertyReverse(globalConfig, ["file", "info"]);
-// Helper which only writes / reads if verify() works. Also performs migration
 
-export abstract class ReadWriteProxy {
+const debounce = require("debounce-promise");
+
+const logger = createLogger("read_write_proxy");
+
+const salt = accessNestedPropertyReverse(globalConfig, ["file", "info"]);
+
+// Helper which only writes / reads if verify() works. Also performs migration
+export class ReadWriteProxy {
+    public app: Application = app;
+
+    public filename = filename;
+
     public currentData: object = null;
+
+    /** Store a debounced handler to prevent double writes */
     public debouncedWrite = debounce(this.doWriteAsync.bind(this), 50);
 
-    constructor(public app: Application, public filename: string) {
+    constructor(app, filename) {
         // TODO: EXTREMELY HACKY! To verify we need to do this a step later
         if (G_IS_DEV && IS_DEBUG) {
             setTimeout(() => {
@@ -31,16 +42,30 @@ export abstract class ReadWriteProxy {
     }
 
     // -- Methods to override
-    abstract verify(data): ExplainedResult;
+
+    verify(data): ExplainedResult {
+        abstract;
+        return ExplainedResult.bad();
+    }
 
     // Should return the default data
-    abstract getDefaultData(): object;
+    getDefaultData() {
+        abstract;
+        return {};
+    }
 
     // Should return the current version as an integer
-    abstract getCurrentVersion(): number;
+    getCurrentVersion() {
+        abstract;
+        return 0;
+    }
 
     // Should migrate the data (Modify in place)
-    abstract migrate(data: object): ExplainedResult;
+
+    migrate(data): ExplainedResult {
+        abstract;
+        return ExplainedResult.bad();
+    }
 
     // -- / Methods
 
@@ -57,9 +82,7 @@ export abstract class ReadWriteProxy {
         return compressionPrefix + compressX64(checksum + jsonString);
     }
 
-    // @Bagel: This was an object, but then immediately called substr??
-    // Also look at removing the substr
-    static deserializeObject(text: string) {
+    static deserializeObject(text: object) {
         const decompressed = decompressX64(text.substr(compressionPrefix.length));
         if (!decompressed) {
             // LZ string decompression failure
@@ -103,9 +126,7 @@ export abstract class ReadWriteProxy {
         return this.debouncedWrite();
     }
 
-    /**
-     * Actually writes the data asychronously
-     */
+    /** Actually writes the data asychronously */
     doWriteAsync(): Promise<void> {
         return asyncCompressor
             .compressObjectAsync(this.currentData)
@@ -132,9 +153,11 @@ export abstract class ReadWriteProxy {
                 .catch(err => {
                     if (err === FILE_NOT_FOUND) {
                         logger.log("File not found, using default data");
+
                         // File not found or unreadable, assume default file
                         return Promise.resolve(null);
                     }
+
                     return Promise.reject("file-error: " + err);
                 })
 
@@ -145,6 +168,7 @@ export abstract class ReadWriteProxy {
                         // So, the file has not been found, use default data
                         return JSON.stringify(compressObject(this.getDefaultData()));
                     }
+
                     if (rawData.startsWith(compressionPrefix)) {
                         const decompressed = decompressX64(rawData.substr(compressionPrefix.length));
                         if (!decompressed) {
@@ -155,12 +179,15 @@ export abstract class ReadWriteProxy {
                             // String too short
                             return Promise.reject("bad-content / payload-too-small");
                         }
+
                         // Compare stored checksum with actual checksum
                         const checksum = decompressed.substring(0, 40);
                         const jsonString = decompressed.substr(40);
+
                         const desiredChecksum = checksum.startsWith(CRC_PREFIX)
                             ? computeCrc(jsonString + salt)
                             : sha1(jsonString + salt);
+
                         if (desiredChecksum !== checksum) {
                             // Checksum mismatch
                             return Promise.reject(
@@ -175,6 +202,7 @@ export abstract class ReadWriteProxy {
                     }
                     return rawData;
                 })
+
                 // Parse JSON, this could throw but that's fine
                 .then(res => {
                     try {
@@ -192,8 +220,10 @@ export abstract class ReadWriteProxy {
                         throw new Error("invalid-serialized-data");
                     }
                 })
+
                 // Decompress
                 .then(compressed => decompressObject(compressed))
+
                 // Verify basic structure
                 .then(contents => {
                     const result = this.internalVerifyBasicStructure(contents);
@@ -202,11 +232,13 @@ export abstract class ReadWriteProxy {
                     }
                     return contents;
                 })
+
                 // Check version and migrate if required
                 .then(contents => {
                     if (contents.version > this.getCurrentVersion()) {
                         return Promise.reject("stored-data-is-newer");
                     }
+
                     if (contents.version < this.getCurrentVersion()) {
                         logger.log(
                             "Trying to migrate data object from version",
@@ -221,6 +253,7 @@ export abstract class ReadWriteProxy {
                     }
                     return contents;
                 })
+
                 // Verify
                 .then(contents => {
                     const verifyResult = this.internalVerifyEntry(contents);
@@ -237,27 +270,28 @@ export abstract class ReadWriteProxy {
                     }
                     return contents;
                 })
+
                 // Store
                 .then(contents => {
                     this.currentData = contents;
                     logger.log("📄 Read data with version", this.currentData.version, "from", this.filename);
                     return contents;
                 })
+
                 // Catchall
                 .catch(err => {
                     return Promise.reject("Failed to read " + this.filename + ": " + err);
                 })
         );
     }
-    /**
-     * Deletes the file
-     * {}
-     */
+
+    /** Deletes the file */
     deleteAsync(): Promise<void> {
         return this.app.storage.deleteFileAsync(this.filename);
     }
+
     // Internal
-    /** {} */
+
     internalVerifyBasicStructure(data): ExplainedResult {
         if (!data) {
             return ExplainedResult.bad("Data is empty");
@@ -267,15 +301,17 @@ export abstract class ReadWriteProxy {
                 `Data has invalid version: ${data.version} (expected ${this.getCurrentVersion()})`
             );
         }
+
         return ExplainedResult.good();
     }
-    /** {} */
+
     internalVerifyEntry(data): ExplainedResult {
         if (data.version !== this.getCurrentVersion()) {
             return ExplainedResult.bad(
                 "Version mismatch, got " + data.version + " and expected " + this.getCurrentVersion()
             );
         }
+
         const verifyStructureError = this.internalVerifyBasicStructure(data);
         if (!verifyStructureError.isGood()) {
             return verifyStructureError;

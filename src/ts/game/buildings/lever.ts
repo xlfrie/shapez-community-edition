@@ -5,11 +5,12 @@ import { defaultBuildingVariant, MetaBuilding } from "../meta_building";
 import { GameRoot } from "../root";
 import { LeverComponent } from "../components/lever";
 import { enumHubGoalRewards } from "../tutorial_goals";
-export class MetaLeverBuilding extends MetaBuilding {
 
+export class MetaLeverBuilding extends MetaBuilding {
     constructor() {
         super("lever");
     }
+
     static getAllVariantCombinations() {
         return [
             {
@@ -18,35 +19,42 @@ export class MetaLeverBuilding extends MetaBuilding {
             },
         ];
     }
+
     getSilhouetteColor() {
         // @todo: Render differently based on if its activated or not
         return "#1a678b";
     }
-        getIsUnlocked(root: GameRoot) {
+
+    getIsUnlocked(root: GameRoot) {
         return root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_wires_painter_and_levers);
     }
+
     getDimensions() {
         return new Vector(1, 1);
     }
+
     getSprite() {
         return null;
     }
+
     getShowWiresLayerPreview() {
         return true;
     }
-    /**
-     * Creates the entity at the given location
-     */
+
+    /** Creates the entity at the given location */
     setupEntityComponents(entity: Entity) {
-        entity.addComponent(new WiredPinsComponent({
-            slots: [
-                {
-                    pos: new Vector(0, 0),
-                    direction: enumDirection.top,
-                    type: enumPinSlotType.logicalEjector,
-                },
-            ],
-        }));
+        entity.addComponent(
+            new WiredPinsComponent({
+                slots: [
+                    {
+                        pos: new Vector(0, 0),
+                        direction: enumDirection.top,
+                        type: enumPinSlotType.logicalEjector,
+                    },
+                ],
+            })
+        );
+
         entity.addComponent(new LeverComponent({}));
     }
 }

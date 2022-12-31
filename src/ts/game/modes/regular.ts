@@ -2,6 +2,7 @@
 import type { GameRoot } from "../root";
 import type { MetaBuilding } from "../meta_building";
 /* typehints:end */
+
 import { findNiceIntegerValue } from "../../core/utils";
 import { MetaConstantProducerBuilding } from "../buildings/constant_producer";
 import { MetaGoalAcceptorBuilding } from "../buildings/goal_acceptor";
@@ -37,16 +38,20 @@ import { MetaItemProducerBuilding } from "../buildings/item_producer";
 import { MOD_SIGNALS } from "../../mods/mod_signals";
 import { finalGameShape, generateLevelsForVariant } from "./levels";
 import { WEB_STEAM_SSO_AUTHENTICATED } from "../../core/steam_sso";
+
 export type UpgradeRequirement = {
     shape: string;
     amount: number;
 };
+
 export type TierRequirement = {
     required: Array<UpgradeRequirement>;
     improvement?: number;
     excludePrevious?: boolean;
 };
+
 export type UpgradeTiers = Array<TierRequirement>;
+
 export type LevelDefinition = {
     shape: string;
     required: number;
@@ -54,23 +59,23 @@ export type LevelDefinition = {
     throughputOnly?: boolean;
 };
 
-
-
-
 export const rocketShape = "CbCuCbCu:Sr------:--CrSrCr:CwCwCwCw";
 const preparementShape = "CpRpCp--:SwSwSwSw";
+
 // Tiers need % of the previous tier as requirement too
 const tierGrowth = 2.5;
+
 const upgradesCache = {};
-/**
- * Generates all upgrades
- * {} */
+
+/** Generates all upgrades * @returns */
 function generateUpgrades(limitedVersion = false, difficulty = 1): Object<string, UpgradeTiers> {
     if (upgradesCache[limitedVersion]) {
         return upgradesCache[limitedVersion];
     }
+
     const fixedImprovements = [0.5, 0.5, 1, 1, 2, 1, 1];
     const numEndgameUpgrades = limitedVersion ? 0 : 1000 - fixedImprovements.length - 1;
+
     function generateInfiniteUnlocks() {
         return new Array(numEndgameUpgrades).fill(null).map((_, i) => ({
             required: [
@@ -81,21 +86,20 @@ function generateUpgrades(limitedVersion = false, difficulty = 1): Object<string
             excludePrevious: true,
         }));
     }
+
     // Fill in endgame upgrades
     for (let i = 0; i < numEndgameUpgrades; ++i) {
         if (i < 20) {
             fixedImprovements.push(0.1);
-        }
-        else if (i < 50) {
+        } else if (i < 50) {
             fixedImprovements.push(0.05);
-        }
-        else if (i < 100) {
+        } else if (i < 100) {
             fixedImprovements.push(0.025);
-        }
-        else {
+        } else {
             fixedImprovements.push(0.0125);
         }
     }
+
     const upgrades = {
         belt: [
             {
@@ -126,6 +130,7 @@ function generateUpgrades(limitedVersion = false, difficulty = 1): Object<string
             },
             ...generateInfiniteUnlocks(),
         ],
+
         miner: [
             {
                 required: [{ shape: "RuRuRuRu", amount: 300 }],
@@ -160,6 +165,7 @@ function generateUpgrades(limitedVersion = false, difficulty = 1): Object<string
             },
             ...generateInfiniteUnlocks(),
         ],
+
         processors: [
             {
                 required: [{ shape: "SuSuSuSu", amount: 500 }],
@@ -189,6 +195,7 @@ function generateUpgrades(limitedVersion = false, difficulty = 1): Object<string
             },
             ...generateInfiniteUnlocks(),
         ],
+
         painting: [
             {
                 required: [{ shape: "RbRb----", amount: 600 }],
@@ -224,17 +231,21 @@ function generateUpgrades(limitedVersion = false, difficulty = 1): Object<string
             ...generateInfiniteUnlocks(),
         ],
     };
+
     // Automatically generate tier levels
     for (const upgradeId in upgrades) {
         const upgradeTiers = upgrades[upgradeId];
+
         let currentTierRequirements = [];
         for (let i = 0; i < upgradeTiers.length; ++i) {
             const tierHandle = upgradeTiers[i];
             tierHandle.improvement = fixedImprovements[i];
+
             tierHandle.required.forEach(required => {
                 required.amount = Math.round(required.amount * difficulty);
             });
             const originalRequired = tierHandle.required.slice();
+
             for (let k = currentTierRequirements.length - 1; k >= 0; --k) {
                 const oldTierRequirement = currentTierRequirements[k];
                 if (!tierHandle.excludePrevious) {
@@ -244,16 +255,20 @@ function generateUpgrades(limitedVersion = false, difficulty = 1): Object<string
                     });
                 }
             }
-            currentTierRequirements.push(...originalRequired.map(req => ({
-                amount: req.amount,
-                shape: req.shape,
-            })));
+            currentTierRequirements.push(
+                ...originalRequired.map(req => ({
+                    amount: req.amount,
+                    shape: req.shape,
+                }))
+            );
             currentTierRequirements.forEach(tier => {
                 tier.amount = findNiceIntegerValue(tier.amount * tierGrowth);
             });
         }
     }
+
     MOD_SIGNALS.modifyUpgrades.dispatch(upgrades);
+
     // VALIDATE
     if (G_IS_DEV) {
         for (const upgradeId in upgrades) {
@@ -261,21 +276,21 @@ function generateUpgrades(limitedVersion = false, difficulty = 1): Object<string
                 tier.required.forEach(({ shape }) => {
                     try {
                         ShapeDefinition.fromShortKey(shape);
-                    }
-                    catch (ex) {
+                    } catch (ex) {
                         throw new Error("Invalid upgrade goal: '" + ex + "' for shape" + shape);
                     }
                 });
             });
         }
     }
+
     upgradesCache[limitedVersion] = upgrades;
     return upgrades;
 }
+
 let levelDefinitionsCache = null;
-/**
- * Generates the level definitions
- */
+
+/** Generates the level definitions */
 export function generateLevelDefinitions(app) {
     if (levelDefinitionsCache) {
         return levelDefinitionsCache;
@@ -286,8 +301,7 @@ export function generateLevelDefinitions(app) {
         levelDefinitions.forEach(({ shape }) => {
             try {
                 ShapeDefinition.fromShortKey(shape);
-            }
-            catch (ex) {
+            } catch (ex) {
                 throw new Error("Invalid tutorial goal: '" + ex + "' for shape" + shape);
             }
         });
@@ -295,13 +309,16 @@ export function generateLevelDefinitions(app) {
     levelDefinitionsCache = levelDefinitions;
     return levelDefinitions;
 }
+
 export class RegularGameMode extends GameMode {
     static getId() {
         return enumGameModeIds.regular;
     }
+
     static getType() {
         return enumGameModeTypes.default;
     }
+
     public additionalHudParts = {
         wiresToolbar: HUDWiresToolbar,
         unlockNotification: HUDUnlockNotification,
@@ -322,56 +339,60 @@ export class RegularGameMode extends GameMode {
         gameMenu: HUDGameMenu,
         constantSignalEdit: HUDConstantSignalEdit,
     };
-    public hiddenBuildings: (typeof MetaBuilding)[] = [
+
+    public hiddenBuildings: typeof MetaBuilding[] = [
         MetaConstantProducerBuilding,
         MetaGoalAcceptorBuilding,
         MetaBlockBuilding,
         MetaItemProducerBuilding,
     ];
 
-        constructor(root) {
+    constructor(root) {
         super(root);
+
         if (!IS_MOBILE) {
             this.additionalHudParts.keybindingOverlay = HUDKeybindingOverlay;
         }
+
         if (this.root.app.restrictionMgr.getIsStandaloneMarketingActive()) {
             this.additionalHudParts.watermark = HUDWatermark;
             this.additionalHudParts.standaloneAdvantages = HUDStandaloneAdvantages;
         }
+
         if (this.root.app.settings.getAllSettings().offerHints) {
             this.additionalHudParts.tutorialHints = HUDPartTutorialHints;
             this.additionalHudParts.interactiveTutorial = HUDInteractiveTutorial;
         }
     }
+
     get difficultyMultiplicator() {
         if (G_IS_STANDALONE || WEB_STEAM_SSO_AUTHENTICATED) {
             return 1;
         }
         return 0.5;
     }
-    /**
-     * Should return all available upgrades
-     * {}
-     */
+
+    /** Should return all available upgrades */
     getUpgrades(): Object<string, UpgradeTiers> {
-        return generateUpgrades(!this.root.app.restrictionMgr.getHasExtendedUpgrades(), this.difficultyMultiplicator);
+        return generateUpgrades(
+            !this.root.app.restrictionMgr.getHasExtendedUpgrades(),
+            this.difficultyMultiplicator
+        );
     }
-    /**
-     * Returns the goals for all levels including their reward
-     * {}
-     */
+
+    /** Returns the goals for all levels including their reward */
     getLevelDefinitions(): Array<LevelDefinition> {
         return generateLevelDefinitions(this.root.app);
     }
+
     /**
      * Should return whether free play is available or if the game stops
      * after the predefined levels
-     * {}
      */
     getIsFreeplayAvailable(): boolean {
         return this.root.app.restrictionMgr.getHasExtendedLevelsAndFreeplay();
     }
-    /** {} */
+
     hasAchievements(): boolean {
         return true;
     }

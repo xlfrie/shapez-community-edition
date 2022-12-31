@@ -3,40 +3,41 @@ import { createLogger } from "./logging";
 const logger = createLogger("factory");
 
 // simple factory pattern
-export class Factory<T extends { getId: () => string }> {
-    public entries: T[] = [];
-    public entryIds: string[] = [];
+export class Factory {
+    public id = id;
+
+    //// Store array as well as dictionary, to speed up lookups
+    public entries = [];
+    public entryIds = [];
     public idToEntry = {};
 
-    constructor(public id?: string) {}
+    constructor(id) {}
 
     getId() {
         return this.id;
     }
 
-    register(entry: T) {
+    register(entry) {
         // Extract id
         const id = entry.getId();
         assert(id, "Factory: Invalid id for class: " + entry);
+
         // Check duplicates
         assert(!this.idToEntry[id], "Duplicate factory entry for " + id);
+
         // Insert
         this.entries.push(entry);
         this.entryIds.push(id);
         this.idToEntry[id] = entry;
     }
 
-    /**
-     * Checks if a given id is registered
-     */
+    /** Checks if a given id is registered */
     hasId(id: string): boolean {
         return !!this.idToEntry[id];
     }
 
-    /**
-     * Finds an instance by a given id
-     */
-    findById(id: string): T {
+    /** Finds an instance by a given id */
+    findById(id: string): object {
         const entry = this.idToEntry[id];
         if (!entry) {
             logger.error("Object with id", id, "is not registered on factory", this.id, "!");
@@ -46,23 +47,17 @@ export class Factory<T extends { getId: () => string }> {
         return entry;
     }
 
-    /**
-     * Returns all entries
-     */
-    getEntries(): Array<T> {
+    /** Returns all entries */
+    getEntries(): Array<object> {
         return this.entries;
     }
 
-    /**
-     * Returns all registered ids
-     */
+    /** Returns all registered ids */
     getAllIds(): Array<string> {
         return this.entryIds;
     }
 
-    /**
-     * Returns amount of stored entries
-     */
+    /** Returns amount of stored entries */
     getNumEntries(): number {
         return this.entries.length;
     }

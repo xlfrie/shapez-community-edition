@@ -8,7 +8,7 @@ const logger = createLogger("async_compression");
 
 export let compressionPrefix = String.fromCodePoint(1);
 
-function checkCryptPrefix(prefix: string) {
+function checkCryptPrefix(prefix) {
     try {
         window.localStorage.setItem("prefix_test", prefix);
         window.localStorage.removeItem("prefix_test");
@@ -79,9 +79,7 @@ class AsynCompression {
         });
     }
 
-    /**
-     * Compresses any object
-     */
+    /** Compresses any object */
     compressObjectAsync(obj: any) {
         logger.log("Compressing object async (optimized)");
         return this.internalQueueJob("compressObject", {
@@ -90,9 +88,7 @@ class AsynCompression {
         });
     }
 
-    /**
-     * Queues a new job
-     */
+    /** Queues a new job */
     internalQueueJob(job: string, data: any): Promise<any> {
         const jobId = ++this.currentJobId;
         return new Promise((resolve, reject) => {

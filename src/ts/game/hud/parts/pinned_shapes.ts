@@ -6,11 +6,16 @@ import { enumAnalyticsDataSource } from "../../production_analytics";
 import { ShapeDefinition } from "../../shape_definition";
 import { enumHubGoalRewards } from "../../tutorial_goals";
 import { BaseHUDPart } from "../base_hud_part";
-/**
- * Manages the pinned shapes on the left side of the screen
- */
+
+/** Manages the pinned shapes on the left side of the screen */
 export class HUDPinnedShapes extends BaseHUDPart {
+    /** Store a list of pinned shapes */
     public pinnedShapes: Array<string> = [];
+
+    /**
+     * Store handles to the currently rendered elements, so we can update them more
+     * convenient. Also allows for cleaning up handles.
+     */
     public handles: Array<{
         key: string;
         definition: ShapeDefinition;
@@ -25,31 +30,27 @@ export class HUDPinnedShapes extends BaseHUDPart {
     constructor(root) {
         super(root);
     }
+
     createElements(parent) {
         this.element = makeDiv(parent, "ingame_HUD_PinnedShapes", []);
     }
-    /**
-     * Serializes the pinned shapes
-     */
+
+    /** Serializes the pinned shapes */
     serialize() {
         return {
             shapes: this.pinnedShapes,
         };
     }
-    /**
-     * Deserializes the pinned shapes
-     */
-    deserialize(data: {
-        shapes: Array<string>;
-    }) {
+
+    /** Deserializes the pinned shapes */
+    deserialize(data: { shapes: Array<string> }) {
         if (!data || !data.shapes || !Array.isArray(data.shapes)) {
             return "Invalid pinned shapes data: " + JSON.stringify(data);
         }
         this.pinnedShapes = data.shapes;
     }
-    /**
-     * Initializes the hud component
-     */
+
+    /** Initializes the hud component */
     initialize() {
         // Connect to any relevant signals
         this.root.signals.storyGoalCompleted.add(this.rerenderFull, this);
@@ -57,12 +58,12 @@ export class HUDPinnedShapes extends BaseHUDPart {
         this.root.signals.postLoadHook.add(this.rerenderFull, this);
         this.root.hud.signals.shapePinRequested.add(this.pinNewShape, this);
         this.root.hud.signals.shapeUnpinRequested.add(this.unpinShape, this);
+
         // Perform initial render
         this.updateShapesAfterUpgrade();
     }
-    /**
-     * Updates all shapes after an upgrade has been purchased and removes the unused ones
-     */
+
+    /** Updates all shapes after an upgrade has been purchased and removes the unused ones */
     updateShapesAfterUpgrade() {
         for (let i = 0; i < this.pinnedShapes.length; ++i) {
             const key = this.pinnedShapes[i];
@@ -77,8 +78,10 @@ export class HUDPinnedShapes extends BaseHUDPart {
                 i -= 1;
             }
         }
+
         this.rerenderFull();
     }
+
     /**
      * Finds the current goal for the given key. If the key is the story goal, returns
      * the story goal. If its the blueprint shape, no goal is returned. Otherwise
@@ -91,16 +94,19 @@ export class HUDPinnedShapes extends BaseHUDPart {
         if (key === this.root.gameMode.getBlueprintShapeKey()) {
             return null;
         }
+
         // Check if this shape is required for any upgrade
         const upgrades = this.root.gameMode.getUpgrades();
         for (const upgradeId in upgrades) {
             const upgradeTiers = upgrades[upgradeId];
             const currentTier = this.root.hubGoals.getUpgradeLevel(upgradeId);
             const tierHandle = upgradeTiers[currentTier];
+
             if (!tierHandle) {
                 // Max level
                 continue;
             }
+
             for (let i = 0; i < tierHandle.required.length; ++i) {
                 const { shape, amount } = tierHandle.required[i];
                 if (shape === key) {
@@ -108,25 +114,28 @@ export class HUDPinnedShapes extends BaseHUDPart {
                 }
             }
         }
+
         return null;
     }
-    /**
-     * Returns whether a given shape is currently pinned
-     */
+
+    /** Returns whether a given shape is currently pinned */
     isShapePinned(key: string) {
-        if (key === this.root.hubGoals.currentGoal.definition.getHash() ||
-            key === this.root.gameMode.getBlueprintShapeKey()) {
+        if (
+            key === this.root.hubGoals.currentGoal.definition.getHash() ||
+            key === this.root.gameMode.getBlueprintShapeKey()
+        ) {
             // This is a "special" shape which is always pinned
             return true;
         }
+
         return this.pinnedShapes.indexOf(key) >= 0;
     }
-    /**
-     * Rerenders the whole component
-     */
+
+    /** Rerenders the whole component */
     rerenderFull() {
         const currentGoal = this.root.hubGoals.currentGoal;
         const currentKey = currentGoal.definition.getHash();
+
         // First, remove all old shapes
         for (let i = 0; i < this.handles.length; ++i) {
             this.handles[i].element.remove();
@@ -140,6 +149,7 @@ export class HUDPinnedShapes extends BaseHUDPart {
             }
         }
         this.handles = [];
+
         // Pin story goal
         this.internalPinShape({
             key: currentKey,
@@ -147,6 +157,7 @@ export class HUDPinnedShapes extends BaseHUDPart {
             className: "goal",
             throughputOnly: currentGoal.throughputOnly,
         });
+
         // Pin blueprint shape as well
         if (this.root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_blueprints)) {
             this.internalPinShape({
@@ -155,6 +166,7 @@ export class HUDPinnedShapes extends BaseHUDPart {
                 className: "blueprint",
             });
         }
+
         // Pin manually pinned shapes
         for (let i = 0; i < this.pinnedShapes.length; ++i) {
             const key = this.pinnedShapes[i];
@@ -163,22 +175,31 @@ export class HUDPinnedShapes extends BaseHUDPart {
             }
         }
     }
-    /**
-     * Pins a new shape
-     */
-    internalPinShape({ key, canUnpin = true, className = null, throughputOnly = false }: {
-        key: string;
-        canUnpin: boolean=;
-        className: string=;
-        throughputOnly: boolean=;
-    }) {
+
+    /** Pins a new shape */
+    internalPinShape(
+        {
+            key,
+            canUnpin = true,
+            className = null,
+            throughputOnly = false,
+        }: {
+            key: string;
+            canUnpin?: boolean;
+            className?: string;
+            throughputOnly?: boolean;
+        } /*--REMOVE_PREV--*/
+    ) {
         const definition = this.root.shapeDefinitionMgr.getShapeFromShortKey(key);
+
         const element = makeDiv(this.element, null, ["shape"]);
         const canvas = definition.generateAsCanvas(120);
         element.appendChild(canvas);
+
         if (className) {
             element.classList.add(className);
         }
+
         let detector = null;
         if (canUnpin) {
             const unpinButton = document.createElement("button");
@@ -191,10 +212,10 @@ export class HUDPinnedShapes extends BaseHUDPart {
                 targetOnly: true,
             });
             detector.click.add(() => this.unpinShape(key));
-        }
-        else {
+        } else {
             element.classList.add("marked");
         }
+
         // Show small info icon
         let infoDetector;
         const infoButton = document.createElement("button");
@@ -206,11 +227,14 @@ export class HUDPinnedShapes extends BaseHUDPart {
             targetOnly: true,
         });
         infoDetector.click.add(() => this.root.hud.signals.viewShapeDetailsRequested.dispatch(definition));
+
         const amountLabel = makeDiv(element, null, ["amountLabel"], "");
+
         const goal = this.findGoalValueForShape(key);
         if (goal) {
             makeDiv(element, null, ["goalLabel"], "/" + formatBigNumber(goal));
         }
+
         this.handles.push({
             key,
             definition,
@@ -222,19 +246,27 @@ export class HUDPinnedShapes extends BaseHUDPart {
             throughputOnly,
         });
     }
-    /**
-     * Updates all amount labels
-     */
+
+    /** Updates all amount labels */
     update() {
         for (let i = 0; i < this.handles.length; ++i) {
             const handle = this.handles[i];
+
             let currentValue = this.root.hubGoals.getShapesStoredByKey(handle.key);
             let currentValueFormatted = formatBigNumber(currentValue);
+
             if (handle.throughputOnly) {
                 currentValue =
-                    this.root.productionAnalytics.getCurrentShapeRateRaw(enumAnalyticsDataSource.delivered, handle.definition) / globalConfig.analyticsSliceDurationSeconds;
-                currentValueFormatted = T.ingame.statistics.shapesDisplayUnits.second.replace("<shapes>", String(currentValue));
+                    this.root.productionAnalytics.getCurrentShapeRateRaw(
+                        enumAnalyticsDataSource.delivered,
+                        handle.definition
+                    ) / globalConfig.analyticsSliceDurationSeconds;
+                currentValueFormatted = T.ingame.statistics.shapesDisplayUnits.second.replace(
+                    "<shapes>",
+                    String(currentValue)
+                );
             }
+
             if (currentValueFormatted !== handle.lastRenderedValue) {
                 handle.lastRenderedValue = currentValueFormatted;
                 handle.amountLabel.innerText = currentValueFormatted;
@@ -243,31 +275,32 @@ export class HUDPinnedShapes extends BaseHUDPart {
             }
         }
     }
-    /**
-     * Unpins a shape
-     */
+
+    /** Unpins a shape */
     unpinShape(key: string) {
         console.log("unpin", key);
         arrayDeleteValue(this.pinnedShapes, key);
         this.rerenderFull();
     }
-    /**
-     * Requests to pin a new shape
-     */
+
+    /** Requests to pin a new shape */
     pinNewShape(definition: ShapeDefinition) {
         const key = definition.getHash();
         if (key === this.root.hubGoals.currentGoal.definition.getHash()) {
             // Can not pin current goal
             return;
         }
+
         if (key === this.root.gameMode.getBlueprintShapeKey()) {
             // Can not pin the blueprint shape
             return;
         }
+
         // Check if its already pinned
         if (this.pinnedShapes.indexOf(key) >= 0) {
             return;
         }
+
         this.pinnedShapes.push(key);
         this.rerenderFull();
     }

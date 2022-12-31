@@ -1,6 +1,7 @@
 import { BaseItem } from "../game/base_item";
 import { ClickDetector } from "./click_detector";
 import { Signal } from "./signal";
+
 /*
  * ***************************************************
  *
@@ -11,18 +12,27 @@ import { Signal } from "./signal";
  *
  * ***************************************************
  */
-export abstract class FormElement {
+
+export class FormElement {
+    public id = id;
+    public label = label;
+
     public valueChosen = new Signal();
 
-    constructor(public id: string, public label: string) {}
+    constructor(id, label) {}
 
-    abstract getHtml();
-
-    getFormElement(parent: Element) {
-        return parent.querySelector("[data-formId='" + this.id + "']") as HTMLFormElement;
+    getHtml() {
+        abstract;
+        return "";
     }
 
-    abstract bindEvents(parent: Element, clickTrackers: ClickDetector[]);
+    getFormElement(parent) {
+        return parent.querySelector("[data-formId='" + this.id + "']");
+    }
+
+    bindEvents(parent, clickTrackers) {
+        abstract;
+    }
 
     focus() {}
 
@@ -30,37 +40,21 @@ export abstract class FormElement {
         return true;
     }
 
-    abstract getValue(): any;
+    getValue(): any {
+        abstract;
+    }
 }
 
 export class FormElementInput extends FormElement {
-    public placeholder: string;
-    public defaultValue: string;
-    public inputType: string;
-    public validator: (str: string) => boolean;
-    public element: HTMLFormElement = null;
+    public placeholder = placeholder;
+    public defaultValue = defaultValue;
+    public inputType = inputType;
+    public validator = validator;
 
-    constructor({
-        id,
-        label = null,
-        placeholder,
-        defaultValue = "",
-        inputType = "text",
-        validator = null,
-    }: {
-        id: string;
-        label?: string;
-        placeholder: string;
-        defaultValue?: string;
-        inputType?: string;
-        validator: (str: string) => boolean;
-    }) {
+    public element = null;
+
+    constructor({ id, label = null, placeholder, defaultValue = "", inputType = "text", validator = null }) {
         super(id, label);
-
-        this.placeholder = placeholder;
-        this.defaultValue = defaultValue;
-        this.inputType = inputType;
-        this.validator = validator;
     }
 
     getHtml() {
@@ -72,11 +66,13 @@ export class FormElementInput extends FormElement {
                 classes.push("input-text");
                 break;
             }
+
             case "email": {
                 classes.push("input-email");
                 inputType = "email";
                 break;
             }
+
             case "token": {
                 classes.push("input-token");
                 inputType = "text";
@@ -84,6 +80,7 @@ export class FormElementInput extends FormElement {
                 break;
             }
         }
+
         return `
             <div class="formElement input">
                 ${this.label ? `<label>${this.label}</label>` : ""}
@@ -130,15 +127,15 @@ export class FormElementInput extends FormElement {
         this.element.select();
     }
 }
-export class FormElementCheckbox extends FormElement {
-    public defaultValue: boolean;
-    public value: boolean;
-    public element: Element = null;
 
-    constructor({ id, label, defaultValue = true }: { id: string; label: string; defaultValue?: boolean }) {
+export class FormElementCheckbox extends FormElement {
+    public defaultValue = defaultValue;
+    public value = this.defaultValue;
+
+    public element = null;
+
+    constructor({ id, label, defaultValue = true }) {
         super(id, label);
-        this.defaultValue = defaultValue;
-        this.value = this.defaultValue;
     }
 
     getHtml() {
@@ -152,7 +149,7 @@ export class FormElementCheckbox extends FormElement {
         `;
     }
 
-    bindEvents(parent: Element, clickTrackers: ClickDetector[]) {
+    bindEvents(parent, clickTrackers) {
         this.element = this.getFormElement(parent);
         const detector = new ClickDetector(this.element, {
             consumeEvents: false,
@@ -171,22 +168,22 @@ export class FormElementCheckbox extends FormElement {
         this.element.classList.toggle("checked", this.value);
     }
 
-    // focus(parent) { }
+    focus(parent) {}
 }
 
 export class FormElementItemChooser extends FormElement {
-    public element: Element = null;
+    public items = items;
+    public element = null;
+
     public chosenItem: BaseItem = null;
-    public items: any[];
 
     constructor({ id, label, items = [] }) {
         super(id, label);
-
-        this.items = items;
     }
 
     getHtml() {
         let classes = [];
+
         return `
             <div class="formElement">
                 ${this.label ? `<label>${this.label}</label>` : ""}
@@ -207,8 +204,8 @@ export class FormElementItemChooser extends FormElement {
             const context = canvas.getContext("2d");
             item.drawFullSizeOnCanvas(context, 128);
             this.element.appendChild(canvas);
-            const detector = new ClickDetector(canvas, {});
 
+            const detector = new ClickDetector(canvas, {});
             clickTrackers.push(detector);
             detector.click.add(() => {
                 this.chosenItem = item;

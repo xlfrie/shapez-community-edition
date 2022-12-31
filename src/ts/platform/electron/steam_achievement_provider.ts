@@ -2,9 +2,12 @@
 import type { Application } from "../../application";
 import type { GameRoot } from "../../game/root";
 /* typehints:end */
+
 import { createLogger } from "../../core/logging";
 import { ACHIEVEMENTS, AchievementCollection, AchievementProviderInterface } from "../achievement_provider";
+
 const logger = createLogger("achievements/steam");
+
 const ACHIEVEMENT_IDS = {
     [ACHIEVEMENTS.belt500Tiles]: "belt_500_tiles",
     [ACHIEVEMENTS.blueprint100k]: "blueprint_100k",
@@ -52,73 +55,75 @@ const ACHIEVEMENT_IDS = {
     [ACHIEVEMENTS.upgradesTier5]: "upgrades_tier_5",
     [ACHIEVEMENTS.upgradesTier8]: "upgrades_tier_8",
 };
+
 export class SteamAchievementProvider extends AchievementProviderInterface {
     public initialized = false;
     public collection = new AchievementCollection(this.activate.bind(this));
 
-        constructor(app) {
+    constructor(app) {
         super(app);
+
         if (G_IS_DEV) {
             for (let key in ACHIEVEMENT_IDS) {
                 assert(this.collection.map.has(key), "Key not found in collection: " + key);
             }
         }
+
         logger.log("Collection created with", this.collection.map.size, "achievements");
     }
-    /** {} */
+
     hasAchievements(): boolean {
         return true;
     }
-    /**
-     * {}
-     */
+
     onLoad(root: GameRoot): Promise<void> {
         this.root = root;
+
         try {
             this.collection = new AchievementCollection(this.activate.bind(this));
             this.collection.initialize(root);
+
             logger.log("Initialized", this.collection.map.size, "relevant achievements");
             return Promise.resolve();
-        }
-        catch (err) {
+        } catch (err) {
             logger.error("Failed to initialize the collection");
             return Promise.reject(err);
         }
     }
-    /** {} */
+
     initialize(): Promise<void> {
         if (!G_IS_STANDALONE) {
             logger.warn("Steam unavailable. Achievements won't sync.");
             return Promise.resolve();
         }
+
         return ipcRenderer.invoke("steam:is-initialized").then(initialized => {
             this.initialized = initialized;
+
             if (!this.initialized) {
                 logger.warn("Steam failed to intialize. Achievements won't sync.");
-            }
-            else {
+            } else {
                 logger.log("Steam achievement provider initialized");
             }
         });
     }
-    /**
-     * {}
-     */
+
     activate(key: string): Promise<void> {
         let promise;
+
         if (!this.initialized) {
             promise = Promise.resolve();
-        }
-        else {
+        } else {
             promise = ipcRenderer.invoke("steam:activate-achievement", ACHIEVEMENT_IDS[key]);
         }
+
         return promise
             .then(() => {
-            logger.log("Achievement activated:", key);
-        })
+                logger.log("Achievement activated:", key);
+            })
             .catch(err => {
-            logger.error("Failed to activate achievement:", key, err);
-            throw err;
-        });
+                logger.error("Failed to activate achievement:", key, err);
+                throw err;
+            });
     }
 }

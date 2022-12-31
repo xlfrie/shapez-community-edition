@@ -3,9 +3,14 @@ import { makeDiv } from "../../../core/utils";
 import { BaseHUDPart } from "../base_hud_part";
 import { DynamicDomAttach } from "../dynamic_dom_attach";
 import { enumNotificationType } from "./notifications";
+
 export class HUDSandboxController extends BaseHUDPart {
     createElements(parent) {
-        this.element = makeDiv(parent, "ingame_HUD_SandboxController", [], `
+        this.element = makeDiv(
+            parent,
+            "ingame_HUD_SandboxController",
+            [],
+            `
             <label>Sandbox Options</label>
             <span class="sandboxHint">Use F6 to toggle this overlay</span>
 
@@ -45,21 +50,29 @@ export class HUDSandboxController extends BaseHUDPart {
                     <button class="styledButton maxOutAll">Max out all</button>
                 </div>
             </div>
-        `);
+        `
+        );
+
         const bind = (selector, handler) => this.trackClicks(this.element.querySelector(selector), handler);
+
         bind(".giveBlueprints", this.giveBlueprints);
         bind(".maxOutAll", this.maxOutAll);
         bind(".levelToggle .minus", () => this.modifyLevel(-1));
         bind(".levelToggle .plus", () => this.modifyLevel(1));
+
         bind(".upgradesBelt .minus", () => this.modifyUpgrade("belt", -1));
         bind(".upgradesBelt .plus", () => this.modifyUpgrade("belt", 1));
+
         bind(".upgradesExtraction .minus", () => this.modifyUpgrade("miner", -1));
         bind(".upgradesExtraction .plus", () => this.modifyUpgrade("miner", 1));
+
         bind(".upgradesProcessing .minus", () => this.modifyUpgrade("processors", -1));
         bind(".upgradesProcessing .plus", () => this.modifyUpgrade("processors", 1));
+
         bind(".upgradesPainting .minus", () => this.modifyUpgrade("painting", -1));
         bind(".upgradesPainting .plus", () => this.modifyUpgrade("painting", 1));
     }
+
     giveBlueprints() {
         const shape = this.root.gameMode.getBlueprintShapeKey();
         if (!this.root.hubGoals.storedShapes[shape]) {
@@ -67,16 +80,23 @@ export class HUDSandboxController extends BaseHUDPart {
         }
         this.root.hubGoals.storedShapes[shape] += 1e9;
     }
+
     maxOutAll() {
         this.modifyUpgrade("belt", 100);
         this.modifyUpgrade("miner", 100);
         this.modifyUpgrade("processors", 100);
         this.modifyUpgrade("painting", 100);
     }
+
     modifyUpgrade(id, amount) {
         const upgradeTiers = this.root.gameMode.getUpgrades()[id];
         const maxLevel = upgradeTiers.length;
-        this.root.hubGoals.upgradeLevels[id] = Math.max(0, Math.min(maxLevel, (this.root.hubGoals.upgradeLevels[id] || 0) + amount));
+
+        this.root.hubGoals.upgradeLevels[id] = Math.max(
+            0,
+            Math.min(maxLevel, (this.root.hubGoals.upgradeLevels[id] || 0) + amount)
+        );
+
         // Compute improvement
         let improvement = 1;
         for (let i = 0; i < this.root.hubGoals.upgradeLevels[id]; ++i) {
@@ -84,17 +104,24 @@ export class HUDSandboxController extends BaseHUDPart {
         }
         this.root.hubGoals.upgradeImprovements[id] = improvement;
         this.root.signals.upgradePurchased.dispatch(id);
-        this.root.hud.signals.notification.dispatch("Upgrade '" + id + "' is now at tier " + (this.root.hubGoals.upgradeLevels[id] + 1), enumNotificationType.upgrade);
+        this.root.hud.signals.notification.dispatch(
+            "Upgrade '" + id + "' is now at tier " + (this.root.hubGoals.upgradeLevels[id] + 1),
+            enumNotificationType.upgrade
+        );
     }
+
     modifyLevel(amount) {
         const hubGoals = this.root.hubGoals;
         hubGoals.level = Math.max(1, hubGoals.level + amount);
         hubGoals.computeNextGoal();
+
         // Clear all shapes of this level
         hubGoals.storedShapes[hubGoals.currentGoal.definition.getHash()] = 0;
+
         if (this.root.hud.parts.pinnedShapes) {
             this.root.hud.parts.pinnedShapes.rerenderFull();
         }
+
         // Compute gained rewards
         hubGoals.gainedRewards = {};
         const levels = this.root.gameMode.getLevelDefinitions();
@@ -104,8 +131,13 @@ export class HUDSandboxController extends BaseHUDPart {
                 hubGoals.gainedRewards[reward] = (hubGoals.gainedRewards[reward] || 0) + 1;
             }
         }
-        this.root.hud.signals.notification.dispatch("Changed level to " + hubGoals.level, enumNotificationType.upgrade);
+
+        this.root.hud.signals.notification.dispatch(
+            "Changed level to " + hubGoals.level,
+            enumNotificationType.upgrade
+        );
     }
+
     initialize() {
         // Allow toggling the controller overlay
         this.root.gameState.inputReciever.keydown.add(key => {
@@ -114,12 +146,15 @@ export class HUDSandboxController extends BaseHUDPart {
                 this.toggle();
             }
         });
+
         this.visible = false;
         this.domAttach = new DynamicDomAttach(this.root, this.element);
     }
+
     toggle() {
         this.visible = !this.visible;
     }
+
     update() {
         this.domAttach.update(this.visible);
     }

@@ -11,7 +11,9 @@ import { ItemEjectorComponent } from "../components/item_ejector";
 import { Entity } from "../entity";
 import { GameSystemWithFilter } from "../game_system_with_filter";
 import { MapChunkView } from "../map_chunk_view";
+
 const logger = createLogger("systems/ejector");
+
 export class ItemEjectorSystem extends GameSystemWithFilter {
     public staleAreaDetector = new StaleAreaDetector({
         root: this.root,
@@ -21,14 +23,18 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
 
     constructor(root) {
         super(root, [ItemEjectorComponent]);
-        this.staleAreaDetector.recomputeOnComponentsChanged([ItemEjectorComponent, ItemAcceptorComponent, BeltComponent], 1);
+
+        this.staleAreaDetector.recomputeOnComponentsChanged(
+            [ItemEjectorComponent, ItemAcceptorComponent, BeltComponent],
+            1
+        );
+
         this.root.signals.postLoadHook.add(this.recomputeCacheFull, this);
     }
-    /**
-     * Recomputes an area after it changed
-     */
+
+    /** Recomputes an area after it changed */
     recomputeArea(area: Rectangle) {
-                const seenUids: Set<number> = new Set();
+        const seenUids: Set<number> = new Set();
         for (let x = 0; x < area.w; ++x) {
             for (let y = 0; y < area.h; ++y) {
                 const tileX = area.x + x;
@@ -44,9 +50,8 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
             }
         }
     }
-    /**
-     * Recomputes the whole cache after the game has loaded
-     */
+
+    /** Recomputes the whole cache after the game has loaded */
     recomputeCacheFull() {
         logger.log("Full cache recompute in post load hook");
         for (let i = 0; i < this.allEntities.length; ++i) {
@@ -54,27 +59,38 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
             this.recomputeSingleEntityCache(entity);
         }
     }
-        recomputeSingleEntityCache(entity: Entity) {
+
+    recomputeSingleEntityCache(entity: Entity) {
         const ejectorComp = entity.components.ItemEjector;
         const staticComp = entity.components.StaticMapEntity;
+
         for (let slotIndex = 0; slotIndex < ejectorComp.slots.length; ++slotIndex) {
             const ejectorSlot = ejectorComp.slots[slotIndex];
+
             // Clear the old cache.
             ejectorSlot.cachedDestSlot = null;
             ejectorSlot.cachedTargetEntity = null;
             ejectorSlot.cachedBeltPath = null;
+
             // Figure out where and into which direction we eject items
             const ejectSlotWsTile = staticComp.localTileToWorld(ejectorSlot.pos);
             const ejectSlotWsDirection = staticComp.localDirectionToWorld(ejectorSlot.direction);
             const ejectSlotWsDirectionVector = enumDirectionToVector[ejectSlotWsDirection];
             const ejectSlotTargetWsTile = ejectSlotWsTile.add(ejectSlotWsDirectionVector);
+
             // Try to find the given acceptor component to take the item
             // Since there can be cross layer dependencies, check on all layers
-            const targetEntities = this.root.map.getLayersContentsMultipleXY(ejectSlotTargetWsTile.x, ejectSlotTargetWsTile.y);
+            const targetEntities = this.root.map.getLayersContentsMultipleXY(
+                ejectSlotTargetWsTile.x,
+                ejectSlotTargetWsTile.y
+            );
+
             for (let i = 0; i < targetEntities.length; ++i) {
                 const targetEntity = targetEntities[i];
+
                 const targetStaticComp = targetEntity.components.StaticMapEntity;
                 const targetBeltComp = targetEntity.components.Belt;
+
                 // Check for belts (special case)
                 if (targetBeltComp) {
                     const beltAcceptingDirection = targetStaticComp.localDirectionToWorld(enumDirection.top);
@@ -84,17 +100,24 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
                         break;
                     }
                 }
+
                 // Check for item acceptors
                 const targetAcceptorComp = targetEntity.components.ItemAcceptor;
                 if (!targetAcceptorComp) {
                     // Entity doesn't accept items
                     continue;
                 }
-                const matchingSlot = targetAcceptorComp.findMatchingSlot(targetStaticComp.worldToLocalTile(ejectSlotTargetWsTile), targetStaticComp.worldDirectionToLocal(ejectSlotWsDirection));
+
+                const matchingSlot = targetAcceptorComp.findMatchingSlot(
+                    targetStaticComp.worldToLocalTile(ejectSlotTargetWsTile),
+                    targetStaticComp.worldDirectionToLocal(ejectSlotWsDirection)
+                );
+
                 if (!matchingSlot) {
                     // No matching slot found
                     continue;
                 }
+
                 // A slot can always be connected to one other slot only
                 ejectorSlot.cachedTargetEntity = targetEntity;
                 ejectorSlot.cachedDestSlot = matchingSlot;
@@ -102,17 +125,22 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
             }
         }
     }
+
     update() {
         this.staleAreaDetector.update();
+
         // Precompute effective belt speed
         let progressGrowth = 2 * this.root.dynamicTickrate.deltaSeconds;
+
         if (G_IS_DEV && globalConfig.debug.instantBelts) {
             progressGrowth = 1;
         }
+
         // Go over all cache entries
         for (let i = 0; i < this.allEntities.length; ++i) {
             const sourceEntity = this.allEntities[i];
             const sourceEjectorComp = sourceEntity.components.ItemEjector;
+
             const slots = sourceEjectorComp.slots;
             for (let j = 0; j < slots.length; ++j) {
                 const sourceSlot = slots[j];
@@ -121,18 +149,25 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
                     // No item available to be ejected
                     continue;
                 }
+
                 // Advance items on the slot
-                sourceSlot.progress = Math.min(1, sourceSlot.progress +
-                    progressGrowth *
-                        this.root.hubGoals.getBeltBaseSpeed() *
-                        globalConfig.itemSpacingOnBelts);
+                sourceSlot.progress = Math.min(
+                    1,
+                    sourceSlot.progress +
+                        progressGrowth *
+                            this.root.hubGoals.getBeltBaseSpeed() *
+                            globalConfig.itemSpacingOnBelts
+                );
+
                 if (G_IS_DEV && globalConfig.debug.disableEjectorProcessing) {
                     sourceSlot.progress = 1.0;
                 }
+
                 // Check if we are still in the process of ejecting, can't proceed then
                 if (sourceSlot.progress < 1.0) {
                     continue;
                 }
+
                 // Check if we are ejecting to a belt path
                 const destPath = sourceSlot.cachedBeltPath;
                 if (destPath) {
@@ -140,10 +175,12 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
                     if (destPath.tryAcceptItem(item)) {
                         sourceSlot.item = null;
                     }
+
                     // Always stop here, since there can *either* be a belt path *or*
                     // a slot
                     continue;
                 }
+
                 // Check if the target acceptor can actually accept this item
                 const destEntity = sourceSlot.cachedTargetEntity;
                 const destSlot = sourceSlot.cachedDestSlot;
@@ -152,6 +189,7 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
                     if (!targetAcceptorComp.canAcceptItem(destSlot.index, item)) {
                         continue;
                     }
+
                     // Try to hand over the item
                     if (this.tryPassOverItem(item, destEntity, destSlot.index)) {
                         // Handover successful, clear slot
@@ -165,9 +203,11 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
             }
         }
     }
-        tryPassOverItem(item: BaseItem, receiver: Entity, slotIndex: number) {
+
+    tryPassOverItem(item: BaseItem, receiver: Entity, slotIndex: number) {
         // Try figuring out how what to do with the item
         // @TODO: Kinda hacky. How to solve this properly? Don't want to go through inheritance hell.
+
         const beltComp = receiver.components.Belt;
         if (beltComp) {
             const path = beltComp.assignedPath;
@@ -178,6 +218,7 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
             // Belt can have nothing else
             return false;
         }
+
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
         //
@@ -185,12 +226,14 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
         //
         ////////////////////////////////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////
+
         const itemProcessorComp = receiver.components.ItemProcessor;
         if (itemProcessorComp) {
             // Check for potential filters
             if (!this.root.systemMgr.systems.itemProcessor.checkRequirements(receiver, item, slotIndex)) {
                 return false;
             }
+
             // Its an item processor ..
             if (itemProcessorComp.tryTakeItem(item, slotIndex)) {
                 return true;
@@ -198,15 +241,23 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
             // Item processor can have nothing else
             return false;
         }
+
         const undergroundBeltComp = receiver.components.UndergroundBelt;
         if (undergroundBeltComp) {
             // Its an underground belt. yay.
-            if (undergroundBeltComp.tryAcceptExternalItem(item, this.root.hubGoals.getUndergroundBeltBaseSpeed())) {
+            if (
+                undergroundBeltComp.tryAcceptExternalItem(
+                    item,
+                    this.root.hubGoals.getUndergroundBeltBaseSpeed()
+                )
+            ) {
                 return true;
             }
+
             // Underground belt can have nothing else
             return false;
         }
+
         const storageComp = receiver.components.Storage;
         if (storageComp) {
             // It's a storage
@@ -214,9 +265,11 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
                 storageComp.takeItem(item);
                 return true;
             }
+
             // Storage can't have anything else
             return false;
         }
+
         const filterComp = receiver.components.Filter;
         if (filterComp) {
             // It's a filter! Unfortunately the filter has to know a lot about it's
@@ -225,32 +278,41 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
                 return true;
             }
         }
+
         return false;
     }
-        drawChunk(parameters: DrawParameters, chunk: MapChunkView) {
+
+    drawChunk(parameters: DrawParameters, chunk: MapChunkView) {
         if (this.root.app.settings.getAllSettings().simplifiedBelts) {
             // Disabled in potato mode
             return;
         }
+
         const contents = chunk.containedEntitiesByLayer.regular;
+
         for (let i = 0; i < contents.length; ++i) {
             const entity = contents[i];
             const ejectorComp = entity.components.ItemEjector;
             if (!ejectorComp) {
                 continue;
             }
+
             const staticComp = entity.components.StaticMapEntity;
+
             for (let i = 0; i < ejectorComp.slots.length; ++i) {
                 const slot = ejectorComp.slots[i];
                 const ejectedItem = slot.item;
+
                 if (!ejectedItem) {
                     // No item
                     continue;
                 }
+
                 if (!ejectorComp.renderFloatingItems && !slot.cachedTargetEntity) {
                     // Not connected to any building
                     continue;
                 }
+
                 // Limit the progress to the maximum available space on the next belt (also see #1000)
                 let progress = slot.progress;
                 const nextBeltPath = slot.cachedBeltPath;
@@ -259,64 +321,164 @@ export class ItemEjectorSystem extends GameSystemWithFilter {
                     If you imagine the track between the center of the building and the center of the first belt as
                     a range from 0 to 1:
 
-                           Building              Belt
-                    |         X         |         X         |
-                    |         0...................1         |
+ Building;
+                    Belt
+                        | X | X |
+                        | 0.;
+                    1 |
 
-                    And for example the first item on belt has a distance of 0.4 to the beginning of the belt:
+ And;
+                    for (example; the; first)
+                        item;
+                    on;
+                    belt;
+                    has;
+                    a;
+                    distance;
+                    of;
+                    0.4;
+                    to;
+                    the;
+                    beginning;
+                    of;
+                    the;
+                    belt:
 
-                           Building              Belt
-                    |         X         |         X         |
-                    |         0...................1         |
-                                               ^ item
+ Building;
+                    Belt
+                        | X | X |
+                        | 0.;
+                    1 |
+                            ^ item;
 
-                    Then the space towards this first item is always 0.5 (the distance from the center of the building to the beginning of the belt)
-                    PLUS the spacing to the item, so in this case 0.5 + 0.4 = 0.9:
+ Then;
+                    the;
+                    space;
+                    towards;
+                    this;
+                    first;
+                    item;
+                    is;
+                    always;
+                    0.5(the, distance, from, the, center, of, the, building, to, the, beginning, of, the, belt);
+                    PLUS;
+                    the;
+                    spacing;
+                    to;
+                    the;
+                    item, so in this;
+                    0.5 + 0.4;
+                    0.9;
 
-                    Building              Belt
-                    |         X         |         X         |
-                    |         0...................1         |
-                                               ^ item @ 0.9
+ Building;
+                    Belt
+                        | X | X |
+                        | 0.;
+                    1 |
+                            ^ item;
 
-                    Since items must not get clashed, we need to substract some spacing (lets assume it is 0.6, exact value see globalConfig.itemSpacingOnBelts),
-                    So we do 0.9 - globalConfig.itemSpacingOnBelts = 0.3
+ Since;
+                    items;
+                    must;
+                    not;
+                    get;
+                    clashed, we;
+                    need;
+                    to;
+                    substract;
+                    some;
+                    spacing(lets, assume, it, is, 0.6, exact, value, see, globalConfig.itemSpacingOnBelts),
+                        So;
+                    we;
+                    do
+                        0.9 - globalConfig.itemSpacingOnBelts;
+                    while
 
-                    Building              Belt
-                    |         X         |         X         |
-                    |         0...................1         |
-                                    ^           ^ item @ 0.9
-                                    ^ max progress = 0.3
+ ( = 0.3
 
-                    Because now our range actually only goes to the end of the building, and not towards the center of the building, we need to multiply
-                    all values by 2:
+ );
 
-                    Building              Belt
-                    |         X         |         X         |
-                    |         0.........1.........2         |
-                                    ^           ^ item @ 1.8
-                                    ^ max progress = 0.6
+ Building;
+                    Belt
+                        | X | X |
+                        | 0.;
+                    1 |
+                            ^  ^ item;
+                        ^ max;
+                    progress = 0.3;
 
-                    And that's it! If you summarize the calculations from above into a formula, you get the one below.
-                    */
-                    const maxProgress = (0.5 + nextBeltPath.spacingToFirstItem - globalConfig.itemSpacingOnBelts) * 2;
+ Because;
+                    now;
+                    our;
+                    range;
+                    actually;
+                    only;
+                    goes;
+                    to;
+                    the;
+                    end;
+                    of;
+                    the;
+                    building, and;
+                    not;
+                    towards;
+                    the;
+                    center;
+                    of;
+                    the;
+                    building, we;
+                    need;
+                    to;
+                    multiply;
+                    all;
+                    values;
+                    by;
+                    2;
+
+ Building;
+                    Belt
+                        | X | X |
+                        | 0.;
+                    .1;
+                    2 |
+                            ^  ^ item;
+                        ^ max;
+                    progress = 0.6;
+
+ And;
+                    that;
+                    's it! If you summarize the calculations from above into a formula, you get the one below.
+                        */ const maxProgress =
+                        (0.5 + nextBeltPath.spacingToFirstItem - globalConfig.itemSpacingOnBelts) * 2;
                     progress = Math.min(maxProgress, progress);
                 }
+
                 // Skip if the item would barely be visible
                 if (progress < 0.05) {
                     continue;
                 }
+
                 const realPosition = staticComp.localTileToWorld(slot.pos);
                 if (!chunk.tileSpaceRectangle.containsPoint(realPosition.x, realPosition.y)) {
                     // Not within this chunk
                     continue;
                 }
+
                 const realDirection = staticComp.localDirectionToWorld(slot.direction);
                 const realDirectionVector = enumDirectionToVector[realDirection];
+
                 const tileX = realPosition.x + 0.5 + realDirectionVector.x * 0.5 * progress;
                 const tileY = realPosition.y + 0.5 + realDirectionVector.y * 0.5 * progress;
+
                 const worldX = tileX * globalConfig.tileSize;
                 const worldY = tileY * globalConfig.tileSize;
-                ejectedItem.drawItemCenteredClipped(worldX, worldY, parameters, globalConfig.defaultItemDiameter);
+
+                ejectedItem.drawItemCenteredClipped(
+                    worldX,
+                    worldY,
+                    parameters,
+                    globalConfig.defaultItemDiameter
+                );
             }
         }
     }

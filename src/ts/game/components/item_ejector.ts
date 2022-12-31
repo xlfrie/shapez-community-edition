@@ -5,6 +5,7 @@ import { BeltPath } from "../belt_path";
 import { Component } from "../component";
 import { Entity } from "../entity";
 import { typeItemSingleton } from "../item_resolver";
+
 export type ItemEjectorSlot = {
     pos: Vector;
     direction: enumDirection;
@@ -20,21 +21,31 @@ export class ItemEjectorComponent extends Component {
     static getId() {
         return "ItemEjector";
     }
+
     static getSchema() {
         // The cachedDestSlot, cachedTargetEntity fields are not serialized.
         return {
-            slots: types.fixedSizeArray(types.structured({
-                item: types.nullable(typeItemSingleton),
-                progress: types.float,
-            })),
+            slots: types.fixedSizeArray(
+                types.structured({
+                    item: types.nullable(typeItemSingleton),
+                    progress: types.float,
+                })
+            ),
         };
     }
     public renderFloatingItems = renderFloatingItems;
 
-        constructor({ slots = [], renderFloatingItems = true }) {
+    /**
+     * @param param0.slots The slots to eject on
+     * @param param0.renderFloatingItems Whether to render items even if they are not connected
+     */
+
+    constructor({ slots = [], renderFloatingItems = true }) {
         super();
+
         this.setSlots(slots);
     }
+
     clear() {
         for (const slot of this.slots) {
             slot.item = null;
@@ -42,11 +53,15 @@ export class ItemEjectorComponent extends Component {
             slot.progress = 0;
         }
     }
-        setSlots(slots: Array<{
-        pos: Vector;
-        direction: enumDirection;
-    }>) {
-                this.slots = [];
+
+    /** @param slots The slots to eject on */
+    setSlots(
+        slots: Array<{
+            pos: Vector;
+            direction: enumDirection;
+        }>
+    ) {
+        this.slots = [];
         for (let i = 0; i < slots.length; ++i) {
             const slot = slots[i];
             this.slots.push({
@@ -60,17 +75,14 @@ export class ItemEjectorComponent extends Component {
             });
         }
     }
-    /**
-     * Returns where this slot ejects to
-     * {}
-     */
+
+    /** Returns where this slot ejects to */
     getSlotTargetLocalTile(slot: ItemEjectorSlot): Vector {
         const directionVector = enumDirectionToVector[slot.direction];
         return slot.pos.add(directionVector);
     }
-    /**
-     * Returns whether any slot ejects to the given local tile
-     */
+
+    /** Returns whether any slot ejects to the given local tile */
     anySlotEjectsToLocalTile(tile: Vector) {
         for (let i = 0; i < this.slots.length; ++i) {
             if (this.getSlotTargetLocalTile(this.slots[i]).equals(tile)) {
@@ -79,18 +91,14 @@ export class ItemEjectorComponent extends Component {
         }
         return false;
     }
-    /**
-     * Returns if we can eject on a given slot
-     * {}
-     */
+
+    /** Returns if we can eject on a given slot */
     canEjectOnSlot(slotIndex: number): boolean {
         assert(slotIndex >= 0 && slotIndex < this.slots.length, "Invalid ejector slot: " + slotIndex);
         return !this.slots[slotIndex].item;
     }
-    /**
-     * Returns the first free slot on this ejector or null if there is none
-     * {}
-     */
+
+    /** Returns the first free slot on this ejector or null if there is none */
     getFirstFreeSlot(): ?number {
         for (let i = 0; i < this.slots.length; ++i) {
             if (this.canEjectOnSlot(i)) {
@@ -99,10 +107,8 @@ export class ItemEjectorComponent extends Component {
         }
         return null;
     }
-    /**
-     * Tries to eject a given item
-     * {}
-     */
+
+    /** Tries to eject a given item */
     tryEject(slotIndex: number, item: BaseItem): boolean {
         if (!this.canEjectOnSlot(slotIndex)) {
             return false;
@@ -112,10 +118,8 @@ export class ItemEjectorComponent extends Component {
         this.slots[slotIndex].progress = 0;
         return true;
     }
-    /**
-     * Clears the given slot and returns the item it had
-     * {}
-     */
+
+    /** Clears the given slot and returns the item it had */
     takeSlotItem(slotIndex: number): BaseItem | null {
         const slot = this.slots[slotIndex];
         const item = slot.item;

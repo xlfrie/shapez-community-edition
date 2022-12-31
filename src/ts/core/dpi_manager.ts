@@ -1,16 +1,12 @@
-import { globalConfig } from "./config";
+import { globalConfig } from "../core/config";
 import { round1Digit, round2Digits } from "./utils";
 
-/**
- * Returns the current dpi
- */
+/** Returns the current dpi */
 export function getDeviceDPI(): number {
     return window.devicePixelRatio || 1;
 }
 
-/**
- * @param dpi Smoothed dpi
- */
+/** @returns Smoothed dpi */
 export function smoothenDpi(dpi: number): number {
     if (dpi < 0.05) {
         return 0.05;
@@ -28,9 +24,7 @@ export function smoothenDpi(dpi: number): number {
 // Initial dpi
 // setDPIMultiplicator(1);
 
-/**
- * Prepares a context for high dpi rendering
- */
+/** Prepares a context for hihg dpi rendering */
 export function prepareHighDPIContext(context: CanvasRenderingContext2D, smooth = true) {
     const dpi = getDeviceDPI();
     context.scale(dpi, dpi);
@@ -47,9 +41,7 @@ export function prepareHighDPIContext(context: CanvasRenderingContext2D, smooth 
     }
 }
 
-/**
- * Resizes a high dpi canvas
- */
+/** Resizes a high dpi canvas */
 export function resizeHighDPICanvas(canvas: HTMLCanvasElement, w: number, h: number, smooth = true) {
     const dpi = getDeviceDPI();
 
@@ -69,9 +61,7 @@ export function resizeHighDPICanvas(canvas: HTMLCanvasElement, w: number, h: num
     }
 }
 
-/**
- * Resizes a canvas
- */
+/** Resizes a canvas */
 export function resizeCanvas(canvas: HTMLCanvasElement, w: number, h: number, setStyle = true) {
     const actualW = Math.ceil(w);
     const actualH = Math.ceil(h);
@@ -86,9 +76,7 @@ export function resizeCanvas(canvas: HTMLCanvasElement, w: number, h: number, se
     }
 }
 
-/**
- * Resizes a canvas and makes sure its cleared
- */
+/** Resizes a canvas and makes sure its cleared */
 export function resizeCanvasAndClear(
     canvas: HTMLCanvasElement,
     context: CanvasRenderingContext2D,

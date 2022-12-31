@@ -1,11 +1,9 @@
 export class ExplainedResult {
-    public result: boolean;
-    public reason: string;
+    public result: boolean = result;
 
-    constructor(result = true, reason: string = null, additionalProps = {}) {
-        this.result = result;
-        this.reason = reason;
+    public reason: string = reason;
 
+    constructor(result = true, reason = null, additionalProps = {}) {
         // Copy additional props
         for (const key in additionalProps) {
             this[key] = additionalProps[key];
@@ -24,13 +22,13 @@ export class ExplainedResult {
         return new ExplainedResult(true);
     }
 
-    static bad(reason?: string, additionalProps?: object) {
+    static bad(reason, additionalProps) {
         return new ExplainedResult(false, reason, additionalProps);
     }
 
-    static requireAll(...args: (() => ExplainedResult)[]) {
+    static requireAll(...args) {
         for (let i = 0; i < args.length; ++i) {
-            const subResult = args[i].call(undefined);
+            const subResult = args[i].call();
             if (!subResult.isGood()) {
                 return subResult;
             }

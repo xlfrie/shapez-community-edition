@@ -8,13 +8,17 @@ import { Entity } from "../entity";
 import { defaultBuildingVariant, MetaBuilding } from "../meta_building";
 import { GameRoot } from "../root";
 import { enumHubGoalRewards } from "../tutorial_goals";
-/** @enum {string} */
-export const enumCutterVariants = { quad: "quad" };
-export class MetaCutterBuilding extends MetaBuilding {
 
+/**
+ @enum 
+*/
+export const enumCutterVariants = { quad: "quad" };
+
+export class MetaCutterBuilding extends MetaBuilding {
     constructor() {
         super("cutter");
     }
+
     static getAllVariantCombinations() {
         return [
             {
@@ -27,9 +31,11 @@ export class MetaCutterBuilding extends MetaBuilding {
             },
         ];
     }
+
     getSilhouetteColor() {
         return "#7dcda2";
     }
+
     getDimensions(variant) {
         switch (variant) {
             case defaultBuildingVariant:
@@ -40,50 +46,53 @@ export class MetaCutterBuilding extends MetaBuilding {
                 assertAlways(false, "Unknown cutter variant: " + variant);
         }
     }
-    /**
-     * {}
-     */
-    getAdditionalStatistics(root: GameRoot, variant: string): Array<[
-        string,
-        string
-    ]> {
+
+    getAdditionalStatistics(root: GameRoot, variant: string): Array<[string, string]> {
         if (root.gameMode.throughputDoesNotMatter()) {
             return [];
         }
-        const speed = root.hubGoals.getProcessorBaseSpeed(variant === enumCutterVariants.quad
-            ? enumItemProcessorTypes.cutterQuad
-            : enumItemProcessorTypes.cutter);
+        const speed = root.hubGoals.getProcessorBaseSpeed(
+            variant === enumCutterVariants.quad
+                ? enumItemProcessorTypes.cutterQuad
+                : enumItemProcessorTypes.cutter
+        );
         return [[T.ingame.buildingPlacement.infoTexts.speed, formatItemsPerSecond(speed)]];
     }
-        getAvailableVariants(root: GameRoot) {
+
+    getAvailableVariants(root: GameRoot) {
         if (root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_cutter_quad)) {
             return [defaultBuildingVariant, enumCutterVariants.quad];
         }
         return super.getAvailableVariants(root);
     }
-        getIsUnlocked(root: GameRoot) {
+
+    getIsUnlocked(root: GameRoot) {
         return root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_cutter_and_trash);
     }
-    /**
-     * Creates the entity at the given location
-     */
+
+    /** Creates the entity at the given location */
     setupEntityComponents(entity: Entity) {
-        entity.addComponent(new ItemProcessorComponent({
-            inputsPerCharge: 1,
-            processorType: enumItemProcessorTypes.cutter,
-        }));
+        entity.addComponent(
+            new ItemProcessorComponent({
+                inputsPerCharge: 1,
+                processorType: enumItemProcessorTypes.cutter,
+            })
+        );
         entity.addComponent(new ItemEjectorComponent({}));
-        entity.addComponent(new ItemAcceptorComponent({
-            slots: [
-                {
-                    pos: new Vector(0, 0),
-                    direction: enumDirection.bottom,
-                    filter: "shape",
-                },
-            ],
-        }));
+        entity.addComponent(
+            new ItemAcceptorComponent({
+                slots: [
+                    {
+                        pos: new Vector(0, 0),
+                        direction: enumDirection.bottom,
+                        filter: "shape",
+                    },
+                ],
+            })
+        );
     }
-        updateVariants(entity: Entity, rotationVariant: number, variant: string) {
+
+    updateVariants(entity: Entity, rotationVariant: number, variant: string) {
         switch (variant) {
             case defaultBuildingVariant: {
                 entity.components.ItemEjector.setSlots([
@@ -103,6 +112,7 @@ export class MetaCutterBuilding extends MetaBuilding {
                 entity.components.ItemProcessor.type = enumItemProcessorTypes.cutterQuad;
                 break;
             }
+
             default:
                 assertAlways(false, "Unknown painter variant: " + variant);
         }

@@ -6,73 +6,48 @@ export const ORIGINAL_SPRITE_SCALE = "0.75";
 export const FULL_CLIP_RECT = new Rectangle(0, 0, 1, 1);
 
 const EXTRUDE = 0.1;
-export abstract class BaseSprite {
+
+export class BaseSprite {
     /**
      * Returns the raw handle
+     * @abstract
      */
-    abstract getRawTexture(): HTMLImageElement | HTMLCanvasElement;
+    getRawTexture(): HTMLImageElement | HTMLCanvasElement {
+        abstract;
+        return null;
+    }
 
-    /**
-     * Draws the sprite
-     */
-    abstract draw(context: CanvasRenderingContext2D, x: number, y: number, w: number, h: number);
+    /** Draws the sprite */
+    draw(context: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) {
+        // eslint-disable-line no-unused-vars
+        abstract;
+    }
 }
 
-/**
- * Position of a sprite within an atlas
- */
+/** Position of a sprite within an atlas */
 export class SpriteAtlasLink {
-    public packedX: number;
-    public packedY: number;
-    public packedW: number;
-    public packedH: number;
-    public packOffsetX: number;
-    public packOffsetY: number;
-    public atlas: HTMLImageElement | HTMLCanvasElement;
-    public w: number;
-    public h: number;
+    public packedX = packedX;
+    public packedY = packedY;
+    public packedW = packedW;
+    public packedH = packedH;
+    public packOffsetX = packOffsetX;
+    public packOffsetY = packOffsetY;
+    public atlas = atlas;
+    public w = w;
+    public h = h;
 
-    constructor({
-        w,
-        h,
-        packedX,
-        packedY,
-        packOffsetX,
-        packOffsetY,
-        packedW,
-        packedH,
-        atlas,
-    }: {
-        packedX: number;
-        packedY: number;
-        packedW: number;
-        packedH: number;
-        packOffsetX: number;
-        packOffsetY: number;
-        atlas: HTMLImageElement | HTMLCanvasElement;
-        w: number;
-        h: number;
-    }) {
-        this.packedX = packedX;
-        this.packedY = packedY;
-        this.packedW = packedW;
-        this.packedH = packedH;
-        this.packOffsetX = packOffsetX;
-        this.packOffsetY = packOffsetY;
-        this.atlas = atlas;
-        this.w = w;
-        this.h = h;
-    }
+    constructor({ w, h, packedX, packedY, packOffsetX, packOffsetY, packedW, packedH, atlas }) {}
 }
 
 export class AtlasSprite extends BaseSprite {
     public linksByResolution: {
         [idx: string]: SpriteAtlasLink;
     } = {};
+    public spriteName = spriteName;
 
     public frozen = false;
 
-    constructor(public spriteName: string = "sprite") {
+    constructor(spriteName = "sprite") {
         super();
     }
 
@@ -82,9 +57,9 @@ export class AtlasSprite extends BaseSprite {
 
     /**
      * Draws the sprite onto a regular context using no contexts
-     * @see {BaseSprite.draw}
+     * @see
      */
-    draw(context: CanvasRenderingContext2D, x: number, y: number, w: number, h: number) {
+    draw(context, x, y, w, h) {
         if (G_IS_DEV) {
             assert(context instanceof CanvasRenderingContext2D, "Not a valid context");
         }
@@ -111,10 +86,12 @@ export class AtlasSprite extends BaseSprite {
 
         context.drawImage(
             link.atlas,
+
             link.packedX,
             link.packedY,
             link.packedW,
             link.packedH,
+
             x + link.packOffsetX * scaleW,
             y + link.packOffsetY * scaleH,
             link.packedW * scaleW,
@@ -138,6 +115,7 @@ export class AtlasSprite extends BaseSprite {
 
     /**
      * Draws the sprite
+     * @param clipping Whether to perform culling
      */
     drawCached(
         parameters: DrawParameters,
@@ -207,12 +185,15 @@ export class AtlasSprite extends BaseSprite {
 
         parameters.context.drawImage(
             link.atlas,
+
             // atlas src pos
             srcX,
             srcY,
+
             // atlas src size
             srcW,
             srcH,
+
             // dest pos and size
             destX - EXTRUDE,
             destY - EXTRUDE,
@@ -223,6 +204,7 @@ export class AtlasSprite extends BaseSprite {
 
     /**
      * Draws a subset of the sprite. Does NO culling
+     * @param clipRect The rectangle in local space (0 ... 1) to draw of the image
      */
     drawCachedWithClipRect(
         parameters: DrawParameters,
@@ -269,12 +251,15 @@ export class AtlasSprite extends BaseSprite {
 
         parameters.context.drawImage(
             link.atlas,
+
             // atlas src pos
             srcX,
             srcY,
+
             // atlas src siize
             srcW,
             srcH,
+
             // dest pos and size
             destX - EXTRUDE,
             destY - EXTRUDE,
@@ -283,19 +268,16 @@ export class AtlasSprite extends BaseSprite {
         );
     }
 
-    /**
-     * Renders into an html element
-     */
+    /** Renders into an html element */
     renderToHTMLElement(element: HTMLElement, w: number = 1, h: number = 1) {
         element.style.position = "relative";
         element.innerHTML = this.getAsHTML(w, h);
     }
 
-    /**
-     * Returns the html to render as icon
-     */
+    /** Returns the html to render as icon */
     getAsHTML(w: number, h: number) {
         const link = this.linksByResolution["0.5"];
+
         if (!link) {
             throw new Error(
                 "getAsHTML: Link for " +
@@ -356,8 +338,13 @@ export class AtlasSprite extends BaseSprite {
         `;
     }
 }
+
 export class RegularSprite extends BaseSprite {
-    constructor(public sprite: HTMLCanvasElement | HTMLImageElement, public w: number, public h: number) {
+    public w = w;
+    public h = h;
+    public sprite = sprite;
+
+    constructor(sprite, w, h) {
         super();
     }
 

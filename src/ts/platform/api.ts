@@ -5,13 +5,17 @@ import { createLogger } from "../core/logging";
 import { compressX64 } from "../core/lzstring";
 import { timeoutPromise } from "../core/utils";
 import { T } from "../translations";
+
 const logger = createLogger("puzzle-api");
+
 export class ClientAPI {
     public app = app;
+
+    /** The current users session token */
     public token: string | null = null;
 
-        constructor(app) {
-    }
+    constructor(app) {}
+
     getEndpoint() {
         if (G_IS_DEV) {
             return "http://localhost:15001";
@@ -21,92 +25,109 @@ export class ClientAPI {
         }
         return "https://api.shapez.io";
     }
+
     isLoggedIn() {
         return Boolean(this.token);
     }
-        _request(endpoint: string, options: {
-        method: "GET" | "POST"=;
-        body: any=;
-    }) {
+
+    _request(
+        endpoint: string,
+        options: {
+            method?: "GET" | "POST";
+            body?: any;
+        } /*--REMOVE_PREV--*/
+    ) {
         const headers = {
             "x-api-key": "d5c54aaa491f200709afff082c153ef2",
             "Content-Type": "application/json",
         };
+
         if (this.token) {
             headers["x-token"] = this.token;
         }
-        return timeoutPromise(fetch(this.getEndpoint() + endpoint, {
-            cache: "no-cache",
-            mode: "cors",
-            headers,
-            method: options.method || "GET",
-            body: options.body ? JSON.stringify(options.body) : undefined,
-        }), 15000)
+
+        return timeoutPromise(
+            fetch(this.getEndpoint() + endpoint, {
+                cache: "no-cache",
+                mode: "cors",
+                headers,
+                method: options.method || "GET",
+                body: options.body ? JSON.stringify(options.body) : undefined,
+            }),
+            15000
+        )
             .then(res => {
-            if (res.status !== 200) {
-                throw "bad-status: " + res.status + " / " + res.statusText;
-            }
-            return res;
-        })
+                if (res.status !== 200) {
+                    throw "bad-status: " + res.status + " / " + res.statusText;
+                }
+                return res;
+            })
             .then(res => res.json())
             .then(data => {
-            if (data && data.error) {
-                logger.warn("Got error from api:", data);
-                throw T.backendErrors[data.error] || data.error;
-            }
-            return data;
-        })
+                if (data && data.error) {
+                    logger.warn("Got error from api:", data);
+                    throw T.backendErrors[data.error] || data.error;
+                }
+                return data;
+            })
             .catch(err => {
-            logger.warn("Failure:", endpoint, ":", err);
-            throw err;
-        });
+                logger.warn("Failure:", endpoint, ":", err);
+                throw err;
+            });
     }
+
     tryLogin() {
         return this.apiTryLogin()
             .then(({ token }) => {
-            this.token = token;
-            return true;
-        })
+                this.token = token;
+                return true;
+            })
             .catch(err => {
-            logger.warn("Failed to login:", err);
-            return false;
-        });
+                logger.warn("Failed to login:", err);
+                return false;
+            });
     }
-    /**
-     * {}
-     */
+
     apiTryLogin(): Promise<{
         token: string;
     }> {
         if (!G_IS_STANDALONE) {
             let token = window.localStorage.getItem("steam_sso_auth_token");
             if (!token && G_IS_DEV) {
-                token = window.prompt("Please enter the auth token for the puzzle DLC (If you have none, you can't login):");
+                token = window.prompt(
+                    "Please enter the auth token for the puzzle DLC (If you have none, you can't login):"
+                );
                 window.localStorage.setItem("dev_api_auth_token", token);
             }
             return Promise.resolve({ token });
         }
-        return timeoutPromise(ipcRenderer.invoke("steam:get-ticket"), 15000).then(ticket => {
-            logger.log("Got auth ticket:", ticket);
-            return this._request("/v1/public/login", {
-                method: "POST",
-                body: {
-                    token: ticket,
-                },
-            });
-        }, err => {
-            logger.error("Failed to get auth ticket from steam: ", err);
-            throw err;
-        });
+
+        return timeoutPromise(ipcRenderer.invoke("steam:get-ticket"), 15000).then(
+            ticket => {
+                logger.log("Got auth ticket:", ticket);
+                return this._request("/v1/public/login", {
+                    method: "POST",
+                    body: {
+                        token: ticket,
+                    },
+                });
+            },
+            err => {
+                logger.error("Failed to get auth ticket from steam: ", err);
+                throw err;
+            }
+        );
     }
-    
-    apiListPuzzles(category: "new" | "top-rated" | "mine"): Promise<import("../savegame/savegame_typedefs").PuzzleMetadata[]> {
+
+    apiListPuzzles(
+        category: "new" | "top-rated" | "mine"
+    ): Promise<import("../savegame/savegame_typedefs").PuzzleMetadata[]> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
         }
         return this._request("/v1/puzzles/list/" + category, {});
     }
-    
+
     apiSearchPuzzles(searchOptions: {
         searchTerm: string;
         difficulty: string;
@@ -120,14 +141,14 @@ export class ClientAPI {
             body: searchOptions,
         });
     }
-    
+
     apiDownloadPuzzle(puzzleId: number): Promise<import("../savegame/savegame_typedefs").PuzzleFullData> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
         }
         return this._request("/v1/puzzles/download/" + puzzleId, {});
     }
-    
+
     apiDeletePuzzle(puzzleId: number): Promise<import("../savegame/savegame_typedefs").PuzzleFullData> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
@@ -137,16 +158,16 @@ export class ClientAPI {
             body: {},
         });
     }
-    
-    apiDownloadPuzzleByKey(shortKey: string): Promise<import("../savegame/savegame_typedefs").PuzzleFullData> {
+
+    apiDownloadPuzzleByKey(
+        shortKey: string
+    ): Promise<import("../savegame/savegame_typedefs").PuzzleFullData> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
         }
         return this._request("/v1/puzzles/download/" + shortKey, {});
     }
-    /**
-     * {}
-     */
+
     apiReportPuzzle(puzzleId: number, reason): Promise<void> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
@@ -156,13 +177,14 @@ export class ClientAPI {
             body: { reason },
         });
     }
-    /**
-     * {}
-     */
-    apiCompletePuzzle(puzzleId: number, payload: {
-        time: number;
-        liked: boolean;
-    }): Promise<{
+
+    apiCompletePuzzle(
+        puzzleId: number,
+        payload: {
+            time: number;
+            liked: boolean;
+        }
+    ): Promise<{
         success: true;
     }> {
         if (!this.isLoggedIn()) {
@@ -173,7 +195,7 @@ export class ClientAPI {
             body: payload,
         });
     }
-    
+
     apiSubmitPuzzle(payload: {
         title: string;
         shortKey: string;

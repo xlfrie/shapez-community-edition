@@ -4,9 +4,7 @@ import { createLogger } from "./logging";
 
 const logger = createLogger("buffer_utils");
 
-/**
- * Enables images smoothing on a context
- */
+/** Enables images smoothing on a context */
 export function enableImageSmoothing(context: CanvasRenderingContext2D) {
     context.imageSmoothingEnabled = true;
     context.webkitImageSmoothingEnabled = true;
@@ -15,9 +13,7 @@ export function enableImageSmoothing(context: CanvasRenderingContext2D) {
     context.imageSmoothingQuality = globalConfig.smoothing.quality;
 }
 
-/**
- * Disables image smoothing on a context
- */
+/** Disables image smoothing on a context */
 export function disableImageSmoothing(context: CanvasRenderingContext2D) {
     context.imageSmoothingEnabled = false;
     context.webkitImageSmoothingEnabled = false;
@@ -30,14 +26,10 @@ export type CanvasCacheEntry = {
 
 const registeredCanvas: Array<CanvasCacheEntry> = [];
 
-/**
- * Buckets for each width * height combination
- */
+/** Buckets for each width * height combination */
 const freeCanvasBuckets: Map<number, Array<CanvasCacheEntry>> = new Map();
 
-/**
- * Track statistics
- */
+/** Track statistics */
 const stats = {
     vramUsage: 0,
     backlogVramUsage: 0,
@@ -53,9 +45,7 @@ export function getBufferVramUsageBytes(canvas: HTMLCanvasElement) {
     return canvas.width * canvas.height * 4;
 }
 
-/**
- * Returns stats on the allocated buffers
- */
+/** Returns stats on the allocated buffers */
 export function getBufferStats() {
     let numBuffersFree = 0;
     freeCanvasBuckets.forEach(bucket => {
@@ -69,9 +59,7 @@ export function getBufferStats() {
     };
 }
 
-/**
- * Clears the backlog buffers if they grew too much
- */
+/** Clears the backlog buffers if they grew too much */
 export function clearBufferBacklog() {
     freeCanvasBuckets.forEach(bucket => {
         while (bucket.length > 500) {
@@ -84,12 +72,10 @@ export function clearBufferBacklog() {
     });
 }
 
-/**
- * Creates a new offscreen buffer
- */
+/** Creates a new offscreen buffer */
 export function makeOffscreenBuffer(
-    w: number,
-    h: number,
+    w: Number,
+    h: Number,
     { smooth = true, reusable = true, label = "buffer" }
 ): [HTMLCanvasElement, CanvasRenderingContext2D] {
     assert(w > 0 && h > 0, "W or H < 0");
@@ -167,6 +153,7 @@ export function makeOffscreenBuffer(
 
     // @ts-ignore
     canvas.label = label;
+
     if (smooth) {
         enableImageSmoothing(context);
     } else {
@@ -180,10 +167,8 @@ export function makeOffscreenBuffer(
     return [canvas, context];
 }
 
-/**
- * Frees a canvas
- */
-export function registerCanvas(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D) {
+/** Frees a canvas */
+export function registerCanvas(canvas: HTMLCanvasElement, context) {
     registeredCanvas.push({ canvas, context });
 
     stats.bufferCount += 1;
@@ -191,9 +176,7 @@ export function registerCanvas(canvas: HTMLCanvasElement, context: CanvasRenderi
     stats.vramUsage += bytesUsed;
 }
 
-/**
- * Frees a canvas
- */
+/** Frees a canvas */
 export function freeCanvas(canvas: HTMLCanvasElement) {
     assert(canvas, "Canvas is empty");
 

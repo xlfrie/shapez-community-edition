@@ -1,18 +1,24 @@
 /* typehints:start */
 import type { PuzzlePlayGameMode } from "../../modes/puzzle_play";
 /* typehints:end */
+
 import { formatBigNumberFull, formatSeconds, makeDiv } from "../../../core/utils";
 import { T } from "../../../translations";
 import { BaseHUDPart } from "../base_hud_part";
+
 const copy = require("clipboard-copy");
+
 export class HUDPuzzlePlayMetadata extends BaseHUDPart {
     createElements(parent) {
         this.titleElement = makeDiv(parent, "ingame_HUD_PuzzlePlayTitle");
         this.titleElement.innerText = "PUZZLE";
-        const mode = this.root.gameMode as PuzzlePlayGameMode);
+
+        const mode = this.root.gameMode as PuzzlePlayGameMode;
         const puzzle = mode.puzzle;
+
         this.puzzleNameElement = makeDiv(this.titleElement, null, ["name"]);
         this.puzzleNameElement.innerText = puzzle.meta.title;
+
         this.element = makeDiv(parent, "ingame_HUD_PuzzlePlayMetadata");
         this.element.innerHTML = `
 
@@ -32,9 +38,11 @@ export class HUDPuzzlePlayMetadata extends BaseHUDPart {
             </div>
             <div class="info rating">
                 <label>${T.ingame.puzzleMetadata.completionRate}</label>
-                <span>${puzzle.meta.downloads > 0
-            ? ((puzzle.meta.completions / puzzle.meta.downloads) * 100.0).toFixed(1) + "%"
-            : "-"}</span>
+                <span>${
+                    puzzle.meta.downloads > 0
+                        ? ((puzzle.meta.completions / puzzle.meta.downloads) * 100.0).toFixed(1) + "%"
+                        : "-"
+                }</span>
             </div>
 
             <div class="buttons">
@@ -42,18 +50,22 @@ export class HUDPuzzlePlayMetadata extends BaseHUDPart {
                 <button class="styledButton report">${T.ingame.puzzleEditorSettings.report}</button>
             </div>
             `;
+
         this.trackClicks(this.element.querySelector("button.share"), this.share);
         this.trackClicks(this.element.querySelector("button.report"), this.report);
-        this.element.querySelector(".author span") as HTMLElement).innerText =
-            puzzle.meta.author;
+
+        (this.element.querySelector(".author span") as HTMLElement).innerText = puzzle.meta.author;
     }
-    initialize() { }
+
+    initialize() {}
+
     share() {
-        const mode = this.root.gameMode as PuzzlePlayGameMode);
+        const mode = this.root.gameMode as PuzzlePlayGameMode;
         mode.sharePuzzle();
     }
+
     report() {
-        const mode = this.root.gameMode as PuzzlePlayGameMode);
+        const mode = this.root.gameMode as PuzzlePlayGameMode;
         mode.reportPuzzle();
     }
 }

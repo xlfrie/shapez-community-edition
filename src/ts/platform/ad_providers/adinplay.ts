@@ -1,37 +1,55 @@
 /* typehints:start */
 import type { Application } from "../../application";
 /* typehints:end */
+
 import { AdProviderInterface } from "../ad_provider";
 import { createLogger } from "../../core/logging";
 import { ClickDetector } from "../../core/click_detector";
 import { clamp } from "../../core/utils";
 import { T } from "../../translations";
+
 const logger = createLogger("adprovider/adinplay");
+
 const minimumTimeBetweenVideoAdsMs = G_IS_DEV ? 1 : 15 * 60 * 1000;
+
 export class AdinplayAdProvider extends AdProviderInterface {
     public getOnSteamClickDetector: ClickDetector = null;
+
     public adContainerMainElement: Element = null;
+
+    /** The resolve function to finish the current video ad. Null if none is currently running */
     public videoAdResolveFunction: Function = null;
+
+    /** The current timer which will timeout the resolve */
     public videoAdResolveTimer = null;
+
+    /** When we showed the last video ad */
     public lastVideoAdShowTime = -1e20;
 
-        constructor(app) {
+    constructor(app) {
         super(app);
     }
+
     getHasAds() {
         return true;
     }
+
     getCanShowVideoAd() {
-        return (this.getHasAds() &&
+        return (
+            this.getHasAds() &&
             !this.videoAdResolveFunction &&
-            performance.now() - this.lastVideoAdShowTime > minimumTimeBetweenVideoAdsMs);
+            performance.now() - this.lastVideoAdShowTime > minimumTimeBetweenVideoAdsMs
+        );
     }
+
     initialize() {
         // No point to initialize everything if ads are not supported
         if (!this.getHasAds()) {
             return Promise.resolve();
         }
+
         logger.log("🎬 Initializing Adinplay");
+
         // Add the preroll element
         this.adContainerMainElement = document.createElement("div");
         this.adContainerMainElement.id = "adinplayVideoContainer";
@@ -42,6 +60,7 @@ export class AdinplayAdProvider extends AdProviderInterface {
                 </div>
             </div>
         `;
+
         // Add the setup script
         const setupScript = document.createElement("script");
         setupScript.textContent = `
@@ -51,21 +70,30 @@ export class AdinplayAdProvider extends AdProviderInterface {
             aiptag.cmd.player = aiptag.cmd.player || [];
         `;
         document.head.appendChild(setupScript);
+
         window.aiptag.gdprShowConsentTool = 0;
         window.aiptag.gdprAlternativeConsentTool = 1;
         window.aiptag.gdprConsent = 1;
+
         const scale = this.app.getEffectiveUiScale();
         const targetW = 960;
         const targetH = 540;
+
         const maxScaleX = (window.innerWidth - 100 * scale) / targetW;
         const maxScaleY = (window.innerHeight - 150 * scale) / targetH;
+
         const scaleFactor = clamp(Math.min(maxScaleX, maxScaleY), 0.25, 2);
+
         const w = Math.round(targetW * scaleFactor);
         const h = Math.round(targetH * scaleFactor);
+
         // Add the player
         const videoElement = this.adContainerMainElement.querySelector(".videoInner");
-                const adInnerElement: HTMLElement = this.adContainerMainElement.querySelector(".adInner");
+
+        const adInnerElement: HTMLElement = this.adContainerMainElement.querySelector(".adInner");
+
         adInnerElement.style.maxWidth = w + "px";
+
         const self = this;
         window.aiptag.cmd.player.push(function () {
             window.adPlayer = new window.aipPlayer({
@@ -89,13 +117,16 @@ export class AdinplayAdProvider extends AdProviderInterface {
                 },
             });
         });
+
         // Load the ads
         const aipScript = document.createElement("script");
         aipScript.src = "https://api.adinplay.com/libs/aiptag/pub/YRG/shapez.io/tag.min.js";
         aipScript.setAttribute("async", "");
         document.head.appendChild(aipScript);
+
         return Promise.resolve();
     }
+
     showVideoAd() {
         assert(this.getHasAds(), "Called showVideoAd but ads are not supported!");
         assert(!this.videoAdResolveFunction, "Video ad still running, can not show again!");
@@ -103,29 +134,32 @@ export class AdinplayAdProvider extends AdProviderInterface {
         document.body.appendChild(this.adContainerMainElement);
         this.adContainerMainElement.classList.add("visible");
         this.adContainerMainElement.classList.remove("waitingForFinish");
+
         try {
             // @ts-ignore
             window.aiptag.cmd.player.push(function () {
                 console.log("🎬 ADINPLAY AD: Start pre roll");
                 window.adPlayer.startPreRoll();
             });
-        }
-        catch (ex) {
+        } catch (ex) {
             logger.warn("🎬 Failed to play video ad:", ex);
             document.body.removeChild(this.adContainerMainElement);
             this.adContainerMainElement.classList.remove("visible");
             return Promise.resolve();
         }
+
         return new Promise(resolve => {
             // So, wait for the remove call but also remove after N seconds
             this.videoAdResolveFunction = () => {
                 this.videoAdResolveFunction = null;
                 clearTimeout(this.videoAdResolveTimer);
                 this.videoAdResolveTimer = null;
+
                 // When the ad closed, also set the time
                 this.lastVideoAdShowTime = performance.now();
                 resolve();
             };
+
             this.videoAdResolveTimer = setTimeout(() => {
                 logger.warn(this, "Automatically closing ad after not receiving callback");
                 if (this.videoAdResolveFunction) {
@@ -134,11 +168,11 @@ export class AdinplayAdProvider extends AdProviderInterface {
             }, 120 * 1000);
         })
             .catch(err => {
-            logger.error("Error while resolving video ad:", err);
-        })
+                logger.error("Error while resolving video ad:", err);
+            })
             .then(() => {
-            document.body.removeChild(this.adContainerMainElement);
-            this.adContainerMainElement.classList.remove("visible");
-        });
+                document.body.removeChild(this.adContainerMainElement);
+                this.adContainerMainElement.classList.remove("visible");
+            });
     }
 }

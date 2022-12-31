@@ -8,15 +8,19 @@ export let queryParamOptions = {
     fbclid: null,
     gclid: null,
 };
+
 if (options.embed) {
     queryParamOptions.embedProvider = options.embed;
 }
+
 if (options.abtVariant) {
     queryParamOptions.abtVariant = options.abtVariant;
 }
+
 if (options.fbclid) {
     queryParamOptions.fbclid = options.fbclid;
 }
+
 if (options.gclid) {
     queryParamOptions.gclid = options.gclid;
 }

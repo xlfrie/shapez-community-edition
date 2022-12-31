@@ -3,16 +3,21 @@ import { BaseItem } from "../base_item";
 import { Component } from "../component";
 import { types } from "../../savegame/serialization";
 import { typeItemSingleton } from "../item_resolver";
-/** @enum {string} */
+
+/**
+ @enum 
+*/
 export const enumPinSlotType = {
     logicalEjector: "logicalEjector",
     logicalAcceptor: "logicalAcceptor",
 };
+
 export type WirePinSlotDefinition = {
     pos: Vector;
     type: enumPinSlotType;
     direction: enumDirection;
 };
+
 export type WirePinSlot = {
     pos: Vector;
     type: enumPinSlotType;
@@ -21,28 +26,30 @@ export type WirePinSlot = {
     linkedNetwork: import("../systems/wire").WireNetwork;
 };
 
-
 export class WiredPinsComponent extends Component {
     static getId() {
         return "WiredPins";
     }
+
     static getSchema() {
         return {
-            slots: types.fixedSizeArray(types.structured({
-                value: types.nullable(typeItemSingleton),
-            })),
+            slots: types.fixedSizeArray(
+                types.structured({
+                    value: types.nullable(typeItemSingleton),
+                })
+            ),
         };
     }
 
-        constructor({ slots = [] }) {
+    constructor({ slots = [] }) {
         super();
         this.setSlots(slots);
     }
-    /**
-     * Sets the slots of this building
-     */
+
+    /** Sets the slots of this building */
     setSlots(slots: Array<WirePinSlotDefinition>) {
-                this.slots = [];
+        this.slots = [];
+
         for (let i = 0; i < slots.length; ++i) {
             const slotData = slots[i];
             this.slots.push({

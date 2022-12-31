@@ -3,11 +3,14 @@ import { BaseItem } from "../base_item";
 import { Component } from "../component";
 import { Entity } from "../entity";
 import { typeItemSingleton } from "../item_resolver";
+
 const chainBufferSize = 6;
+
 export class MinerComponent extends Component {
     static getId() {
         return "Miner";
     }
+
     static getSchema() {
         // cachedMinedItem is not serialized.
         return {
@@ -17,13 +20,21 @@ export class MinerComponent extends Component {
     }
     public lastMiningTime = 0;
     public chainable = chainable;
+
     public cachedMinedItem: BaseItem = null;
+
+    /**
+     * Which miner this miner ejects to, in case its a chainable one.
+     * If the value is false, it means there is no entity, and we don't have to re-check
+     */
     public cachedChainedMiner: Entity | null | false = null;
 
     constructor({ chainable = false }) {
         super();
+
         this.clear();
     }
+
     clear() {
         /**
          * Stores items from other miners which were chained to this
@@ -31,11 +42,13 @@ export class MinerComponent extends Component {
          */
         this.itemChainBuffer = [];
     }
-        tryAcceptChainedItem(item: BaseItem) {
+
+    tryAcceptChainedItem(item: BaseItem) {
         if (this.itemChainBuffer.length > chainBufferSize) {
             // Well, this one is full
             return false;
         }
+
         this.itemChainBuffer.push(item);
         return true;
     }

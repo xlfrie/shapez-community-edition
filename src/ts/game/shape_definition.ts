@@ -6,6 +6,7 @@ import { Vector } from "../core/vector";
 import { BasicSerializableObject, types } from "../savegame/serialization";
 import { enumColors, enumColorsToHexCode, enumColorToShortcode, enumShortcodeToColor } from "./colors";
 import { THEME } from "./theme";
+
 export type SubShapeDrawOptions = {
     context: CanvasRenderingContext2D;
     quadrantSize: number;
@@ -15,6 +16,7 @@ export type SubShapeDrawOptions = {
 export const MODS_ADDITIONAL_SUB_SHAPE_DRAWERS: {
     [idx: string]: (options: SubShapeDrawOptions) => void;
 } = {};
+
 export type ShapeLayerItem = {
     subShape: enumSubShape;
     color: enumColors;
@@ -24,12 +26,8 @@ export const TOP_RIGHT = 0;
 export const BOTTOM_RIGHT = 1;
 export const BOTTOM_LEFT = 2;
 export const TOP_LEFT = 3;
-export type ShapeLayer = [
-    ShapeLayerItem?,
-    ShapeLayerItem?,
-    ShapeLayerItem?,
-    ShapeLayerItem?
-];
+
+export type ShapeLayer = [ShapeLayerItem?, ShapeLayerItem?, ShapeLayerItem?, ShapeLayerItem?];
 
 const arrayQuadrantIndexToOffset = [
     new Vector(1, -1),
@@ -37,29 +35,37 @@ const arrayQuadrantIndexToOffset = [
     new Vector(-1, 1),
     new Vector(-1, -1), // tl
 ];
-/** @enum {string} */
+
+/**
+ @enum 
+*/
 export const enumSubShape = {
     rect: "rect",
     circle: "circle",
     star: "star",
     windmill: "windmill",
 };
-/** @enum {string} */
+
+/**
+ @enum 
+*/
 export const enumSubShapeToShortcode = {
     [enumSubShape.rect]: "R",
     [enumSubShape.circle]: "C",
     [enumSubShape.star]: "S",
     [enumSubShape.windmill]: "W",
 };
-/** @enum {enumSubShape} */
+
+/**
+ @enum 
+*/
 export const enumShortcodeToSubShape = {};
 for (const key in enumSubShapeToShortcode) {
     enumShortcodeToSubShape[enumSubShapeToShortcode[key]] = key;
 }
-/**
- * Converts the given parameters to a valid shape definition
- * @returns{}
- *n createSimpleShape(layers: *): Array<ShapeLayer> {
+
+/** Converts the given parameters to a valid shape definition */
+export function createSimpleShape(layers: *): Array<ShapeLayer> {
     layers.forEach(layer => {
         layer.forEach(item => {
             if (item) {
@@ -69,46 +75,53 @@ for (const key in enumSubShapeToShortcode) {
     });
     return layers;
 }
-/**
- * Cache which shapes are valid short keys and which not
- */
+
+/** Cache which shapes are valid short keys and which not */
 const SHORT_KEY_CACHE: Map<string, boolean> = new Map();
+
 export class ShapeDefinition extends BasicSerializableObject {
     static getId() {
         return "ShapeDefinition";
     }
+
     static getSchema() {
         return {};
     }
+
     deserialize(data) {
         const errorCode = super.deserialize(data);
         if (errorCode) {
             return errorCode;
         }
         const definition = ShapeDefinition.fromShortKey(data);
-        this.layers = definition.layers as Array<ShapeLayer>);
+        this.layers = definition.layers as Array<ShapeLayer>;
     }
+
     serialize() {
         return this.getHash();
     }
+
+    /** The layers from bottom to top */
     public layers: Array<ShapeLayer> = layers;
+
     public cachedHash: string = null;
+
+    //// Set on demand
     public bufferGenerator = null;
 
-        constructor({ layers = [] }) {
+    constructor({ layers = [] }) {
         super();
     }
-    /**
-     * Generates the definition from the given short key
-     * {}
-     */
+
+    /** Generates the definition from the given short key */
     static fromShortKey(key: string): ShapeDefinition {
         const sourceLayers = key.split(":");
         let layers = [];
         for (let i = 0; i < sourceLayers.length; ++i) {
             const text = sourceLayers[i];
             assert(text.length === 8, "Invalid shape short key: " + key);
-                        const quads: ShapeLayer = [null, null, null, null];
+
+            const quads: ShapeLayer = [null, null, null, null];
             for (let quad = 0; quad < 4; ++quad) {
                 const shapeText = text[quad * 2 + 0];
                 const subShape = enumShortcodeToSubShape[shapeText];
@@ -119,34 +132,33 @@ export class ShapeDefinition extends BasicSerializableObject {
                         subShape,
                         color,
                     };
-                }
-                else if (shapeText !== "-") {
+                } else if (shapeText !== "-") {
                     assert(false, "Invalid shape key: " + shapeText);
                 }
             }
             layers.push(quads);
         }
+
         const definition = new ShapeDefinition({ layers });
         // We know the hash so save some work
         definition.cachedHash = key;
         return definition;
     }
-    /**
-     * Checks if a given string is a valid short key
-     * {}
-     */
+
+    /** Checks if a given string is a valid short key */
     static isValidShortKey(key: string): boolean {
         if (SHORT_KEY_CACHE.has(key)) {
             return SHORT_KEY_CACHE.get(key);
         }
+
         const result = ShapeDefinition.isValidShortKeyInternal(key);
         SHORT_KEY_CACHE.set(key, result);
         return result;
     }
+
     /**
      * INTERNAL
      * Checks if a given string is a valid short key
-     * {}
      */
     static isValidShortKeyInternal(key: string): boolean {
         const sourceLayers = key.split(":");
@@ -156,13 +168,15 @@ export class ShapeDefinition extends BasicSerializableObject {
             if (text.length !== 8) {
                 return false;
             }
-                        const quads: ShapeLayer = [null, null, null, null];
+
+            const quads: ShapeLayer = [null, null, null, null];
             let anyFilled = false;
             for (let quad = 0; quad < 4; ++quad) {
                 const shapeText = text[quad * 2 + 0];
                 const colorText = text[quad * 2 + 1];
                 const subShape = enumShortcodeToSubShape[shapeText];
                 const color = enumShortcodeToColor[colorText];
+
                 // Valid shape
                 if (subShape) {
                     if (!color) {
@@ -174,63 +188,60 @@ export class ShapeDefinition extends BasicSerializableObject {
                         color,
                     };
                     anyFilled = true;
-                }
-                else if (shapeText === "-") {
+                } else if (shapeText === "-") {
                     // Make sure color is empty then, too
                     if (colorText !== "-") {
                         return false;
                     }
-                }
-                else {
+                } else {
                     // Invalid shape key
                     return false;
                 }
             }
+
             if (!anyFilled) {
                 // Empty layer
                 return false;
             }
             layers.push(quads);
         }
+
         if (layers.length === 0 || layers.length > 4) {
             return false;
         }
+
         return true;
     }
-    /**
-     * Internal method to clone the shape definition
-     * {}
-     */
+
+    /** Internal method to clone the shape definition */
     getClonedLayers(): Array<ShapeLayer> {
         return JSON.parse(JSON.stringify(this.layers));
     }
-    /**
-     * Returns if the definition is entirely empty^
-     * {}
-     */
+
+    /** Returns if the definition is entirely empty^ */
     isEntirelyEmpty(): boolean {
         return this.layers.length === 0;
     }
-    /**
-     * Returns a unique id for this shape
-     * {}
-     */
+
+    /** Returns a unique id for this shape */
     getHash(): string {
         if (this.cachedHash) {
             return this.cachedHash;
         }
+
         let id = "";
         for (let layerIndex = 0; layerIndex < this.layers.length; ++layerIndex) {
             const layer = this.layers[layerIndex];
+
             for (let quadrant = 0; quadrant < layer.length; ++quadrant) {
                 const item = layer[quadrant];
                 if (item) {
                     id += enumSubShapeToShortcode[item.subShape] + enumColorToShortcode[item.color];
-                }
-                else {
+                } else {
                     id += "--";
                 }
             }
+
             if (layerIndex < this.layers.length - 1) {
                 id += ":";
             }
@@ -238,14 +249,15 @@ export class ShapeDefinition extends BasicSerializableObject {
         this.cachedHash = id;
         return id;
     }
-    /**
-     * Draws the shape definition
-     */
-    drawCentered(x: number, y: number, parameters: DrawParameters, diameter: number= = 20) {
+
+    /** Draws the shape definition */
+    drawCentered(x: number, y: number, parameters: DrawParameters, diameter: number = 20) {
         const dpi = smoothenDpi(globalConfig.shapesSharpness * parameters.zoomLevel);
+
         if (!this.bufferGenerator) {
             this.bufferGenerator = this.internalGenerateShapeBuffer.bind(this);
         }
+
         const key = diameter + "/" + dpi + "/" + this.cachedHash;
         const canvas = parameters.root.buffers.getForKey({
             key: "shapedef",
@@ -257,58 +269,74 @@ export class ShapeDefinition extends BasicSerializableObject {
         });
         parameters.context.drawImage(canvas, x - diameter / 2, y - diameter / 2, diameter, diameter);
     }
-    /**
-     * Draws the item to a canvas
-     */
+
+    /** Draws the item to a canvas */
     drawFullSizeOnCanvas(context: CanvasRenderingContext2D, size: number) {
         this.internalGenerateShapeBuffer(null, context, size, size, 1);
     }
-    /**
-     * Generates this shape as a canvas
-     */
+
+    /** Generates this shape as a canvas */
     generateAsCanvas(size: number = 120) {
         const [canvas, context] = makeOffscreenBuffer(size, size, {
             smooth: true,
             label: "definition-canvas-cache-" + this.getHash(),
             reusable: false,
         });
+
         this.internalGenerateShapeBuffer(canvas, context, size, size, 1);
         return canvas;
     }
-        internalGenerateShapeBuffer(canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, w: number, h: number, dpi: number) {
+
+    internalGenerateShapeBuffer(
+        canvas: HTMLCanvasElement,
+        context: CanvasRenderingContext2D,
+        w: number,
+        h: number,
+        dpi: number
+    ) {
         context.translate((w * dpi) / 2, (h * dpi) / 2);
         context.scale((dpi * w) / 23, (dpi * h) / 23);
+
         context.fillStyle = "#e9ecf7";
+
         const quadrantSize = 10;
         const quadrantHalfSize = quadrantSize / 2;
+
         context.fillStyle = THEME.items.circleBackground;
         context.beginCircle(0, 0, quadrantSize * 1.15);
         context.fill();
+
         for (let layerIndex = 0; layerIndex < this.layers.length; ++layerIndex) {
             const quadrants = this.layers[layerIndex];
+
             const layerScale = Math.max(0.1, 0.9 - layerIndex * 0.22);
+
             for (let quadrantIndex = 0; quadrantIndex < 4; ++quadrantIndex) {
                 if (!quadrants[quadrantIndex]) {
                     continue;
                 }
                 const { subShape, color } = quadrants[quadrantIndex];
+
                 const quadrantPos = arrayQuadrantIndexToOffset[quadrantIndex];
                 const centerQuadrantX = quadrantPos.x * quadrantHalfSize;
                 const centerQuadrantY = quadrantPos.y * quadrantHalfSize;
+
                 const rotation = Math.radians(quadrantIndex * 90);
+
                 context.translate(centerQuadrantX, centerQuadrantY);
                 context.rotate(rotation);
+
                 context.fillStyle = enumColorsToHexCode[color];
                 context.strokeStyle = THEME.items.outline;
                 context.lineWidth = THEME.items.outlineWidth;
+
                 if (MODS_ADDITIONAL_SUB_SHAPE_DRAWERS[subShape]) {
                     MODS_ADDITIONAL_SUB_SHAPE_DRAWERS[subShape]({
                         context,
                         layerScale,
                         quadrantSize,
                     });
-                }
-                else {
+                } else {
                     switch (subShape) {
                         case enumSubShape.rect: {
                             context.beginPath();
@@ -321,8 +349,10 @@ export class ShapeDefinition extends BasicSerializableObject {
                         case enumSubShape.star: {
                             context.beginPath();
                             const dims = quadrantSize * layerScale;
+
                             let originX = -quadrantHalfSize;
                             let originY = quadrantHalfSize - dims;
+
                             const moveInwards = dims * 0.4;
                             context.moveTo(originX, originY + moveInwards);
                             context.lineTo(originX + dims, originY);
@@ -333,9 +363,11 @@ export class ShapeDefinition extends BasicSerializableObject {
                             context.stroke();
                             break;
                         }
+
                         case enumSubShape.windmill: {
                             context.beginPath();
                             const dims = quadrantSize * layerScale;
+
                             let originX = -quadrantHalfSize;
                             let originY = quadrantHalfSize - dims;
                             const moveInwards = dims * 0.4;
@@ -348,29 +380,36 @@ export class ShapeDefinition extends BasicSerializableObject {
                             context.stroke();
                             break;
                         }
+
                         case enumSubShape.circle: {
                             context.beginPath();
                             context.moveTo(-quadrantHalfSize, quadrantHalfSize);
-                            context.arc(-quadrantHalfSize, quadrantHalfSize, quadrantSize * layerScale, -Math.PI * 0.5, 0);
+                            context.arc(
+                                -quadrantHalfSize,
+                                quadrantHalfSize,
+                                quadrantSize * layerScale,
+                                -Math.PI * 0.5,
+                                0
+                            );
                             context.closePath();
                             context.fill();
                             context.stroke();
                             break;
                         }
+
                         default: {
                             throw new Error("Unkown sub shape: " + subShape);
                         }
                     }
                 }
+
                 context.rotate(-rotation);
                 context.translate(-centerQuadrantX, -centerQuadrantY);
             }
         }
     }
-    /**
-     * Returns a definition with only the given quadrants
-     * {}
-     */
+
+    /** Returns a definition with only the given quadrants */
     cloneFilteredByQuadrants(includeQuadrants: Array<number>): ShapeDefinition {
         const newLayers = this.getClonedLayers();
         for (let layerIndex = 0; layerIndex < newLayers.length; ++layerIndex) {
@@ -379,11 +418,11 @@ export class ShapeDefinition extends BasicSerializableObject {
             for (let quadrantIndex = 0; quadrantIndex < 4; ++quadrantIndex) {
                 if (includeQuadrants.indexOf(quadrantIndex) < 0) {
                     quadrants[quadrantIndex] = null;
-                }
-                else if (quadrants[quadrantIndex]) {
+                } else if (quadrants[quadrantIndex]) {
                     anyContents = true;
                 }
             }
+
             // Check if the layer is entirely empty
             if (!anyContents) {
                 newLayers.splice(layerIndex, 1);
@@ -392,10 +431,8 @@ export class ShapeDefinition extends BasicSerializableObject {
         }
         return new ShapeDefinition({ layers: newLayers });
     }
-    /**
-     * Returns a definition which was rotated clockwise
-     * {}
-     */
+
+    /** Returns a definition which was rotated clockwise */
     cloneRotateCW(): ShapeDefinition {
         const newLayers = this.getClonedLayers();
         for (let layerIndex = 0; layerIndex < newLayers.length; ++layerIndex) {
@@ -405,10 +442,8 @@ export class ShapeDefinition extends BasicSerializableObject {
         }
         return new ShapeDefinition({ layers: newLayers });
     }
-    /**
-     * Returns a definition which was rotated counter clockwise
-     * {}
-     */
+
+    /** Returns a definition which was rotated counter clockwise */
     cloneRotateCCW(): ShapeDefinition {
         const newLayers = this.getClonedLayers();
         for (let layerIndex = 0; layerIndex < newLayers.length; ++layerIndex) {
@@ -418,10 +453,8 @@ export class ShapeDefinition extends BasicSerializableObject {
         }
         return new ShapeDefinition({ layers: newLayers });
     }
-    /**
-     * Returns a definition which was rotated 180 degrees
-     * {}
-     */
+
+    /** Returns a definition which was rotated 180 degrees */
     cloneRotate180(): ShapeDefinition {
         const newLayers = this.getClonedLayers();
         for (let layerIndex = 0; layerIndex < newLayers.length; ++layerIndex) {
@@ -430,15 +463,16 @@ export class ShapeDefinition extends BasicSerializableObject {
         }
         return new ShapeDefinition({ layers: newLayers });
     }
-    /**
-     * Stacks the given shape definition on top.
-     */
+
+    /** Stacks the given shape definition on top. */
     cloneAndStackWith(definition: ShapeDefinition) {
         if (this.isEntirelyEmpty() || definition.isEntirelyEmpty()) {
             assert(false, "Can not stack entirely empty definition");
         }
+
         const bottomShapeLayers = this.layers;
         const bottomShapeHighestLayerByQuad = [-1, -1, -1, -1];
+
         for (let layer = bottomShapeLayers.length - 1; layer >= 0; --layer) {
             const shapeLayer = bottomShapeLayers[layer];
             for (let quad = 0; quad < 4; ++quad) {
@@ -448,8 +482,10 @@ export class ShapeDefinition extends BasicSerializableObject {
                 }
             }
         }
+
         const topShapeLayers = definition.layers;
         const topShapeLowestLayerByQuad = [4, 4, 4, 4];
+
         for (let layer = 0; layer < topShapeLayers.length; ++layer) {
             const shapeLayer = topShapeLayers[layer];
             for (let quad = 0; quad < 4; ++quad) {
@@ -459,6 +495,7 @@ export class ShapeDefinition extends BasicSerializableObject {
                 }
             }
         }
+
         /**
          * We want to find the number `layerToMergeAt` such that when the top shape is placed at that
          * layer, the smallest gap between shapes is only 1. Instead of doing a guess-and-check method to
@@ -473,10 +510,12 @@ export class ShapeDefinition extends BasicSerializableObject {
         const smallestGapBetweenShapes = Math.min(...gapsBetweenShapes);
         // Can't merge at a layer lower than 0
         const layerToMergeAt = Math.max(1 - smallestGapBetweenShapes, 0);
+
         const mergedLayers = this.getClonedLayers();
         for (let layer = mergedLayers.length; layer < layerToMergeAt + topShapeLayers.length; ++layer) {
             mergedLayers.push([null, null, null, null]);
         }
+
         for (let layer = 0; layer < topShapeLayers.length; ++layer) {
             const layerMergingAt = layerToMergeAt + layer;
             const bottomShapeLayer = mergedLayers[layerMergingAt];
@@ -486,15 +525,17 @@ export class ShapeDefinition extends BasicSerializableObject {
                 bottomShapeLayer[quad] = bottomShapeLayer[quad] || topShapeLayer[quad];
             }
         }
+
         // Limit to 4 layers at max
         mergedLayers.splice(4);
+
         return new ShapeDefinition({ layers: mergedLayers });
     }
-    /**
-     * Clones the shape and colors everything in the given color
-     */
+
+    /** Clones the shape and colors everything in the given color */
     cloneAndPaintWith(color: enumColors) {
         const newLayers = this.getClonedLayers();
+
         for (let layerIndex = 0; layerIndex < newLayers.length; ++layerIndex) {
             const quadrants = newLayers[layerIndex];
             for (let quadrantIndex = 0; quadrantIndex < 4; ++quadrantIndex) {
@@ -506,16 +547,11 @@ export class ShapeDefinition extends BasicSerializableObject {
         }
         return new ShapeDefinition({ layers: newLayers });
     }
-    /**
-     * Clones the shape and colors everything in the given colors
-     */
-    cloneAndPaintWith4Colors(colors: [
-        enumColors,
-        enumColors,
-        enumColors,
-        enumColors
-    ]) {
+
+    /** Clones the shape and colors everything in the given colors */
+    cloneAndPaintWith4Colors(colors: [enumColors, enumColors, enumColors, enumColors]) {
         const newLayers = this.getClonedLayers();
+
         for (let layerIndex = 0; layerIndex < newLayers.length; ++layerIndex) {
             const quadrants = newLayers[layerIndex];
             for (let quadrantIndex = 0; quadrantIndex < 4; ++quadrantIndex) {

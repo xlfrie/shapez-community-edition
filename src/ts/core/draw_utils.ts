@@ -1,5 +1,6 @@
-import type { AtlasSprite } from "./sprites";
-import type { DrawParameters } from "./draw_parameters";
+export type AtlasSprite = import("./sprites").AtlasSprite;
+
+export type DrawParameters = import("./draw_parameters").DrawParameters;
 
 import { globalConfig } from "./config";
 import { createLogger } from "./logging";
@@ -43,25 +44,27 @@ export function initDrawUtils() {
     };
 }
 
-export function drawRotatedSprite({
-    parameters,
-    sprite,
-    x,
-    y,
-    angle,
-    size,
-    offsetX = 0,
-    offsetY = 0,
-}: {
-    parameters: DrawParameters;
-    sprite: AtlasSprite;
-    x: number;
-    y: number;
-    angle: number;
-    size: number;
-    offsetX: number;
-    offsetY: number;
-}) {
+export function drawRotatedSprite(
+    {
+        parameters,
+        sprite,
+        x,
+        y,
+        angle,
+        size,
+        offsetX = 0,
+        offsetY = 0,
+    }: {
+        parameters: DrawParameters;
+        sprite: AtlasSprite;
+        x: number;
+        y: number;
+        angle: number;
+        size: number;
+        offsetX?: number;
+        offsetY?: number;
+    } /*--REMOVE_PREV--*/
+) {
     if (angle === 0) {
         sprite.drawCachedCentered(parameters, x + offsetX, y + offsetY, size);
         return;
@@ -76,9 +79,7 @@ export function drawRotatedSprite({
 
 let warningsShown = 0;
 
-/**
- * Draws a sprite with clipping
- */
+/** Draws a sprite with clipping */
 export function drawSpriteClipped({
     parameters,
     sprite,
@@ -118,6 +119,7 @@ export function drawSpriteClipped({
 
     parameters.context.drawImage(
         sprite,
+
         // src pos and size
         ((intersection.x - x) / w) * originalW,
         ((intersection.y - y) / h) * originalH,

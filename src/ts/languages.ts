@@ -1,5 +1,5 @@
 export const LANGUAGES: {
-    [code: string]: {
+    [idx: string]: {
         name: string;
         data: any;
         code: string;
@@ -12,6 +12,7 @@ export const LANGUAGES: {
         code: "en",
         region: "",
     },
+
     "zh-CN": {
         // simplified chinese
         name: "简体中文",
@@ -19,6 +20,7 @@ export const LANGUAGES: {
         code: "zh",
         region: "CN",
     },
+
     "zh-TW": {
         // traditional chinese
         name: "繁體中文",
@@ -26,6 +28,7 @@ export const LANGUAGES: {
         code: "zh",
         region: "TW",
     },
+
     "ja": {
         // japanese
         name: "日本語",
@@ -33,6 +36,7 @@ export const LANGUAGES: {
         code: "ja",
         region: "",
     },
+
     "kor": {
         // korean
         name: "한국어",
@@ -40,6 +44,7 @@ export const LANGUAGES: {
         code: "ko",
         region: "",
     },
+
     "cs": {
         // czech
         name: "Čeština",
@@ -47,6 +52,7 @@ export const LANGUAGES: {
         code: "cs",
         region: "",
     },
+
     "da": {
         // danish
         name: "Dansk",
@@ -54,6 +60,7 @@ export const LANGUAGES: {
         code: "da",
         region: "",
     },
+
     "de": {
         // german
         name: "Deutsch",
@@ -61,6 +68,7 @@ export const LANGUAGES: {
         code: "de",
         region: "",
     },
+
     "es-419": {
         // spanish
         name: "Español",
@@ -68,6 +76,7 @@ export const LANGUAGES: {
         code: "es",
         region: "",
     },
+
     "fr": {
         // french
         name: "Français",
@@ -75,6 +84,7 @@ export const LANGUAGES: {
         code: "fr",
         region: "",
     },
+
     "it": {
         // italian
         name: "Italiano",
@@ -82,6 +92,7 @@ export const LANGUAGES: {
         code: "it",
         region: "",
     },
+
     "hu": {
         // hungarian
         name: "Magyar",
@@ -89,6 +100,7 @@ export const LANGUAGES: {
         code: "hu",
         region: "",
     },
+
     "nl": {
         // dutch
         name: "Nederlands",
@@ -96,6 +108,7 @@ export const LANGUAGES: {
         code: "nl",
         region: "",
     },
+
     "no": {
         // norwegian
         name: "Norsk",
@@ -103,6 +116,7 @@ export const LANGUAGES: {
         code: "no",
         region: "",
     },
+
     "pl": {
         // polish
         name: "Polski",
@@ -110,6 +124,7 @@ export const LANGUAGES: {
         code: "pl",
         region: "",
     },
+
     "pt-PT": {
         // portuguese
         name: "Português",
@@ -117,6 +132,7 @@ export const LANGUAGES: {
         code: "pt",
         region: "PT",
     },
+
     "pt-BR": {
         // portuguese - brazil
         name: "Português - Brasil",
@@ -124,6 +140,7 @@ export const LANGUAGES: {
         code: "pt",
         region: "BR",
     },
+
     "ro": {
         // romanian
         name: "Română",
@@ -131,6 +148,7 @@ export const LANGUAGES: {
         code: "ro",
         region: "",
     },
+
     "ru": {
         // russian
         name: "Русский",
@@ -138,6 +156,7 @@ export const LANGUAGES: {
         code: "ru",
         region: "",
     },
+
     "fi": {
         // finish
         name: "Suomi",
@@ -145,6 +164,7 @@ export const LANGUAGES: {
         code: "fi",
         region: "",
     },
+
     "sv": {
         // swedish
         name: "Svenska",
@@ -152,6 +172,7 @@ export const LANGUAGES: {
         code: "sv",
         region: "",
     },
+
     "tr": {
         // turkish
         name: "Türkçe",
@@ -159,6 +180,7 @@ export const LANGUAGES: {
         code: "tr",
         region: "",
     },
+
     "uk": {
         // ukrainian
         name: "Українська",
@@ -166,6 +188,7 @@ export const LANGUAGES: {
         code: "uk",
         region: "",
     },
+
     "he": {
         // hebrew
         name: "עברית",

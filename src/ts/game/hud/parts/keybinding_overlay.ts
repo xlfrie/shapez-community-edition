@@ -1,14 +1,23 @@
 import { makeDiv } from "../../../core/utils";
 import { T } from "../../../translations";
-import { getStringForKeyCode, KEYCODE_LMB, KEYCODE_MMB, KEYCODE_RMB, KEYMAPPINGS, } from "../../key_action_mapper";
+import {
+    getStringForKeyCode,
+    KEYCODE_LMB,
+    KEYCODE_MMB,
+    KEYCODE_RMB,
+    KEYMAPPINGS,
+} from "../../key_action_mapper";
 import { enumHubGoalRewards } from "../../tutorial_goals";
 import { BaseHUDPart } from "../base_hud_part";
 import { DynamicDomAttach } from "../dynamic_dom_attach";
+
 const DIVIDER_TOKEN = "/";
 const ADDER_TOKEN = "+";
+
 export type KeyCode = {
     keyCode: number;
 };
+
 export type KeyBinding = {
     condition: () => boolean;
     keys: Array<KeyCode | number | string>;
@@ -17,93 +26,81 @@ export type KeyBinding = {
     cachedVisibility?: boolean;
 };
 
-
 export class HUDKeybindingOverlay extends BaseHUDPart {
-    /**
-     * HELPER / Returns if there is a building selected for placement
-     * {}
-     */
+    /** HELPER / Returns if there is a building selected for placement */
     get buildingPlacementActive() {
         const placer = this.root.hud.parts.buildingPlacer;
         return !this.mapOverviewActive && placer && !!placer.currentMetaBuilding.get();
     }
+
     /**
      * HELPER / Returns if there is a building selected for placement and
      * it supports the belt planner
-     * {}
      */
     get buildingPlacementSupportsBeltPlanner() {
         const placer = this.root.hud.parts.buildingPlacer;
-        return (!this.mapOverviewActive &&
+        return (
+            !this.mapOverviewActive &&
             placer &&
             placer.currentMetaBuilding.get() &&
-            placer.currentMetaBuilding.get().getHasDirectionLockAvailable(placer.currentVariant.get()));
+            placer.currentMetaBuilding.get().getHasDirectionLockAvailable(placer.currentVariant.get())
+        );
     }
+
     /**
      * HELPER / Returns if there is a building selected for placement and
      * it has multiplace enabled by default
-     * {}
      */
     get buildingPlacementStaysInPlacement() {
         const placer = this.root.hud.parts.buildingPlacer;
-        return (!this.mapOverviewActive &&
+        return (
+            !this.mapOverviewActive &&
             placer &&
             placer.currentMetaBuilding.get() &&
-            placer.currentMetaBuilding.get().getStayInPlacementMode());
+            placer.currentMetaBuilding.get().getStayInPlacementMode()
+        );
     }
-    /**
-     * HELPER / Returns if there is a blueprint selected for placement
-     * {}
-     */
+
+    /** HELPER / Returns if there is a blueprint selected for placement */
     get blueprintPlacementActive() {
         const placer = this.root.hud.parts.blueprintPlacer;
         return placer && !!placer.currentBlueprint.get();
     }
-    /**
-     * HELPER / Returns if the belt planner is currently active
-     * {}
-     */
+
+    /** HELPER / Returns if the belt planner is currently active */
     get beltPlannerActive() {
         const placer = this.root.hud.parts.buildingPlacer;
         return !this.mapOverviewActive && placer && placer.isDirectionLockActive;
     }
-    /**
-     * HELPER / Returns if there is a last blueprint available
-     * {}
-     */
+
+    /** HELPER / Returns if there is a last blueprint available */
     get lastBlueprintAvailable() {
         const placer = this.root.hud.parts.blueprintPlacer;
         return placer && !!placer.lastBlueprintUsed;
     }
-    /**
-     * HELPER / Returns if there is anything selected on the map
-     * {}
-     */
+
+    /** HELPER / Returns if there is anything selected on the map */
     get anythingSelectedOnMap() {
         const selector = this.root.hud.parts.massSelector;
         return selector && selector.selectedUids.size > 0;
     }
-    /**
-     * HELPER / Returns if there is a building or blueprint selected for placement
-     * {}
-     */
+
+    /** HELPER / Returns if there is a building or blueprint selected for placement */
     get anyPlacementActive() {
         return this.buildingPlacementActive || this.blueprintPlacementActive;
     }
-    /**
-     * HELPER / Returns if the map overview is active
-     * {}
-     */
+
+    /** HELPER / Returns if the map overview is active */
     get mapOverviewActive() {
         return this.root.camera.getIsMapOverlayActive();
     }
-    /**
-     * Initializes the element
-     */
+
+    /** Initializes the element */
     createElements(parent: HTMLElement) {
         const mapper = this.root.keyMapper;
         const k = KEYMAPPINGS;
-                this.keybindings = [
+
+        this.keybindings = [
             {
                 // Move map - Including mouse
                 label: T.ingame.keybindingsOverlay.moveMap,
@@ -117,6 +114,7 @@ export class HUDKeybindingOverlay extends BaseHUDPart {
                 ],
                 condition: () => !this.anyPlacementActive,
             },
+
             {
                 // Move map - No mouse
                 label: T.ingame.keybindingsOverlay.moveMap,
@@ -128,72 +126,85 @@ export class HUDKeybindingOverlay extends BaseHUDPart {
                 ],
                 condition: () => this.anyPlacementActive,
             },
+
             {
                 // [OVERVIEW] Create marker with right click
                 label: T.ingame.keybindingsOverlay.createMarker,
                 keys: [KEYCODE_RMB],
                 condition: () => this.mapOverviewActive && !this.blueprintPlacementActive,
             },
+
             {
                 // Cancel placement
                 label: T.ingame.keybindingsOverlay.stopPlacement,
                 keys: [KEYCODE_RMB],
                 condition: () => this.anyPlacementActive,
             },
+
             {
                 // Delete with right click
                 label: T.ingame.keybindingsOverlay.delete,
                 keys: [KEYCODE_RMB],
-                condition: () => !this.anyPlacementActive && !this.mapOverviewActive && !this.anythingSelectedOnMap,
+                condition: () =>
+                    !this.anyPlacementActive && !this.mapOverviewActive && !this.anythingSelectedOnMap,
             },
+
             {
                 // Pipette
                 label: T.ingame.keybindingsOverlay.pipette,
                 keys: [k.placement.pipette],
                 condition: () => !this.mapOverviewActive && !this.blueprintPlacementActive,
             },
+
             {
                 // Area select
                 label: T.ingame.keybindingsOverlay.selectBuildings,
                 keys: [k.massSelect.massSelectStart, ADDER_TOKEN, KEYCODE_LMB],
                 condition: () => !this.anyPlacementActive && !this.anythingSelectedOnMap,
             },
+
             {
                 // Place building
                 label: T.ingame.keybindingsOverlay.placeBuilding,
                 keys: [KEYCODE_LMB],
                 condition: () => this.anyPlacementActive,
             },
+
             {
                 // Rotate
                 label: T.ingame.keybindingsOverlay.rotateBuilding,
                 keys: [k.placement.rotateWhilePlacing],
                 condition: () => this.anyPlacementActive && !this.beltPlannerActive,
             },
+
             {
                 // [BELT PLANNER] Flip Side
                 label: T.ingame.keybindingsOverlay.plannerSwitchSide,
                 keys: [k.placement.switchDirectionLockSide],
                 condition: () => this.beltPlannerActive,
             },
+
             {
                 // Place last blueprint
                 label: T.ingame.keybindingsOverlay.pasteLastBlueprint,
                 keys: [k.massSelect.pasteLastBlueprint],
                 condition: () => !this.blueprintPlacementActive && this.lastBlueprintAvailable,
             },
+
             {
                 // Belt planner
                 label: T.ingame.keybindingsOverlay.lockBeltDirection,
                 keys: [k.placementModifiers.lockBeltDirection],
                 condition: () => this.buildingPlacementSupportsBeltPlanner && !this.beltPlannerActive,
             },
+
             {
                 // [SELECTION] Destroy
                 label: T.ingame.keybindingsOverlay.delete,
                 keys: [k.massSelect.confirmMassDelete],
                 condition: () => this.anythingSelectedOnMap,
             },
+
             {
                 // [SELECTION] Cancel
                 label: T.ingame.keybindingsOverlay.clearSelection,
@@ -206,25 +217,30 @@ export class HUDKeybindingOverlay extends BaseHUDPart {
                 keys: [k.massSelect.massSelectCut],
                 condition: () => this.anythingSelectedOnMap,
             },
+
             {
                 // [SELECTION] Copy
                 label: T.ingame.keybindingsOverlay.copySelection,
                 keys: [k.massSelect.massSelectCopy],
                 condition: () => this.anythingSelectedOnMap,
             },
+
             {
                 // [SELECTION] Clear
                 label: T.ingame.keybindingsOverlay.clearBelts,
                 keys: [k.massSelect.massSelectClear],
                 condition: () => this.anythingSelectedOnMap,
             },
+
             {
                 // Switch layers
                 label: T.ingame.keybindingsOverlay.switchLayers,
                 keys: [k.ingame.switchLayers],
-                condition: () => this.root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_wires_painter_and_levers),
+                condition: () =>
+                    this.root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_wires_painter_and_levers),
             },
         ];
+
         if (!this.root.app.settings.getAllSettings().alwaysMultiplace) {
             this.keybindings.push({
                 // Multiplace
@@ -233,12 +249,16 @@ export class HUDKeybindingOverlay extends BaseHUDPart {
                 condition: () => this.anyPlacementActive && !this.buildingPlacementStaysInPlacement,
             });
         }
+
         this.element = makeDiv(parent, "ingame_HUD_KeybindingOverlay", []);
+
         for (let i = 0; i < this.keybindings.length; ++i) {
             let html = "";
             const handle = this.keybindings[i];
+
             for (let k = 0; k < handle.keys.length; ++k) {
                 const key = handle.keys[k];
+
                 switch (key) {
                     case KEYCODE_LMB:
                         html += `<code class="keybinding leftMouse"></code>`;
@@ -256,19 +276,24 @@ export class HUDKeybindingOverlay extends BaseHUDPart {
                         html += `+`;
                         break;
                     default:
-                        html += `<code class="keybinding">${getStringForKeyCode(mapper.getBinding(key as KeyCode)).keyCode)}</code>`;
+                        html += `<code class="keybinding">${getStringForKeyCode(
+                            mapper.getBinding(key as KeyCode).keyCode
+                        )}</code>`;
                 }
             }
             html += `<label>${handle.label}</label>`;
+
             handle.cachedElement = makeDiv(this.element, null, ["binding"], html);
             handle.cachedVisibility = false;
         }
     }
+
     initialize() {
         this.domAttach = new DynamicDomAttach(this.root, this.element, {
             trackHover: true,
         });
     }
+
     update() {
         for (let i = 0; i < this.keybindings.length; ++i) {
             const handle = this.keybindings[i];
@@ -278,6 +303,7 @@ export class HUDKeybindingOverlay extends BaseHUDPart {
                 handle.cachedElement.classList.toggle("visible", visibility);
             }
         }
+
         // Required for hover
         this.domAttach.update(true);
     }

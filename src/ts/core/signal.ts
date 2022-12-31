@@ -1,41 +1,36 @@
 export const STOP_PROPAGATION = "stop_propagation";
 export type STOP_PROPAGATION = typeof STOP_PROPAGATION;
 
-export class Signal<T extends any[]> {
-    public receivers: {
-        receiver: (...args: T) => STOP_PROPAGATION | void;
-        scope: object;
-    }[] = [];
+export type SignalReceiver<T extends any[]> = (...args: T) => STOP_PROPAGATION | void;
+
+export class Signal<T extends any[] = []> {
+    public receivers = [];
     public modifyCount = 0;
 
-    /**
-     * Adds a new signal listener
-     */
-    add(receiver: (...args: T) => STOP_PROPAGATION | void, scope: object = null) {
+    constructor() { }
+
+    /** Adds a new signal listener */
+    add(receiver: SignalReceiver<T>, scope: object = null) {
         assert(receiver, "receiver is null");
         this.receivers.push({ receiver, scope });
         ++this.modifyCount;
     }
 
-    /**
-     * Adds a new signal listener
-     */
-    addToTop(receiver: (...args: T) => STOP_PROPAGATION | void, scope: object = null) {
+    /** Adds a new signal listener */
+    addToTop(receiver: SignalReceiver<T>, scope: object = null) {
         assert(receiver, "receiver is null");
         this.receivers.unshift({ receiver, scope });
         ++this.modifyCount;
     }
 
-    /**
-     * Dispatches the signal
-     */
-    dispatch(...payload: T): void | STOP_PROPAGATION {
+    /** Dispatches the signal */
+    dispatch(...args: T) {
         const modifyState = this.modifyCount;
 
         const n = this.receivers.length;
         for (let i = 0; i < n; ++i) {
             const { receiver, scope } = this.receivers[i];
-            if (receiver.apply(scope, payload) === STOP_PROPAGATION) {
+            if (receiver.apply(scope, arguments) === STOP_PROPAGATION) {
                 return STOP_PROPAGATION;
             }
 
@@ -46,10 +41,8 @@ export class Signal<T extends any[]> {
         }
     }
 
-    /**
-     * Removes a receiver
-     */
-    remove(receiver: (...args: any[]) => any) {
+    /** Removes a receiver */
+    remove(receiver: SignalReceiver<T>) {
         let index = null;
         const n = this.receivers.length;
         for (let i = 0; i < n; ++i) {
@@ -63,9 +56,7 @@ export class Signal<T extends any[]> {
         ++this.modifyCount;
     }
 
-    /**
-     * Removes all receivers
-     */
+    /** Removes all receivers */
     removeAll() {
         this.receivers = [];
         ++this.modifyCount;

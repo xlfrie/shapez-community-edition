@@ -2,10 +2,12 @@ export type Size = {
     w: number;
     h: number;
 };
+
 export type Position = {
     x: number;
     y: number;
 };
+
 export type SpriteDefinition = {
     frame: Position & Size;
     rotated: boolean;
@@ -13,6 +15,7 @@ export type SpriteDefinition = {
     sourceSize: Size;
     trimmed: boolean;
 };
+
 export type AtlasMeta = {
     app: string;
     version: string;
@@ -22,24 +25,18 @@ export type AtlasMeta = {
     scale: string;
     smartupdate: string;
 };
+
 export type SourceData = {
-    frames: {
-        [idx: string]: SpriteDefinition;
-    };
+    frames: Object<string, SpriteDefinition>;
     meta: AtlasMeta;
 };
-export class AtlasDefinition {
-    public meta: AtlasMeta;
-    public sourceData: {
-        [idx: string]: SpriteDefinition;
-    };
-    public sourceFileName: string;
 
-    constructor({ frames, meta }: SourceData) {
-        this.meta = meta;
-        this.sourceData = frames;
-        this.sourceFileName = meta.image;
-    }
+export class AtlasDefinition {
+    public meta = meta;
+    public sourceData = frames;
+    public sourceFileName = meta.image;
+
+    constructor({ frames, meta }) {}
 
     getFullSourcePath() {
         return this.sourceFileName;

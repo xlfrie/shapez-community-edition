@@ -1,8 +1,10 @@
+/* typehints:start */
 import type { Application } from "../application";
 import type { StateManager } from "./state_manager";
+/* typehints:end */
 
 import { globalConfig } from "./config";
-import { ClickDetector, ClickDetectorConstructorArgs } from "./click_detector";
+import { ClickDetector } from "./click_detector";
 import { logSection, createLogger } from "./logging";
 import { InputReceiver } from "./input_receiver";
 import { waitNextFrame } from "./utils";
@@ -11,45 +13,49 @@ import { MUSIC } from "../platform/sound";
 
 const logger = createLogger("game_state");
 
-/**
- * Basic state of the game state machine. This is the base of the whole game
- */
-export abstract class GameState {
+/** Basic state of the game state machine. This is the base of the whole game */
+export class GameState {
+    public key = key;
+
     public stateManager: StateManager = null;
+
     public app: Application = null;
+
+    //// Store if we are currently fading out
     public fadingOut = false;
+
     public clickDetectors: Array<ClickDetector> = [];
-    public inputReceiver: InputReceiver;
+
+    //// Every state captures keyboard events by default
+    public inputReciever = new InputReceiver("state-" + key);
+
+    //// A channel we can use to perform async ops
     public asyncChannel = new RequestChannel();
-
-    public htmlElement: HTMLElement;
-
     /**
      * Constructs a new state with the given id
+     * @param key The id of the state. We use ids to refer to states because otherwise we get
+     * circular references
      */
-    constructor(public key) {
-        this.inputReceiver = new InputReceiver("state-" + key);
-        this.inputReceiver.backButton.add(this.onBackButton, this);
+
+    constructor(key) {
+        this.inputReciever.backButton.add(this.onBackButton, this);
     }
 
     //// GETTERS / HELPER METHODS ////
 
-    /**
-     * Returns the states key
-     */
+    /** Returns the states key */
     getKey(): string {
         return this.key;
     }
 
-    /**
-     * Returns the html element of the state
-     */
+    /** Returns the html element of the state */
     getDivElement(): HTMLElement {
         return document.getElementById("state_" + this.key);
     }
 
     /**
      * Transfers to a new state
+     * @param stateKey The id of the new state
      */
     moveToState(stateKey: string, payload = {}, skipFadeOut = false) {
         if (this.fadingOut) {
@@ -78,8 +84,15 @@ export abstract class GameState {
     /**
      * Tracks clicks on a given element and calls the given callback *on this state*.
      * If you want to call another function wrap it inside a lambda.
+     * @param element The element to track clicks on
+     * @param handler The handler to call
+     * @param args Click detector arguments
      */
-    trackClicks(element: Element, handler: () => void, args: ClickDetectorConstructorArgs = {}) {
+    trackClicks(
+        element: Element,
+        handler: () => void,
+        args: import("./click_detector").ClickDetectorConstructorArgs = {}
+    ) {
         const detector = new ClickDetector(element, args);
         detector.click.add(handler, this);
         if (G_IS_DEV) {
@@ -90,9 +103,7 @@ export abstract class GameState {
         this.clickDetectors.push(detector);
     }
 
-    /**
-     * Cancels all promises on the api as well as our async channel
-     */
+    /** Cancels all promises on the api as well as our async channel */
     cancelAllAsyncOperations() {
         this.asyncChannel.cancelAll();
     }
@@ -101,36 +112,35 @@ export abstract class GameState {
 
     /**
      * Callback when entering the state, to be overriddemn
+     * @param payload Arbitrary data passed from the state which we are transferring from
      */
     onEnter(payload: any) {}
 
-    /**
-     * Callback when leaving the state
-     */
+    /** Callback when leaving the state */
     onLeave() {}
 
-    /**
-     * Callback when the app got paused (on android, this means in background)
-     */
+    /** Callback when the app got paused (on android, this means in background) */
     onAppPause() {}
 
-    /**
-     * Callback when the app got resumed (on android, this means in foreground again)
-     */
+    /** Callback when the app got resumed (on android, this means in foreground again) */
     onAppResume() {}
 
     /**
      * Render callback
+     * @param dt Delta time in ms since last render
      */
     onRender(dt: number) {}
 
     /**
      * Background tick callback, called while the game is inactiev
+     * @param dt Delta time in ms since last tick
      */
     onBackgroundTick(dt: number) {}
 
     /**
      * Called when the screen resized
+     * @param w window/screen width
+     * @param h window/screen height
      */
     onResized(w: number, h: number) {}
 
@@ -179,8 +189,12 @@ export abstract class GameState {
 
     /**
      * Should return the html code of the state.
+     * @abstract
      */
-    abstract getInnerHTML(): string;
+    getInnerHTML(): string {
+        abstract;
+        return "";
+    }
 
     /**
      * Returns if the state has an unload confirmation, this is the
@@ -190,23 +204,17 @@ export abstract class GameState {
         return false;
     }
 
-    /**
-     * Should return the theme music for this state
-     */
+    /** Should return the theme music for this state */
     getThemeMusic(): string | null {
         return MUSIC.menu;
     }
 
-    /**
-     * Should return true if the player is currently ingame
-     */
+    /** Should return true if the player is currently ingame */
     getIsIngame(): boolean {
         return false;
     }
 
-    /**
-     * Should return whether to clear the whole body content before entering the state.
-     */
+    /** Should return whether to clear the whole body content before entering the state. */
     getRemovePreviousContent(): boolean {
         return true;
     }
@@ -215,10 +223,8 @@ export abstract class GameState {
 
     //// INTERNAL ////
 
-    /**
-     * Internal callback from the manager. Do not override!
-     */
-    internalRegisterCallback(stateManager: StateManager, app: Application) {
+    /** Internal callback from the manager. Do not override! */
+    internalRegisterCallback(stateManager: StateManager, app) {
         assert(stateManager, "No state manager");
         assert(app, "No app");
         this.stateManager = stateManager;
@@ -227,10 +233,12 @@ export abstract class GameState {
 
     /**
      * Internal callback when entering the state. Do not override!
+     * @param payload Arbitrary data passed from the state which we are transferring from
+     * @param callCallback Whether to call the onEnter callback
      */
     internalEnterCallback(payload: any, callCallback: boolean = true) {
         logSection(this.key, "#26a69a");
-        this.app.inputMgr.pushReciever(this.inputReceiver);
+        this.app.inputMgr.pushReciever(this.inputReciever);
 
         this.htmlElement = this.getDivElement();
         this.htmlElement.classList.add("active");
@@ -249,34 +257,27 @@ export abstract class GameState {
         }
     }
 
-    /**
-     * Internal callback when the state is left. Do not override!
-     */
+    /** Internal callback when the state is left. Do not override! */
     internalLeaveCallback() {
         this.onLeave();
+
         this.htmlElement.classList.remove("active");
-        this.app.inputMgr.popReciever(this.inputReceiver);
+        this.app.inputMgr.popReciever(this.inputReciever);
         this.internalCleanUpClickDetectors();
         this.asyncChannel.cancelAll();
     }
 
-    /**
-     * Internal app pause callback
-     */
+    /** Internal app pause callback */
     internalOnAppPauseCallback() {
         this.onAppPause();
     }
 
-    /**
-     * Internal app resume callback
-     */
+    /** Internal app resume callback */
     internalOnAppResumeCallback() {
         this.onAppResume();
     }
 
-    /**
-     * Cleans up all click detectors
-     */
+    /** Cleans up all click detectors */
     internalCleanUpClickDetectors() {
         if (this.clickDetectors) {
             for (let i = 0; i < this.clickDetectors.length; ++i) {
@@ -286,9 +287,7 @@ export abstract class GameState {
         }
     }
 
-    /**
-     * Internal method to get the HTML of the game state.
-     */
+    /** Internal method to get the HTML of the game state. */
     internalGetFullHtml(): string {
         return this.getInnerHTML();
     }

@@ -1,32 +1,34 @@
-import { Application } from "../application";
+/* typehints:start */
+import type { Application } from "../application";
 import type { InputReceiver } from "./input_receiver";
+/* typehints:end */
 
 import { Signal, STOP_PROPAGATION } from "./signal";
 import { createLogger } from "./logging";
 import { arrayDeleteValue, fastArrayDeleteValue } from "./utils";
+
 const logger = createLogger("input_distributor");
+
 export class InputDistributor {
-    public app: Application;
-    public receiverStack: Array<InputReceiver> = [];
+    public app = app;
+
+    public recieverStack: Array<InputReceiver> = [];
+
     public filters: Array<(arg: any) => boolean> = [];
+
     /** All keys which are currently down */
     public keysDown = new Set();
 
-    constructor(app: Application) {
-        this.app = app;
+    constructor(app) {
         this.bindToEvents();
     }
 
-    /**
-     * Attaches a new filter which can filter and reject events
-     */
+    /** Attaches a new filter which can filter and reject events */
     installFilter(filter: (arg: any) => boolean) {
         this.filters.push(filter);
     }
 
-    /**
-     * Removes an attached filter
-     */
+    /** Removes an attached filter */
     dismountFilter(filter: (arg: any) => boolean) {
         fastArrayDeleteValue(this.filters, filter);
     }
@@ -37,41 +39,41 @@ export class InputDistributor {
             logger.error("Can not add reciever", reciever.context, "twice");
             return;
         }
-        this.receiverStack.push(reciever);
+        this.recieverStack.push(reciever);
 
-        if (this.receiverStack.length > 10) {
+        if (this.recieverStack.length > 10) {
             logger.error(
                 "Reciever stack is huge, probably some dead receivers arround:",
-                this.receiverStack.map(x => x.context)
+                this.recieverStack.map(x => x.context)
             );
         }
     }
 
     popReciever(reciever: InputReceiver) {
-        if (this.receiverStack.indexOf(reciever) < 0) {
+        if (this.recieverStack.indexOf(reciever) < 0) {
             assert(false, "Can not pop reciever " + reciever.context + "  since its not contained");
             logger.error("Can not pop reciever", reciever.context, "since its not contained");
             return;
         }
-        if (this.receiverStack[this.receiverStack.length - 1] !== reciever) {
+        if (this.recieverStack[this.recieverStack.length - 1] !== reciever) {
             logger.warn(
                 "Popping reciever",
                 reciever.context,
                 "which is not on top of the stack. Stack is: ",
-                this.receiverStack.map(x => x.context)
+                this.recieverStack.map(x => x.context)
             );
         }
-        arrayDeleteValue(this.receiverStack, reciever);
+        arrayDeleteValue(this.recieverStack, reciever);
     }
 
     isRecieverAttached(reciever: InputReceiver) {
-        return this.receiverStack.indexOf(reciever) >= 0;
+        return this.recieverStack.indexOf(reciever) >= 0;
     }
 
     isRecieverOnTop(reciever: InputReceiver) {
         return (
             this.isRecieverAttached(reciever) &&
-            this.receiverStack[this.receiverStack.length - 1] === reciever
+            this.recieverStack[this.recieverStack.length - 1] === reciever
         );
     }
 
@@ -82,7 +84,7 @@ export class InputDistributor {
 
     makeSureDetached(reciever: InputReceiver) {
         if (this.isRecieverAttached(reciever)) {
-            arrayDeleteValue(this.receiverStack, reciever);
+            arrayDeleteValue(this.recieverStack, reciever);
         }
     }
 
@@ -94,8 +96,8 @@ export class InputDistributor {
     // Internal
 
     getTopReciever() {
-        if (this.receiverStack.length > 0) {
-            return this.receiverStack[this.receiverStack.length - 1];
+        if (this.recieverStack.length > 0) {
+            return this.recieverStack[this.recieverStack.length - 1];
         }
         return null;
     }
@@ -139,9 +141,7 @@ export class InputDistributor {
         this.forwardToReceiver("backButton");
     }
 
-    /**
-     * Handles when the page got blurred
-     */
+    /** Handles when the page got blurred */
     handleBlur() {
         this.forwardToReceiver("pageBlur", {});
         this.keysDown.clear();

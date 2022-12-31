@@ -4,33 +4,22 @@ import { globalConfig } from "./config";
 import { createLogger } from "./logging";
 import { Rectangle } from "./rectangle";
 
-import type { GameRoot } from "../game/root";
-
 const logger = createLogger("stale_areas");
 
 export class StaleAreaDetector {
-    public root: GameRoot;
-    public name: string;
-    public recomputeMethod: (rect: Rectangle) => void;
+    public root = root;
+    public name = name;
+    public recomputeMethod = recomputeMethod;
+
     public staleArea: Rectangle = null;
-
-    constructor({
-        root,
-        name,
-        recomputeMethod,
-    }: {
-        root: GameRoot;
-        name: string;
-        recomputeMethod: (rect: Rectangle) => void;
-    }) {
-        this.root = root;
-        this.name = name;
-        this.recomputeMethod = recomputeMethod;
-    }
-
     /**
-     * Invalidates the given area
+     * @param param0.name The name for reference
+     * @param param0.recomputeMethod Method which recomputes the given area
      */
+
+    constructor({ root, name, recomputeMethod }) {}
+
+    /** Invalidates the given area */
     invalidate(area: Rectangle) {
         // logger.log(this.name, "invalidated", area.toString());
         if (this.staleArea) {
@@ -43,13 +32,12 @@ export class StaleAreaDetector {
     /**
      * Makes this detector recompute the area of an entity whenever
      * it changes in any way
+     * @param tilesAround How many tiles arround to expand the area
      */
     recomputeOnComponentsChanged(components: Array<typeof Component>, tilesAround: number) {
         const componentIds = components.map(component => component.getId());
 
-        /**
-         * Internal checker method
-         */
+        /** Internal checker method */
         const checker = (entity: Entity) => {
             if (!this.root.gameInitialized) {
                 return;
@@ -76,9 +64,7 @@ export class StaleAreaDetector {
         this.root.signals.entityDestroyed.add(checker);
     }
 
-    /**
-     * Updates the stale area
-     */
+    /** Updates the stale area */
     update() {
         if (this.staleArea) {
             if (G_IS_DEV && globalConfig.debug.renderChanges) {

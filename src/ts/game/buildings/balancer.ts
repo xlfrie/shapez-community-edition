@@ -9,13 +9,17 @@ import { enumHubGoalRewards } from "../tutorial_goals";
 import { T } from "../../translations";
 import { formatItemsPerSecond, generateMatrixRotations } from "../../core/utils";
 import { BeltUnderlaysComponent } from "../components/belt_underlays";
-/** @enum {string} */
+
+/**
+ @enum 
+*/
 export const enumBalancerVariants = {
     merger: "merger",
     mergerInverse: "merger-inverse",
     splitter: "splitter",
     splitterInverse: "splitter-inverse",
 };
+
 const overlayMatrices = {
     [defaultBuildingVariant]: null,
     [enumBalancerVariants.merger]: generateMatrixRotations([0, 1, 0, 0, 1, 1, 0, 1, 0]),
@@ -23,11 +27,12 @@ const overlayMatrices = {
     [enumBalancerVariants.splitter]: generateMatrixRotations([0, 1, 0, 0, 1, 1, 0, 1, 0]),
     [enumBalancerVariants.splitterInverse]: generateMatrixRotations([0, 1, 0, 1, 1, 0, 0, 1, 0]),
 };
-export class MetaBalancerBuilding extends MetaBuilding {
 
+export class MetaBalancerBuilding extends MetaBuilding {
     constructor() {
         super("balancer");
     }
+
     static getAllVariantCombinations() {
         return [
             {
@@ -52,6 +57,7 @@ export class MetaBalancerBuilding extends MetaBuilding {
             },
         ];
     }
+
     getDimensions(variant) {
         switch (variant) {
             case defaultBuildingVariant:
@@ -65,26 +71,25 @@ export class MetaBalancerBuilding extends MetaBuilding {
                 assertAlways(false, "Unknown balancer variant: " + variant);
         }
     }
-    /**
-     * {}
-     */
-    getSpecialOverlayRenderMatrix(rotation: number, rotationVariant: number, variant: string, entity: Entity): Array<number> | null {
+
+    getSpecialOverlayRenderMatrix(
+        rotation: number,
+        rotationVariant: number,
+        variant: string,
+        entity: Entity
+    ): Array<number> | null {
         const matrix = overlayMatrices[variant];
         if (matrix) {
             return matrix[rotation];
         }
         return null;
     }
-    /**
-     * {}
-     */
-    getAdditionalStatistics(root: GameRoot, variant: string): Array<[
-        string,
-        string
-    ]> {
+
+    getAdditionalStatistics(root: GameRoot, variant: string): Array<[string, string]> {
         if (root.gameMode.throughputDoesNotMatter()) {
             return [];
         }
+
         let speedMultiplier = 2;
         switch (variant) {
             case enumBalancerVariants.merger:
@@ -93,44 +98,62 @@ export class MetaBalancerBuilding extends MetaBuilding {
             case enumBalancerVariants.splitterInverse:
                 speedMultiplier = 1;
         }
-        const speed = (root.hubGoals.getProcessorBaseSpeed(enumItemProcessorTypes.balancer) / 2) * speedMultiplier;
+
+        const speed =
+            (root.hubGoals.getProcessorBaseSpeed(enumItemProcessorTypes.balancer) / 2) * speedMultiplier;
         return [[T.ingame.buildingPlacement.infoTexts.speed, formatItemsPerSecond(speed)]];
     }
+
     getSilhouetteColor() {
         return "#555759";
     }
-        getAvailableVariants(root: GameRoot) {
+
+    getAvailableVariants(root: GameRoot) {
         const deterministic = root.gameMode.getIsDeterministic();
+
         let available = deterministic ? [] : [defaultBuildingVariant];
+
         if (!deterministic && root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_merger)) {
             available.push(enumBalancerVariants.merger, enumBalancerVariants.mergerInverse);
         }
+
         if (root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_splitter)) {
             available.push(enumBalancerVariants.splitter, enumBalancerVariants.splitterInverse);
         }
+
         return available;
     }
-        getIsUnlocked(root: GameRoot) {
+
+    getIsUnlocked(root: GameRoot) {
         return root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_balancer);
     }
-    /**
-     * Creates the entity at the given location
-     */
+
+    /** Creates the entity at the given location */
     setupEntityComponents(entity: Entity) {
-        entity.addComponent(new ItemAcceptorComponent({
-            slots: [], // set later
-        }));
-        entity.addComponent(new ItemProcessorComponent({
-            inputsPerCharge: 1,
-            processorType: enumItemProcessorTypes.balancer,
-        }));
-        entity.addComponent(new ItemEjectorComponent({
-            slots: [],
-            renderFloatingItems: false,
-        }));
+        entity.addComponent(
+            new ItemAcceptorComponent({
+                slots: [], // set later
+            })
+        );
+
+        entity.addComponent(
+            new ItemProcessorComponent({
+                inputsPerCharge: 1,
+                processorType: enumItemProcessorTypes.balancer,
+            })
+        );
+
+        entity.addComponent(
+            new ItemEjectorComponent({
+                slots: [],
+                renderFloatingItems: false,
+            })
+        );
+
         entity.addComponent(new BeltUnderlaysComponent({ underlays: [] }));
     }
-        updateVariants(entity: Entity, rotationVariant: number, variant: string) {
+
+    updateVariants(entity: Entity, rotationVariant: number, variant: string) {
         switch (variant) {
             case defaultBuildingVariant: {
                 entity.components.ItemAcceptor.setSlots([
@@ -143,14 +166,17 @@ export class MetaBalancerBuilding extends MetaBuilding {
                         direction: enumDirection.bottom,
                     },
                 ]);
+
                 entity.components.ItemEjector.setSlots([
                     { pos: new Vector(0, 0), direction: enumDirection.top },
                     { pos: new Vector(1, 0), direction: enumDirection.top },
                 ]);
+
                 entity.components.BeltUnderlays.underlays = [
                     { pos: new Vector(0, 0), direction: enumDirection.top },
                     { pos: new Vector(1, 0), direction: enumDirection.top },
                 ];
+
                 break;
             }
             case enumBalancerVariants.merger:
@@ -162,17 +188,21 @@ export class MetaBalancerBuilding extends MetaBuilding {
                     },
                     {
                         pos: new Vector(0, 0),
-                        direction: variant === enumBalancerVariants.mergerInverse
-                            ? enumDirection.left
-                            : enumDirection.right,
+                        direction:
+                            variant === enumBalancerVariants.mergerInverse
+                                ? enumDirection.left
+                                : enumDirection.right,
                     },
                 ]);
+
                 entity.components.ItemEjector.setSlots([
                     { pos: new Vector(0, 0), direction: enumDirection.top },
                 ]);
+
                 entity.components.BeltUnderlays.underlays = [
                     { pos: new Vector(0, 0), direction: enumDirection.top },
                 ];
+
                 break;
             }
             case enumBalancerVariants.splitter:
@@ -183,6 +213,7 @@ export class MetaBalancerBuilding extends MetaBuilding {
                         direction: enumDirection.bottom,
                     },
                 ]);
+
                 entity.components.ItemEjector.setSlots([
                     {
                         pos: new Vector(0, 0),
@@ -190,14 +221,17 @@ export class MetaBalancerBuilding extends MetaBuilding {
                     },
                     {
                         pos: new Vector(0, 0),
-                        direction: variant === enumBalancerVariants.splitterInverse
-                            ? enumDirection.left
-                            : enumDirection.right,
+                        direction:
+                            variant === enumBalancerVariants.splitterInverse
+                                ? enumDirection.left
+                                : enumDirection.right,
                     },
                 ]);
+
                 entity.components.BeltUnderlays.underlays = [
                     { pos: new Vector(0, 0), direction: enumDirection.top },
                 ];
+
                 break;
             }
             default:

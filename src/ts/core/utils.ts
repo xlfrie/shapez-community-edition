@@ -4,9 +4,7 @@ import { WEB_STEAM_SSO_AUTHENTICATED } from "./steam_sso";
 
 const bigNumberSuffixTranslationKeys = ["thousands", "millions", "billions", "trillions"];
 
-/**
- * Returns a platform name
- */
+/** Returns a platform name */
 export function getPlatformName(): "android" | "browser" | "ios" | "standalone" | "unknown" {
     if (G_IS_STANDALONE) {
         return "standalone";
@@ -16,9 +14,7 @@ export function getPlatformName(): "android" | "browser" | "ios" | "standalone" 
     return "unknown";
 }
 
-/**
- * Makes a new 2D array with undefined contents
- */
+/** Makes a new 2D array with undefined contents */
 export function make2DUndefinedArray(w: number, h: number): Array<Array<any>> {
     const result = new Array(w);
     for (let x = 0; x < w; ++x) {
@@ -27,24 +23,18 @@ export function make2DUndefinedArray(w: number, h: number): Array<Array<any>> {
     return result;
 }
 
-/**
- * Creates a new map (an empty object without any props)
- */
-export function newEmptyMap(): object {
+/** Creates a new map (an empty object without any props) */
+export function newEmptyMap() {
     return Object.create(null);
 }
 
-/**
- * Returns a random integer in the range [start,end]
- */
+/** Returns a random integer in the range [start,end] */
 export function randomInt(start: number, end: number) {
     return rando(start, end);
 }
 
-/**
- * Access an object in a very annoying way, used for obsfuscation.
- */
-export function accessNestedPropertyReverse(obj: any, keys: Array<string>): any {
+/** Access an object in a very annoying way, used for obsfuscation. */
+export function accessNestedPropertyReverse(obj: any, keys: Array<string>) {
     let result = obj;
     for (let i = keys.length - 1; i >= 0; --i) {
         result = result[keys[i]];
@@ -54,14 +44,13 @@ export function accessNestedPropertyReverse(obj: any, keys: Array<string>): any 
 
 /**
  * Chooses a random entry of an array
+ * @template T
  */
-export function randomChoice<T>(arr: T[]): T {
+export function randomChoice(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
-/**
- * Deletes from an array by swapping with the last element
- */
+/** Deletes from an array by swapping with the last element */
 export function fastArrayDelete(array: Array<any>, index: number) {
     if (index < 0 || index >= array.length) {
         throw new Error("Out of bounds");
@@ -93,9 +82,7 @@ export function fastArrayDeleteValue(array: Array<any>, value: any) {
     return fastArrayDelete(array, index);
 }
 
-/**
- * @see fastArrayDeleteValue
- */
+/** @see fastArrayDeleteValue */
 export function fastArrayDeleteValueIfContained(array: Array<any>, value: any) {
     if (array == null) {
         throw new Error("Tried to delete from non array!");
@@ -107,9 +94,7 @@ export function fastArrayDeleteValueIfContained(array: Array<any>, value: any) {
     return fastArrayDelete(array, index);
 }
 
-/**
- * Deletes from an array at the given index
- */
+/** Deletes from an array at the given index */
 export function arrayDelete(array: Array<any>, index: number) {
     if (index < 0 || index >= array.length) {
         throw new Error("Out of bounds");
@@ -117,9 +102,7 @@ export function arrayDelete(array: Array<any>, index: number) {
     array.splice(index, 1);
 }
 
-/**
- * Deletes the given value from an array
- */
+/** Deletes the given value from an array */
 export function arrayDeleteValue(array: Array<any>, value: any) {
     if (array == null) {
         throw new Error("Tried to delete from non array!");
@@ -132,23 +115,20 @@ export function arrayDeleteValue(array: Array<any>, value: any) {
     return arrayDelete(array, index);
 }
 
-/**
- * Compare two floats for epsilon equality
- */
+/** Compare two floats for epsilon equality */
 export function epsilonCompare(a: number, b: number, epsilon = 1e-5): boolean {
     return Math.abs(a - b) < epsilon;
 }
 
 /**
  * Interpolates two numbers
+ * @param x Mix factor, 0 means 100% a, 1 means 100%b, rest is interpolated
  */
 export function lerp(a: number, b: number, x: number) {
     return a * (1 - x) + b * x;
 }
 
-/**
- * Finds a value which is nice to display, e.g. 15669 -> 15000. Also handles fractional stuff
- */
+/** Finds a value which is nice to display, e.g. 15669 -> 15000. Also handles fractional stuff */
 export function findNiceValue(num: number) {
     if (num > 1e8) {
         return num;
@@ -156,6 +136,7 @@ export function findNiceValue(num: number) {
     if (num < 0.00001) {
         return 0;
     }
+
     let roundAmount = 1;
     if (num > 50000) {
         roundAmount = 10000;
@@ -194,6 +175,7 @@ export function findNiceIntegerValue(num: number) {
 
 /**
  * Formats a big number
+ * @param separator The decimal separator for numbers like 50.1 (separator='.')
  */
 export function formatBigNumber(num: number, separator: string = T.global.decimalSeparator): string {
     const sign = num < 0 ? "-" : "";
@@ -234,6 +216,7 @@ export function formatBigNumber(num: number, separator: string = T.global.decima
 
 /**
  * Formats a big number, but does not add any suffix and instead uses its full representation
+ * @param divider The divider for numbers like 50,000 (divider=',')
  */
 export function formatBigNumberFull(num: number, divider: string = T.global.thousandsDivider): string {
     if (num < 1000) {
@@ -253,9 +236,7 @@ export function formatBigNumberFull(num: number, divider: string = T.global.thou
     return out.substring(0, out.length - 1);
 }
 
-/**
- * Waits two frames so the ui is updated
- */
+/** Waits two frames so the ui is updated */
 export function waitNextFrame(): Promise<void> {
     return new Promise(function (resolve) {
         window.requestAnimationFrame(function () {
@@ -266,44 +247,36 @@ export function waitNextFrame(): Promise<void> {
     });
 }
 
-/**
- * Rounds 1 digit
- */
+/** Rounds 1 digit */
 export function round1Digit(n: number): number {
     return Math.floor(n * 10.0) / 10.0;
 }
 
-/**
- * Rounds 2 digits
- */
+/** Rounds 2 digits */
 export function round2Digits(n: number): number {
     return Math.floor(n * 100.0) / 100.0;
 }
 
-/**
- * Rounds 3 digits
- */
+/** Rounds 3 digits */
 export function round3Digits(n: number): number {
     return Math.floor(n * 1000.0) / 1000.0;
 }
 
-/**
- * Rounds 4 digits
- */
+/** Rounds 4 digits */
 export function round4Digits(n: number): number {
     return Math.floor(n * 10000.0) / 10000.0;
 }
 
 /**
  * Clamps a value between [min, max]
+ * @param minimum Default 0
+ * @param maximum Default 1
  */
 export function clamp(v: number, minimum: number = 0, maximum: number = 1) {
     return Math.max(minimum, Math.min(maximum, v));
 }
 
-/**
- * Helper method to create a new div element
- */
+/** Helper method to create a new div element */
 export function makeDivElement(id: string = null, classes: Array<string> = [], innerHTML: string = "") {
     const div = document.createElement("div");
     if (id) {
@@ -316,9 +289,7 @@ export function makeDivElement(id: string = null, classes: Array<string> = [], i
     return div;
 }
 
-/**
- * Helper method to create a new div
- */
+/** Helper method to create a new div */
 export function makeDiv(
     parent: Element,
     id: string = null,
@@ -330,9 +301,7 @@ export function makeDiv(
     return div;
 }
 
-/**
- * Helper method to create a new button element
- */
+/** Helper method to create a new button element */
 export function makeButtonElement(classes: Array<string> = [], innerHTML: string = "") {
     const element = document.createElement("button");
     for (let i = 0; i < classes.length; ++i) {
@@ -343,18 +312,14 @@ export function makeButtonElement(classes: Array<string> = [], innerHTML: string
     return element;
 }
 
-/**
- * Helper method to create a new button
- */
+/** Helper method to create a new button */
 export function makeButton(parent: Element, classes: Array<string> = [], innerHTML: string = "") {
     const element = makeButtonElement(classes, innerHTML);
     parent.appendChild(element);
     return element;
 }
 
-/**
- * Removes all children of the given element
- */
+/** Removes all children of the given element */
 export function removeAllChildren(elem: Element) {
     if (elem) {
         var range = document.createRange();
@@ -363,9 +328,7 @@ export function removeAllChildren(elem: Element) {
     }
 }
 
-/**
- * Returns if the game supports this browser
- */
+/** Returns if the game supports this browser */
 export function isSupportedBrowser() {
     // please note,
     // that IE11 now returns undefined again for window.chrome
@@ -406,6 +369,7 @@ export function isSupportedBrowser() {
 
 /**
  * Formats an amount of seconds into something like "5s ago"
+ * @param secs Seconds
  */
 export function formatSecondsToTimeAgo(secs: number): string {
     const seconds = Math.floor(secs);
@@ -438,6 +402,7 @@ export function formatSecondsToTimeAgo(secs: number): string {
 
 /**
  * Formats seconds into a readable string like "5h 23m"
+ * @param secs Seconds
  */
 export function formatSeconds(secs: number): string {
     const trans = T.global.time;
@@ -459,6 +424,7 @@ export function formatSeconds(secs: number): string {
 
 /**
  * Formats a number like 2.51 to "2.5"
+ * @param separator The decimal separator for numbers like 50.1 (separator='.')
  */
 export function round1DigitLocalized(speed: number, separator: string = T.global.decimalSeparator) {
     return round1Digit(speed).toString().replace(".", separator);
@@ -466,6 +432,7 @@ export function round1DigitLocalized(speed: number, separator: string = T.global
 
 /**
  * Formats a number like 2.51 to "2.51 items / s"
+ * @param separator The decimal separator for numbers like 50.1 (separator='.')
  */
 export function formatItemsPerSecond(
     speed: number,
@@ -495,6 +462,7 @@ export function formatItemsPerSecond(
  * 7 mu
  * 8 ru
  */
+
 export function rotateFlatMatrix3x3(flatMatrix: Array<number>) {
     return [
         flatMatrix[6],
@@ -509,32 +477,25 @@ export function rotateFlatMatrix3x3(flatMatrix: Array<number>) {
     ];
 }
 
-/**
- * Generates rotated variants of the matrix
- */
-export function generateMatrixRotations(originalMatrix: Array<number>): { [idx: number]: Array<number> } {
+/** Generates rotated variants of the matrix */
+export function generateMatrixRotations(originalMatrix: Array<number>): Object<number, Array<number>> {
     const result = {
         0: originalMatrix,
     };
+
     originalMatrix = rotateFlatMatrix3x3(originalMatrix);
     result[90] = originalMatrix;
+
     originalMatrix = rotateFlatMatrix3x3(originalMatrix);
     result[180] = originalMatrix;
+
     originalMatrix = rotateFlatMatrix3x3(originalMatrix);
     result[270] = originalMatrix;
+
     return result;
 }
 
-export type DirectionalObject = {
-    top: any;
-    right: any;
-    bottom: any;
-    left: any;
-};
-
-/**
- * Rotates a directional object
- */
+/** Rotates a directional object */
 export function rotateDirectionalObject(obj: DirectionalObject, rotation): DirectionalObject {
     const queue = [obj.top, obj.right, obj.bottom, obj.left];
     while (rotation !== 0) {
@@ -550,32 +511,27 @@ export function rotateDirectionalObject(obj: DirectionalObject, rotation): Direc
     };
 }
 
-/**
- * Modulo which works for negative numbers
- */
+/** Modulo which works for negative numbers */
 export function safeModulo(n: number, m: number) {
     return ((n % m) + m) % m;
 }
 
 /**
  * Returns a smooth pulse between 0 and 1
+ * @param time time in seconds
  */
 export function smoothPulse(time: number): number {
     return Math.sin(time * 4) * 0.5 + 0.5;
 }
 
-/**
- * Fills in a <link> tag
- */
+/** Fills in a <link> tag */
 export function fillInLinkIntoTranslation(translation: string, link: string) {
     return translation
         .replace("<link>", "<a href='" + link + "' target='_blank'>")
         .replace("</link>", "</a>");
 }
 
-/**
- * Generates a file download
- */
+/** Generates a file download */
 export function generateFileDownload(filename: string, text: string) {
     var element = document.createElement("a");
     element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(text));
@@ -588,9 +544,7 @@ export function generateFileDownload(filename: string, text: string) {
     document.body.removeChild(element);
 }
 
-/**
- * Starts a file chooser
- */
+/** Starts a file chooser */
 export function startFileChoose(acceptedType: string = ".bin") {
     var input = document.createElement("input");
     input.type = "file";
@@ -657,23 +611,21 @@ export function getRomanNumber(number: number): string {
     return formatted;
 }
 
-/**
- * Returns the appropriate logo sprite path
- */
+/** Returns the appropriate logo sprite path */
 export function getLogoSprite() {
     if (G_IS_STANDALONE || WEB_STEAM_SSO_AUTHENTICATED) {
         return "logo.png";
     }
+
     if (G_IS_BROWSER) {
         return "logo_demo.png";
     }
+
     return "logo.png";
 }
 
-/**
- * Rejects a promise after X ms
- */
-export function timeoutPromise(promise: Promise<any>, timeout: number = 30000) {
+/** Rejects a promise after X ms */
+export function timeoutPromise(promise: Promise, timeout = 30000) {
     return Promise.race([
         new Promise((resolve, reject) => {
             setTimeout(() => reject("timeout of " + timeout + " ms exceeded"), timeout);

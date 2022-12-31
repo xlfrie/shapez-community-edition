@@ -1,22 +1,16 @@
 import { HUDModalDialogs } from "../game/hud/parts/modal_dialogs";
 import { GameState } from "./game_state";
 import { T } from "../translations";
+
 /**
- * Baseclass for all game states which are structured similarly: A header with back button + some
+ * Baseclass for all game states which are structured similary: A header with back button + some
  * scrollable content.
  */
 export class TextualGameState extends GameState {
-    public backToStateId: string;
-    public backToStatePayload: object;
-
-    public containerElement: HTMLDivElement;
-    public headerElement: HTMLDivElement;
-    public dialogs: HUDModalDialogs;
-
     ///// INTERFACE ////
 
     /**
-     * Should return the states inner html. If not overridden, will create a scrollable container
+     * Should return the states inner html. If not overriden, will create a scrollable container
      * with the content of getMainContentHTML()
      */
     getInnerHTML(): string {
@@ -27,9 +21,7 @@ export class TextualGameState extends GameState {
         `;
     }
 
-    /**
-     * Should return the states HTML content.
-     */
+    /** Should return the states HTML content. */
     getMainContentHTML() {
         return "";
     }
@@ -56,16 +48,12 @@ export class TextualGameState extends GameState {
         }
     }
 
-    /**
-     * Returns the default state to go back to
-     */
+    /** Returns the default state to go back to */
     getDefaultPreviousState() {
         return "MainMenuState";
     }
 
-    /**
-     * Goes to a new state, telling him to go back to this state later
-     */
+    /** Goes to a new state, telling him to go back to this state later */
     moveToStateAddGoBack(stateId: string) {
         this.moveToState(stateId, {
             backToStateId: this.key,
@@ -92,15 +80,13 @@ export class TextualGameState extends GameState {
         }
     }
 
-    /**
-     * Overrides the GameState implementation to provide our own html
-     */
+    /** Overrides the GameState implementation to provide our own html */
     internalGetFullHtml() {
         let headerHtml = "";
         if (this.getStateHeaderTitle()) {
             headerHtml = `
             <div class="headerBar">
-
+            
                 <h1><button class="backButton"></button> ${this.getStateHeaderTitle()}</h1>
             </div>`;
         }
@@ -116,17 +102,13 @@ export class TextualGameState extends GameState {
 
     //// INTERNALS /////
 
-    /**
-     * Overrides the GameState leave callback to cleanup stuff
-     */
+    /** Overrides the GameState leave callback to cleanup stuff */
     internalLeaveCallback() {
         super.internalLeaveCallback();
         this.dialogs.cleanup();
     }
 
-    /**
-     * Overrides the GameState enter callback to setup required stuff
-     */
+    /** Overrides the GameState enter callback to setup required stuff */
     internalEnterCallback(payload: any) {
         super.internalEnterCallback(payload, false);
         if (payload.backToStateId) {

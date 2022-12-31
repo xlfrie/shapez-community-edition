@@ -2,6 +2,7 @@
 import type { GameSystem } from "./game_system";
 import type { GameRoot } from "./root";
 /* typehints:end */
+
 import { createLogger } from "../core/logging";
 import { BeltSystem } from "./systems/belt";
 import { ItemEjectorSystem } from "./systems/item_ejector";
@@ -27,51 +28,79 @@ import { ItemProducerSystem } from "./systems/item_producer";
 import { ConstantProducerSystem } from "./systems/constant_producer";
 import { GoalAcceptorSystem } from "./systems/goal_acceptor";
 import { ZoneSystem } from "./systems/zone";
+
 const logger = createLogger("game_system_manager");
+
 export const MODS_ADDITIONAL_SYSTEMS: {
     [idx: string]: Array<{
         id: string;
         systemClass: new (any) => GameSystem;
     }>;
 } = {};
+
 export class GameSystemManager {
     public root = root;
+
     public systems = {
         /* typehints:start */
-                belt: null,
-                itemEjector: null,
-                mapResources: null,
-                miner: null,
-                itemProcessor: null,
-                undergroundBelt: null,
-                hub: null,
-                staticMapEntities: null,
-                itemAcceptor: null,
-                storage: null,
-                wiredPins: null,
-                beltUnderlays: null,
-                wire: null,
-                constantSignal: null,
-                logicGate: null,
-                lever: null,
-                display: null,
-                itemProcessorOverlays: null,
-                beltReader: null,
-                filter: null,
-                itemProducer: null,
-                ConstantProducer: null,
-                GoalAcceptor: null,
-                zone: null,
+
+        belt: null,
+
+        itemEjector: null,
+
+        mapResources: null,
+
+        miner: null,
+
+        itemProcessor: null,
+
+        undergroundBelt: null,
+
+        hub: null,
+
+        staticMapEntities: null,
+
+        itemAcceptor: null,
+
+        storage: null,
+
+        wiredPins: null,
+
+        beltUnderlays: null,
+
+        wire: null,
+
+        constantSignal: null,
+
+        logicGate: null,
+
+        lever: null,
+
+        display: null,
+
+        itemProcessorOverlays: null,
+
+        beltReader: null,
+
+        filter: null,
+
+        itemProducer: null,
+
+        ConstantProducer: null,
+
+        GoalAcceptor: null,
+
+        zone: null,
+
         /* typehints:end */
     };
     public systemUpdateOrder = [];
 
-        constructor(root) {
+    constructor(root) {
         this.internalInitSystems();
     }
-    /**
-     * Initializes all systems
-     */
+
+    /** Initializes all systems */
     internalInitSystems() {
         const addBefore = id => {
             const systems = MODS_ADDITIONAL_SYSTEMS[id];
@@ -79,63 +108,92 @@ export class GameSystemManager {
                 systems.forEach(({ id, systemClass }) => add(id, systemClass));
             }
         };
+
         const add = (id, systemClass) => {
             addBefore(id);
             this.systems[id] = new systemClass(this.root);
             this.systemUpdateOrder.push(id);
         };
+
         // Order is important!
+
         // IMPORTANT: Item acceptor must be before the belt, because it may not tick after the belt
         // has put in the item into the acceptor animation, otherwise its off
         add("itemAcceptor", ItemAcceptorSystem);
+
         add("belt", BeltSystem);
+
         add("undergroundBelt", UndergroundBeltSystem);
+
         add("miner", MinerSystem);
+
         add("storage", StorageSystem);
+
         add("itemProcessor", ItemProcessorSystem);
+
         add("filter", FilterSystem);
+
         add("itemProducer", ItemProducerSystem);
+
         add("itemEjector", ItemEjectorSystem);
+
         if (this.root.gameMode.hasResources()) {
             add("mapResources", MapResourcesSystem);
         }
+
         add("hub", HubSystem);
+
         add("staticMapEntities", StaticMapEntitySystem);
+
         add("wiredPins", WiredPinsSystem);
+
         add("beltUnderlays", BeltUnderlaysSystem);
+
         add("constantSignal", ConstantSignalSystem);
+
         // WIRES section
         add("lever", LeverSystem);
+
         // Wires must be before all gate, signal etc logic!
         add("wire", WireSystem);
+
         // IMPORTANT: We have 2 phases: In phase 1 we compute the output values of all gates,
         // processors etc. In phase 2 we propagate it through the wires network
         add("logicGate", LogicGateSystem);
+
         add("beltReader", BeltReaderSystem);
+
         add("display", DisplaySystem);
+
         add("itemProcessorOverlays", ItemProcessorOverlaysSystem);
+
         add("constantProducer", ConstantProducerSystem);
+
         add("goalAcceptor", GoalAcceptorSystem);
+
         if (this.root.gameMode.getBuildableZones()) {
             add("zone", ZoneSystem);
         }
+
         addBefore("end");
+
         for (const key in MODS_ADDITIONAL_SYSTEMS) {
             if (!this.systems[key] && key !== "end") {
                 logger.error("Mod system not attached due to invalid 'before': ", key);
             }
         }
+
         logger.log("📦 There are", this.systemUpdateOrder.length, "game systems");
     }
-    /**
-     * Updates all systems
-     */
+
+    /** Updates all systems */
     update() {
         for (let i = 0; i < this.systemUpdateOrder.length; ++i) {
             const system = this.systems[this.systemUpdateOrder[i]];
             system.update();
         }
     }
+
     refreshCaches() {
         for (let i = 0; i < this.systemUpdateOrder.length; ++i) {
             const system = this.systems[this.systemUpdateOrder[i]];

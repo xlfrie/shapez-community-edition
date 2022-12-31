@@ -20,6 +20,7 @@ import { BeltReaderComponent } from "./components/belt_reader";
 import { FilterComponent } from "./components/filter";
 import { ItemProducerComponent } from "./components/item_producer";
 import { GoalAcceptorComponent } from "./components/goal_acceptor";
+
 export function initComponentRegistry() {
     const components = [
         StaticMapEntityComponent,
@@ -45,11 +46,17 @@ export function initComponentRegistry() {
         GoalAcceptorComponent,
     ];
     components.forEach(component => gComponentRegistry.register(component));
+
     // IMPORTANT ^^^^^ UPDATE ENTITY COMPONENT STORAGE AFTERWARDS
+
     // Sanity check - If this is thrown, you forgot to add a new component here
+
     assert(
-    // @ts-ignore
-    require.context("./components", false, /.*\.js/i).keys().length ===
-        gComponentRegistry.getNumEntries(), "Not all components are registered");
+        // @ts-ignore
+        require.context("./components", false, /.*\.js/i).keys().length ===
+            gComponentRegistry.getNumEntries(),
+        "Not all components are registered"
+    );
+
     console.log("📦 There are", gComponentRegistry.getNumEntries(), "components");
 }

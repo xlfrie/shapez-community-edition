@@ -4,10 +4,9 @@ import { GameSystem } from "../game_system";
 import { MapChunkView } from "../map_chunk_view";
 import { THEME } from "../theme";
 import { drawSpriteClipped } from "../../core/draw_utils";
+
 export class MapResourcesSystem extends GameSystem {
-    /**
-     * Draws the map resources
-     */
+    /** Draws the map resources */
     drawChunk(parameters: DrawParameters, chunk: MapChunkView) {
         const basicChunkBackground = this.root.buffers.getForKey({
             key: "mapresourcebg",
@@ -17,6 +16,7 @@ export class MapResourcesSystem extends GameSystem {
             dpi: 1,
             redrawMethod: this.generateChunkBackground.bind(this, chunk),
         });
+
         parameters.context.imageSmoothingEnabled = false;
         drawSpriteClipped({
             parameters,
@@ -29,7 +29,9 @@ export class MapResourcesSystem extends GameSystem {
             originalH: globalConfig.mapChunkSize,
         });
         parameters.context.imageSmoothingEnabled = true;
+
         parameters.context.globalAlpha = 0.5;
+
         if (this.root.app.settings.getAllSettings().lowQualityMapResources) {
             // LOW QUALITY: Draw patch items only
             for (let i = 0; i < chunk.patches.length; ++i) {
@@ -37,10 +39,10 @@ export class MapResourcesSystem extends GameSystem {
                 const destX = chunk.x * globalConfig.mapChunkWorldSize + patch.pos.x * globalConfig.tileSize;
                 const destY = chunk.y * globalConfig.mapChunkWorldSize + patch.pos.y * globalConfig.tileSize;
                 const diameter = Math.min(80, 40 / parameters.zoomLevel);
+
                 patch.item.drawItemCenteredClipped(destX, destY, parameters, diameter);
             }
-        }
-        else {
+        } else {
             // HIGH QUALITY: Draw all items
             const layer = chunk.lowerLayer;
             const layerEntities = chunk.contents;
@@ -50,31 +52,48 @@ export class MapResourcesSystem extends GameSystem {
                 const worldX = (chunk.tileX + x) * globalConfig.tileSize;
                 for (let y = 0; y < globalConfig.mapChunkSize; ++y) {
                     const lowerItem = row[y];
+
                     const entity = rowEntities[y];
                     if (entity) {
                         // Don't draw if there is an entity above
                         continue;
                     }
+
                     if (lowerItem) {
                         const worldY = (chunk.tileY + y) * globalConfig.tileSize;
+
                         const destX = worldX + globalConfig.halfTileSize;
                         const destY = worldY + globalConfig.halfTileSize;
-                        lowerItem.drawItemCenteredClipped(destX, destY, parameters, globalConfig.defaultItemDiameter);
+
+                        lowerItem.drawItemCenteredClipped(
+                            destX,
+                            destY,
+                            parameters,
+                            globalConfig.defaultItemDiameter
+                        );
                     }
                 }
             }
         }
         parameters.context.globalAlpha = 1;
     }
-        generateChunkBackground(chunk: MapChunkView, canvas: HTMLCanvasElement, context: CanvasRenderingContext2D, w: number, h: number, dpi: number) {
+
+    generateChunkBackground(
+        chunk: MapChunkView,
+        canvas: HTMLCanvasElement,
+        context: CanvasRenderingContext2D,
+        w: number,
+        h: number,
+        dpi: number
+    ) {
         if (this.root.app.settings.getAllSettings().disableTileGrid) {
             // The map doesn't draw a background, so we have to
             context.fillStyle = THEME.map.background;
             context.fillRect(0, 0, w, h);
-        }
-        else {
+        } else {
             context.clearRect(0, 0, w, h);
         }
+
         context.globalAlpha = 0.5;
         const layer = chunk.lowerLayer;
         for (let x = 0; x < globalConfig.mapChunkSize; ++x) {
@@ -87,6 +106,7 @@ export class MapResourcesSystem extends GameSystem {
                 }
             }
         }
+
         if (this.root.app.settings.getAllSettings().displayChunkBorders) {
             context.fillStyle = THEME.map.chunkBorders;
             context.fillRect(0, 0, w, 1);

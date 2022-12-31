@@ -1,4 +1,5 @@
 // ALEA RNG
+
 function Mash() {
     var n = 0xefc8249d;
     return function (data) {
@@ -61,37 +62,27 @@ function makeNewRng(seed: number | string) {
 }
 
 export class RandomNumberGenerator {
-    public internalRng: () => number;
+    public internalRng = makeNewRng(seed || Math.random());
 
-    constructor(seed?: number | string) {
-        this.internalRng = makeNewRng(seed || Math.random());
-    }
+    constructor(seed) {}
 
-    /**
-     * Re-seeds the generator
-     */
+    /** Re-seeds the generator */
     reseed(seed: number | string) {
         this.internalRng = makeNewRng(seed || Math.random());
     }
 
-    /**
-     * @returns between 0 and 1
-     */
+    /** @returns between 0 and 1 */
     next(): number {
         return this.internalRng();
     }
 
-    /**
-     * Random choice of an array
-     */
-    choice(array: any[]) {
+    /** Random choice of an array */
+    choice(array: array) {
         const index = this.nextIntRange(0, array.length);
         return array[index];
     }
 
-    /**
-     * @returns Integer in range [min, max[]
-     */
+    /** @returns Integer in range [min, max[ */
     nextIntRange(min: number, max: number): number {
         assert(Number.isFinite(min), "Minimum is no integer");
         assert(Number.isFinite(max), "Maximum is no integer");
@@ -99,17 +90,13 @@ export class RandomNumberGenerator {
         return Math.floor(this.next() * (max - min) + min);
     }
 
-    /**
-     * @returns Number in range [min, max[
-     */
+    /** @returns Number in range [min, max[ */
     nextRange(min: number, max: number): number {
         assert(max > min, "rng: max <= min");
         return this.next() * (max - min) + min;
     }
 
-    /**
-     * Updates the seed
-     */
+    /** Updates the seed */
     setSeed(seed: number) {
         this.internalRng = makeNewRng(seed);
     }

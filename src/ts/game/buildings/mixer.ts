@@ -8,11 +8,12 @@ import { Entity } from "../entity";
 import { defaultBuildingVariant, MetaBuilding } from "../meta_building";
 import { GameRoot } from "../root";
 import { enumHubGoalRewards } from "../tutorial_goals";
-export class MetaMixerBuilding extends MetaBuilding {
 
+export class MetaMixerBuilding extends MetaBuilding {
     constructor() {
         super("mixer");
     }
+
     static getAllVariantCombinations() {
         return [
             {
@@ -21,52 +22,56 @@ export class MetaMixerBuilding extends MetaBuilding {
             },
         ];
     }
+
     getDimensions() {
         return new Vector(2, 1);
     }
+
     getSilhouetteColor() {
         return "#cdbb7d";
     }
-        getIsUnlocked(root: GameRoot) {
+
+    getIsUnlocked(root: GameRoot) {
         return root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_mixer);
     }
-    /**
-     * {}
-     */
-    getAdditionalStatistics(root: GameRoot, variant: string): Array<[
-        string,
-        string
-    ]> {
+
+    getAdditionalStatistics(root: GameRoot, variant: string): Array<[string, string]> {
         if (root.gameMode.throughputDoesNotMatter()) {
             return [];
         }
         const speed = root.hubGoals.getProcessorBaseSpeed(enumItemProcessorTypes.mixer);
         return [[T.ingame.buildingPlacement.infoTexts.speed, formatItemsPerSecond(speed)]];
     }
-    /**
-     * Creates the entity at the given location
-     */
+
+    /** Creates the entity at the given location */
     setupEntityComponents(entity: Entity) {
-        entity.addComponent(new ItemProcessorComponent({
-            inputsPerCharge: 2,
-            processorType: enumItemProcessorTypes.mixer,
-        }));
-        entity.addComponent(new ItemEjectorComponent({
-            slots: [{ pos: new Vector(0, 0), direction: enumDirection.top }],
-        }));
-        entity.addComponent(new ItemAcceptorComponent({
-            slots: [
-                {
-                    pos: new Vector(0, 0),
-                    direction: enumDirection.bottom,
-                    filter: "color",
-                },
-                {
-                    pos: new Vector(1, 0),
-                    direction: enumDirection.bottom,
-                    filter: "color",
-                },
-            ],
-        }));
+        entity.addComponent(
+            new ItemProcessorComponent({
+                inputsPerCharge: 2,
+                processorType: enumItemProcessorTypes.mixer,
+            })
+        );
+
+        entity.addComponent(
+            new ItemEjectorComponent({
+                slots: [{ pos: new Vector(0, 0), direction: enumDirection.top }],
+            })
+        );
+        entity.addComponent(
+            new ItemAcceptorComponent({
+                slots: [
+                    {
+                        pos: new Vector(0, 0),
+                        direction: enumDirection.bottom,
+                        filter: "color",
+                    },
+                    {
+                        pos: new Vector(1, 0),
+                        direction: enumDirection.bottom,
+                        filter: "color",
+                    },
+                ],
+            })
+        );
     }
 }

@@ -14,20 +14,17 @@ import { MetaStackerBuilding } from "./buildings/stacker";
 import { MetaStorageBuilding } from "./buildings/storage";
 import { enumUndergroundBeltVariants, MetaUndergroundBeltBuilding } from "./buildings/underground_belt";
 import { defaultBuildingVariant, MetaBuilding } from "./meta_building";
-export type TutorialGoalReward = Array<[
-    typeof MetaBuilding,
-    string
-]>;
+
+export type TutorialGoalReward = Array<[typeof MetaBuilding, string]>;
 
 import { enumHubGoalRewards } from "./tutorial_goals";
-/**
- * Helper method for proper types
- *  {}
- */
+
+/** Helper method for proper types */
 const typed = (x): TutorialGoalReward => x;
+
 /**
  * Stores which reward unlocks what
- * @enum {TutorialGoalReward?}
+ * @enum
  */
 export const enumHubGoalRewardsToContentUnlocked = {
     [enumHubGoalRewards.reward_cutter_and_trash]: typed([[MetaCutterBuilding, defaultBuildingVariant]]),
@@ -37,6 +34,7 @@ export const enumHubGoalRewardsToContentUnlocked = {
     [enumHubGoalRewards.reward_stacker]: typed([[MetaStackerBuilding, defaultBuildingVariant]]),
     [enumHubGoalRewards.reward_balancer]: typed([[MetaBalancerBuilding, defaultBuildingVariant]]),
     [enumHubGoalRewards.reward_tunnel]: typed([[MetaUndergroundBeltBuilding, defaultBuildingVariant]]),
+
     [enumHubGoalRewards.reward_rotater_ccw]: typed([[MetaRotaterBuilding, enumRotaterVariants.ccw]]),
     [enumHubGoalRewards.reward_rotater_180]: typed([[MetaRotaterBuilding, enumRotaterVariants.rotate180]]),
     [enumHubGoalRewards.reward_miner_chainable]: typed([[MetaMinerBuilding, enumMinerVariants.chainable]]),
@@ -48,6 +46,7 @@ export const enumHubGoalRewardsToContentUnlocked = {
     [enumHubGoalRewards.reward_cutter_quad]: typed([[MetaCutterBuilding, enumCutterVariants.quad]]),
     [enumHubGoalRewards.reward_painter_double]: typed([[MetaPainterBuilding, enumPainterVariants.double]]),
     [enumHubGoalRewards.reward_storage]: typed([[MetaStorageBuilding, defaultBuildingVariant]]),
+
     [enumHubGoalRewards.reward_belt_reader]: typed([[MetaReaderBuilding, defaultBuildingVariant]]),
     [enumHubGoalRewards.reward_display]: typed([[MetaDisplayBuilding, defaultBuildingVariant]]),
     [enumHubGoalRewards.reward_constant_signal]: typed([
@@ -56,6 +55,7 @@ export const enumHubGoalRewardsToContentUnlocked = {
     [enumHubGoalRewards.reward_logic_gates]: typed([[MetaLogicGateBuilding, defaultBuildingVariant]]),
     [enumHubGoalRewards.reward_filter]: typed([[MetaFilterBuilding, defaultBuildingVariant]]),
     [enumHubGoalRewards.reward_virtual_processing]: null,
+
     [enumHubGoalRewards.reward_wires_painter_and_levers]: typed([
         [MetaPainterBuilding, enumPainterVariants.quad],
     ]),
@@ -65,13 +65,19 @@ export const enumHubGoalRewardsToContentUnlocked = {
     [enumHubGoalRewards.no_reward_freeplay]: null,
     [enumHubGoalRewards.reward_demo_end]: null,
 };
+
 if (G_IS_DEV) {
     // Sanity check
     for (const rewardId in enumHubGoalRewards) {
         const mapping = enumHubGoalRewardsToContentUnlocked[rewardId];
+
         if (typeof mapping === "undefined") {
-            assertAlways(false, "Please define a mapping for the reward " + rewardId + " in tutorial_goals_mappings.js");
+            assertAlways(
+                false,
+                "Please define a mapping for the reward " + rewardId + " in tutorial_goals_mappings.js"
+            );
         }
+
         const translation = T.storyRewards[rewardId];
         if (!translation || !translation.title || !translation.desc) {
             assertAlways(false, "Translation for reward " + rewardId + "missing");

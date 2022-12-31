@@ -1,10 +1,11 @@
 import { cachebust } from "../core/cachebust";
 import { GameState } from "../core/game_state";
-export class MobileWarningState extends GameState {
 
+export class MobileWarningState extends GameState {
     constructor() {
         super("MobileWarningState");
     }
+
     getInnerHTML() {
         return `
 
@@ -17,12 +18,15 @@ export class MobileWarningState extends GameState {
             <a href="https://get.shapez.io/shapez_mobile" class="standaloneLink" target="_blank">Play on Steam!</a>
         `;
     }
+
     getThemeMusic() {
         return null;
     }
+
     getHasFadeIn() {
         return false;
     }
+
     onEnter() {
         try {
             if (window.gtag) {
@@ -31,8 +35,7 @@ export class MobileWarningState extends GameState {
                     event_label: "mobile_warning",
                 });
             }
-        }
-        catch (ex) {
+        } catch (ex) {
             console.warn("Failed to track mobile click:", ex);
         }
     }

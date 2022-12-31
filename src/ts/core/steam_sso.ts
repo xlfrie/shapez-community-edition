@@ -1,11 +1,9 @@
-import { Application } from "../application";
-import { HUDModalDialogs } from "../game/hud/parts/modal_dialogs";
 import { T } from "../translations";
 import { openStandaloneLink } from "./config";
 
 export let WEB_STEAM_SSO_AUTHENTICATED = false;
 
-export async function authorizeViaSSOToken(app: Application, dialogs: HUDModalDialogs) {
+export async function authorizeViaSSOToken(app, dialogs) {
     if (G_IS_STANDALONE) {
         return;
     }
@@ -54,7 +52,7 @@ export async function authorizeViaSSOToken(app: Application, dialogs: HUDModalDi
         }
 
         try {
-            const response = (await Promise.race([
+            const response = await Promise.race([
                 fetch(apiUrl + "/v1/sso/refresh", {
                     method: "POST",
                     body: token,
@@ -65,7 +63,7 @@ export async function authorizeViaSSOToken(app: Application, dialogs: HUDModalDi
                 new Promise((resolve, reject) => {
                     setTimeout(() => reject("timeout exceeded"), 20000);
                 }),
-            ])) as Response;
+            ]);
 
             const responseText = await response.json();
             if (!responseText.token) {

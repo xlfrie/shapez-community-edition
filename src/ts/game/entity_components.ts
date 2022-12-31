@@ -21,33 +21,55 @@ import type { FilterComponent } from "./components/filter";
 import type { ItemProducerComponent } from "./components/item_producer";
 import type { GoalAcceptorComponent } from "./components/goal_acceptor";
 /* typehints:end */
+
 /**
  * Typedefs for all entity components. These are not actually present on the entity,
  * thus they are undefined by default
  */
 export class EntityComponentStorage {
+    /* typehints:start */
+
     public StaticMapEntity: StaticMapEntityComponent;
+
     public Belt: BeltComponent;
+
     public ItemEjector: ItemEjectorComponent;
+
     public ItemAcceptor: ItemAcceptorComponent;
+
     public Miner: MinerComponent;
+
     public ItemProcessor: ItemProcessorComponent;
+
     public UndergroundBelt: UndergroundBeltComponent;
+
     public Hub: HubComponent;
+
     public Storage: StorageComponent;
+
     public WiredPins: WiredPinsComponent;
+
     public BeltUnderlays: BeltUnderlaysComponent;
+
     public Wire: WireComponent;
+
     public ConstantSignal: ConstantSignalComponent;
+
     public LogicGate: LogicGateComponent;
+
     public Lever: LeverComponent;
+
     public WireTunnel: WireTunnelComponent;
+
     public Display: DisplayComponent;
+
     public BeltReader: BeltReaderComponent;
+
     public Filter: FilterComponent;
+
     public ItemProducer: ItemProducerComponent;
+
     public GoalAcceptor: GoalAcceptorComponent;
 
-    constructor() {
-    }
+    constructor() {}
 }

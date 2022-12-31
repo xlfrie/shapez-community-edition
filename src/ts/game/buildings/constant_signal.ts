@@ -6,12 +6,14 @@ import { GameRoot } from "../root";
 import { ConstantSignalComponent } from "../components/constant_signal";
 import { generateMatrixRotations } from "../../core/utils";
 import { enumHubGoalRewards } from "../tutorial_goals";
-const overlayMatrix = generateMatrixRotations([0, 1, 0, 1, 1, 1, 1, 1, 1]);
-export class MetaConstantSignalBuilding extends MetaBuilding {
 
+const overlayMatrix = generateMatrixRotations([0, 1, 0, 1, 1, 1, 1, 1, 1]);
+
+export class MetaConstantSignalBuilding extends MetaBuilding {
     constructor() {
         super("constant_signal");
     }
+
     static getAllVariantCombinations() {
         return [
             {
@@ -20,38 +22,47 @@ export class MetaConstantSignalBuilding extends MetaBuilding {
             },
         ];
     }
+
     getSilhouetteColor() {
         return "#2b84fd";
     }
-        getIsUnlocked(root: GameRoot) {
+
+    getIsUnlocked(root: GameRoot) {
         return root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_constant_signal);
     }
-    /** {} **/
+
+    /**
+ @returns *
+*/
     getLayer(): "wires" {
         return "wires";
     }
+
     getDimensions() {
         return new Vector(1, 1);
     }
+
     getRenderPins() {
         return false;
     }
+
     getSpecialOverlayRenderMatrix(rotation) {
         return overlayMatrix[rotation];
     }
-    /**
-     * Creates the entity at the given location
-     */
+
+    /** Creates the entity at the given location */
     setupEntityComponents(entity: Entity) {
-        entity.addComponent(new WiredPinsComponent({
-            slots: [
-                {
-                    pos: new Vector(0, 0),
-                    direction: enumDirection.top,
-                    type: enumPinSlotType.logicalEjector,
-                },
-            ],
-        }));
+        entity.addComponent(
+            new WiredPinsComponent({
+                slots: [
+                    {
+                        pos: new Vector(0, 0),
+                        direction: enumDirection.top,
+                        type: enumPinSlotType.logicalEjector,
+                    },
+                ],
+            })
+        );
         entity.addComponent(new ConstantSignalComponent({}));
     }
 }

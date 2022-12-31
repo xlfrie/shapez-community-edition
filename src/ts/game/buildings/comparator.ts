@@ -5,11 +5,12 @@ import { Entity } from "../entity";
 import { defaultBuildingVariant, MetaBuilding } from "../meta_building";
 import { GameRoot } from "../root";
 import { enumHubGoalRewards } from "../tutorial_goals";
-export class MetaComparatorBuilding extends MetaBuilding {
 
+export class MetaComparatorBuilding extends MetaBuilding {
     constructor() {
         super("comparator");
     }
+
     static getAllVariantCombinations() {
         return [
             {
@@ -18,48 +19,59 @@ export class MetaComparatorBuilding extends MetaBuilding {
             },
         ];
     }
+
     getSilhouetteColor() {
         return "#823cab";
     }
-        getIsUnlocked(root: GameRoot) {
+
+    getIsUnlocked(root: GameRoot) {
         return root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_virtual_processing);
     }
-    /** {} **/
+
+    /**
+ @returns *
+*/
     getLayer(): "wires" {
         return "wires";
     }
+
     getDimensions() {
         return new Vector(1, 1);
     }
+
     getRenderPins() {
         // We already have it included
         return false;
     }
-    /**
-     * Creates the entity at the given location
-     */
+
+    /** Creates the entity at the given location */
     setupEntityComponents(entity: Entity) {
-        entity.addComponent(new WiredPinsComponent({
-            slots: [
-                {
-                    pos: new Vector(0, 0),
-                    direction: enumDirection.top,
-                    type: enumPinSlotType.logicalEjector,
-                },
-                {
-                    pos: new Vector(0, 0),
-                    direction: enumDirection.left,
-                    type: enumPinSlotType.logicalAcceptor,
-                },
-                {
-                    pos: new Vector(0, 0),
-                    direction: enumDirection.right,
-                    type: enumPinSlotType.logicalAcceptor,
-                },
-            ],
-        }));
-        entity.addComponent(new LogicGateComponent({
-            type: enumLogicGateType.compare,
-        }));
+        entity.addComponent(
+            new WiredPinsComponent({
+                slots: [
+                    {
+                        pos: new Vector(0, 0),
+                        direction: enumDirection.top,
+                        type: enumPinSlotType.logicalEjector,
+                    },
+                    {
+                        pos: new Vector(0, 0),
+                        direction: enumDirection.left,
+                        type: enumPinSlotType.logicalAcceptor,
+                    },
+                    {
+                        pos: new Vector(0, 0),
+                        direction: enumDirection.right,
+                        type: enumPinSlotType.logicalAcceptor,
+                    },
+                ],
+            })
+        );
+
+        entity.addComponent(
+            new LogicGateComponent({
+                type: enumLogicGateType.compare,
+            })
+        );
     }
 }

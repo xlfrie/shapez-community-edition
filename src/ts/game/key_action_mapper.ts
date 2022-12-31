@@ -3,25 +3,34 @@ import type { GameRoot } from "./root";
 import type { InputReceiver } from "../core/input_receiver";
 import type { Application } from "../application";
 /* typehints:end */
+
 import { Signal, STOP_PROPAGATION } from "../core/signal";
 import { IS_MOBILE } from "../core/config";
 import { T } from "../translations";
+
 export function keyToKeyCode(str) {
     return str.toUpperCase().charCodeAt(0);
 }
+
 export const KEYCODES = {
     Tab: 9,
     Enter: 13,
+
     Shift: 16,
     Ctrl: 17,
     Alt: 18,
+
     Escape: 27,
+
     Space: 32,
+
     ArrowLeft: 37,
     ArrowUp: 38,
     ArrowRight: 39,
     ArrowDown: 40,
+
     Delete: 46,
+
     F1: 112,
     F2: 113,
     F3: 114,
@@ -34,42 +43,53 @@ export const KEYCODES = {
     F10: 121,
     F11: 122,
     F12: 123,
+
     Plus: 187,
     Minus: 189,
 };
+
 export const KEYMAPPINGS = {
     // Make sure mods come first so they can override everything
     mods: {},
+
     general: {
         confirm: { keyCode: KEYCODES.Enter },
         back: { keyCode: KEYCODES.Escape, builtin: true },
     },
+
     ingame: {
         menuOpenShop: { keyCode: keyToKeyCode("F") },
         menuOpenStats: { keyCode: keyToKeyCode("G") },
         menuClose: { keyCode: keyToKeyCode("Q") },
+
         toggleHud: { keyCode: KEYCODES.F2 },
         exportScreenshot: { keyCode: KEYCODES.F3 },
         toggleFPSInfo: { keyCode: KEYCODES.F4 },
+
         switchLayers: { keyCode: keyToKeyCode("E") },
+
         showShapeTooltip: { keyCode: KEYCODES.Alt },
     },
+
     navigation: {
         mapMoveUp: { keyCode: keyToKeyCode("W") },
         mapMoveRight: { keyCode: keyToKeyCode("D") },
         mapMoveDown: { keyCode: keyToKeyCode("S") },
         mapMoveLeft: { keyCode: keyToKeyCode("A") },
         mapMoveFaster: { keyCode: KEYCODES.Shift },
+
         centerMap: { keyCode: KEYCODES.Space },
         mapZoomIn: { keyCode: KEYCODES.Plus, repeated: true },
         mapZoomOut: { keyCode: KEYCODES.Minus, repeated: true },
         createMarker: { keyCode: keyToKeyCode("M") },
     },
+
     buildings: {
         // Puzzle buildings
         constant_producer: { keyCode: keyToKeyCode("H") },
         goal_acceptor: { keyCode: keyToKeyCode("N") },
         block: { keyCode: keyToKeyCode("4") },
+
         // Primary Toolbar
         belt: { keyCode: keyToKeyCode("1") },
         balancer: { keyCode: keyToKeyCode("2") },
@@ -81,14 +101,17 @@ export const KEYMAPPINGS = {
         mixer: { keyCode: keyToKeyCode("8") },
         painter: { keyCode: keyToKeyCode("9") },
         trash: { keyCode: keyToKeyCode("0") },
+
         // Sandbox
         item_producer: { keyCode: keyToKeyCode("L") },
+
         // Secondary toolbar
         storage: { keyCode: keyToKeyCode("Y") },
         reader: { keyCode: keyToKeyCode("U") },
         lever: { keyCode: keyToKeyCode("I") },
         filter: { keyCode: keyToKeyCode("O") },
         display: { keyCode: keyToKeyCode("P") },
+
         // Wires toolbar
         wire: { keyCode: keyToKeyCode("1") },
         wire_tunnel: { keyCode: keyToKeyCode("2") },
@@ -99,6 +122,7 @@ export const KEYMAPPINGS = {
         comparator: { keyCode: keyToKeyCode("7") },
         transistor: { keyCode: keyToKeyCode("8") },
     },
+
     placement: {
         pipette: { keyCode: keyToKeyCode("Q") },
         rotateWhilePlacing: { keyCode: keyToKeyCode("R") },
@@ -110,8 +134,10 @@ export const KEYMAPPINGS = {
         cycleBuildingVariants: { keyCode: keyToKeyCode("T") },
         cycleBuildings: { keyCode: KEYCODES.Tab },
         switchDirectionLockSide: { keyCode: keyToKeyCode("R") },
+
         copyWireValue: { keyCode: keyToKeyCode("Z") },
     },
+
     massSelect: {
         massSelectStart: { keyCode: KEYCODES.Ctrl },
         massSelectSelectMultiple: { keyCode: KEYCODES.Shift },
@@ -121,6 +147,7 @@ export const KEYMAPPINGS = {
         confirmMassDelete: { keyCode: KEYCODES.Delete },
         pasteLastBlueprint: { keyCode: keyToKeyCode("V") },
     },
+
     placementModifiers: {
         lockBeltDirection: { keyCode: KEYCODES.Shift },
         placementDisableAutoOrientation: { keyCode: KEYCODES.Ctrl },
@@ -128,19 +155,19 @@ export const KEYMAPPINGS = {
         placeInverse: { keyCode: KEYCODES.Alt },
     },
 };
+
 // Assign ids
 for (const categoryId in KEYMAPPINGS) {
     for (const mappingId in KEYMAPPINGS[categoryId]) {
         KEYMAPPINGS[categoryId][mappingId].id = mappingId;
     }
 }
+
 export const KEYCODE_LMB = 1;
 export const KEYCODE_MMB = 2;
 export const KEYCODE_RMB = 3;
-/**
- * Returns a keycode -> string
- * {}
- */
+
+/** Returns a keycode -> string */
 export function getStringForKeyCode(code: number): string {
     // @todo: Refactor into dictionary
     switch (code) {
@@ -252,6 +279,7 @@ export function getStringForKeyCode(code: number): string {
             return "F11";
         case KEYCODES.F12:
             return "F12";
+
         case 144:
             return "NUMLOCK";
         case 145:
@@ -283,27 +311,29 @@ export function getStringForKeyCode(code: number): string {
         case 222:
             return "'";
     }
+
     return (48 <= code && code <= 57) || (65 <= code && code <= 90)
         ? String.fromCharCode(code)
         : "[" + code + "]";
 }
+
 export class Keybinding {
     public keyMapper = keyMapper;
     public app = app;
     public keyCode = keyCode;
     public builtin = builtin;
     public repeated = repeated;
+
     public modifiers = modifiers;
+
     public signal = new Signal();
     public toggled = new Signal();
 
-        constructor(keyMapper, app, { keyCode, builtin = false, repeated = false, modifiers = {} }) {
+    constructor(keyMapper, app, { keyCode, builtin = false, repeated = false, modifiers = {} }) {
         assert(keyCode && Number.isInteger(keyCode), "Invalid key code: " + keyCode);
     }
-    /**
-     * Returns whether this binding is currently pressed
-     * {}
-     */
+
+    /** Returns whether this binding is currently pressed */
     get pressed() {
         // Check if the key is down
         if (this.app.inputMgr.keysDown.has(this.keyCode)) {
@@ -313,21 +343,18 @@ export class Keybinding {
         }
         return false;
     }
-    /**
-     * Adds an event listener
-     */
-    add(receiver: function():void, scope: object= = null) {
+
+    /** Adds an event listener */
+    add(receiver: () => void, scope: object = null) {
         this.signal.add(receiver, scope);
     }
-    /**
-     * Adds an event listener
-     */
-    addToTop(receiver: function():void, scope: object= = null) {
+
+    /** Adds an event listener */
+    addToTop(receiver: () => void, scope: object = null) {
         this.signal.addToTop(receiver, scope);
     }
-    /**
-     * {} the created element, or null if the keybindings are not shown
-     *  */
+
+    /** @returns the created element, or null if the keybindings are not shown * */
     appendLabelToElement(elem: Element): HTMLElement {
         if (IS_MOBILE) {
             return null;
@@ -338,30 +365,32 @@ export class Keybinding {
         elem.appendChild(spacer);
         return spacer;
     }
-    /**
-     * Returns the key code as a nice string
-     */
+
+    /** Returns the key code as a nice string */
     getKeyCodeString() {
         return getStringForKeyCode(this.keyCode);
     }
-    /**
-     * Remvoes all signal receivers
-     */
+
+    /** Remvoes all signal receivers */
     clearSignalReceivers() {
         this.signal.removeAll();
     }
 }
+
 export class KeyActionMapper {
     public root = root;
     public inputReceiver = inputReciever;
+
     public keybindings: {
         [idx: string]: Keybinding;
     } = {};
 
-        constructor(root, inputReciever) {
+    constructor(root, inputReciever) {
         inputReciever.keydown.add(this.handleKeydown, this);
         inputReciever.keyup.add(this.handleKeyup, this);
+
         const overrides = root.app.settings.getKeybindingOverrides();
+
         for (const category in KEYMAPPINGS) {
             for (const key in KEYMAPPINGS[category]) {
                 let payload = Object.assign({}, KEYMAPPINGS[category][key]);
@@ -369,6 +398,7 @@ export class KeyActionMapper {
                     payload.keyCode = overrides[key];
                 }
                 this.keybindings[key] = new Keybinding(this, this.root.app, payload);
+
                 if (G_IS_DEV) {
                     // Sanity
                     if (!T.keybindings.mappings[key]) {
@@ -377,13 +407,12 @@ export class KeyActionMapper {
                 }
             }
         }
+
         inputReciever.pageBlur.add(this.onPageBlur, this);
         inputReciever.destroyed.add(this.cleanup, this);
     }
-    /**
-     * Returns all keybindings starting with the given id
-     * {}
-     */
+
+    /** Returns all keybindings starting with the given id */
     getKeybindingsStartingWith(pattern: string): Array<Keybinding> {
         let result = [];
         for (const key in this.keybindings) {
@@ -393,88 +422,90 @@ export class KeyActionMapper {
         }
         return result;
     }
-    /**
-     * Forwards the given events to the other mapper (used in tooltips)
-     */
+
+    /** Forwards the given events to the other mapper (used in tooltips) */
     forward(receiver: KeyActionMapper, bindings: Array<string>) {
         for (let i = 0; i < bindings.length; ++i) {
             const key = bindings[i];
             this.keybindings[key].signal.add((...args) => receiver.keybindings[key].signal.dispatch(...args));
         }
     }
+
     cleanup() {
         for (const key in this.keybindings) {
             this.keybindings[key].signal.removeAll();
         }
     }
+
     onPageBlur() {
         // Reset all down states
         // Find mapping
         for (const key in this.keybindings) {
-                        const binding: Keybinding = this.keybindings[key];
+            const binding: Keybinding = this.keybindings[key];
         }
     }
-    /**
-     * Internal keydown handler
-     */
-    handleKeydown({ keyCode, shift, alt, ctrl, initial }: {
-        keyCode: number;
-        shift: boolean;
-        alt: boolean;
-        ctrl: boolean;
-        initial: boolean=;
-    }) {
+
+    /** Internal keydown handler */
+    handleKeydown(
+        {
+            keyCode,
+            shift,
+            alt,
+            ctrl,
+            initial,
+        }: {
+            keyCode: number;
+            shift: boolean;
+            alt: boolean;
+            ctrl: boolean;
+            initial?: boolean;
+        } /*--REMOVE_PREV--*/
+    ) {
         let stop = false;
+
         // Find mapping
         for (const key in this.keybindings) {
-                        const binding: Keybinding = this.keybindings[key];
+            const binding: Keybinding = this.keybindings[key];
             if (binding.keyCode === keyCode && (initial || binding.repeated)) {
                 if (binding.modifiers.shift && !shift) {
                     continue;
                 }
+
                 if (binding.modifiers.ctrl && !ctrl) {
                     continue;
                 }
+
                 if (binding.modifiers.alt && !alt) {
                     continue;
                 }
-                                const signal: Signal = this.keybindings[key].signal;
+
+                const signal: Signal = this.keybindings[key].signal;
                 if (signal.dispatch() === STOP_PROPAGATION) {
                     return;
                 }
             }
         }
+
         if (stop) {
             return STOP_PROPAGATION;
         }
     }
-    /**
-     * Internal keyup handler
-     */
-    handleKeyup({ keyCode, shift, alt }: {
-        keyCode: number;
-        shift: boolean;
-        alt: boolean;
-    }) {
+
+    /** Internal keyup handler */
+    handleKeyup({ keyCode, shift, alt }: { keyCode: number; shift: boolean; alt: boolean }) {
         // Empty
     }
-    /**
-     * Returns a given keybinding
-     * {}
-     */
-    getBinding(binding: {
-        keyCode: number;
-    }): Keybinding {
+
+    /** Returns a given keybinding */
+    getBinding(binding: { keyCode: number }): Keybinding {
         // @ts-ignore
         const id = binding.id;
         assert(id, "Not a valid keybinding: " + JSON.stringify(binding));
         assert(this.keybindings[id], "Keybinding " + id + " not known!");
         return this.keybindings[id];
     }
-    /**
-     * Returns a given keybinding
-     * {}
-     */
+
+    /** Returns a given keybinding */
     getBindingById(id: string): Keybinding {
         assert(this.keybindings[id], "Keybinding " + id + " not known!");
         return this.keybindings[id];

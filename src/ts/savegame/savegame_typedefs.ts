@@ -1,5 +1,5 @@
-
 export type Entity = import("../game/entity").Entity;
+
 export type SavegameStoredMods = {
     id: string;
     version: string;
@@ -7,11 +7,13 @@ export type SavegameStoredMods = {
     name: string;
     author: string;
 }[];
+
 export type SavegameStats = {
     failedMam: boolean;
     trashedCount: number;
     usedInverseRotater: boolean;
 };
+
 export type SerializedGame = {
     camera: any;
     time: any;
@@ -25,6 +27,7 @@ export type SerializedGame = {
     beltPaths: Array<any>;
     modExtraData: Object;
 };
+
 export type SavegameData = {
     version: number;
     dump: SerializedGame;
@@ -32,6 +35,7 @@ export type SavegameData = {
     lastUpdate: number;
     mods: SavegameStoredMods;
 };
+
 export type SavegameMetadata = {
     lastUpdate: number;
     version: number;
@@ -39,11 +43,16 @@ export type SavegameMetadata = {
     level: number;
     name: string | null;
 };
+
 export type SavegamesData = {
     version: number;
     savegames: Array<SavegameMetadata>;
 };
+
 import { MetaBuilding } from "../game/meta_building";
+
+//// Notice: Update backend too
+
 export type PuzzleMetadata = {
     id: number;
     shortKey: string;
@@ -56,6 +65,9 @@ export type PuzzleMetadata = {
     author: string;
     completed: boolean;
 };
+
+//// Notice: Update backend too
+
 export type PuzzleGameBuildingConstantProducer = {
     type: "emitter";
     item: string;
@@ -65,6 +77,9 @@ export type PuzzleGameBuildingConstantProducer = {
         r: number;
     };
 };
+
+//// Notice: Update backend too
+
 export type PuzzleGameBuildingGoal = {
     type: "goal";
     item: string;
@@ -74,6 +89,9 @@ export type PuzzleGameBuildingGoal = {
         r: number;
     };
 };
+
+//// Notice: Update backend too
+
 export type PuzzleGameBuildingBlock = {
     type: "block";
     pos: {
@@ -82,6 +100,9 @@ export type PuzzleGameBuildingBlock = {
         r: number;
     };
 };
+
+//// Notice: Update backend too
+
 export type PuzzleGameData = {
     version: number;
     bounds: {
@@ -91,15 +112,14 @@ export type PuzzleGameData = {
     buildings: (PuzzleGameBuildingGoal | PuzzleGameBuildingConstantProducer | PuzzleGameBuildingBlock)[];
     excludedBuildings: Array<string>;
 };
+
+//// Notice: Update backend too
+
 export type PuzzleFullData = {
     meta: PuzzleMetadata;
     game: PuzzleGameData;
 };
+
 // Notice: Update backend too
-
-
-
-
-
 
 export default {};

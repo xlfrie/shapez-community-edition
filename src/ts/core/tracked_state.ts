@@ -1,10 +1,7 @@
-export class TrackedState<T> {
-    public callback: (value: T) => void;
-    public callbackScope: object;
+export class TrackedState {
+    public lastSeenValue = null;
 
-    public lastSeenValue: T = null;
-
-    constructor(callbackMethod: (value: T) => void = null, callbackScope: any = null) {
+    constructor(callbackMethod = null, callbackScope = null) {
         if (callbackMethod) {
             this.callback = callbackMethod;
             if (callbackScope) {
@@ -13,7 +10,7 @@ export class TrackedState<T> {
         }
     }
 
-    set(value: T, changeHandler: (value: T) => void = null, changeScope: object = null) {
+    set(value, changeHandler = null, changeScope = null) {
         if (value !== this.lastSeenValue) {
             // Copy value since the changeHandler call could actually modify our lastSeenValue
             const valueCopy = value;
@@ -32,11 +29,11 @@ export class TrackedState<T> {
         }
     }
 
-    setSilent(value: T) {
+    setSilent(value) {
         this.lastSeenValue = value;
     }
 
-    get(): T {
+    get() {
         return this.lastSeenValue;
     }
 }

@@ -1,4 +1,6 @@
+/* typehints:start*/
 import type { Application } from "../application";
+/* typehints:end*/
 
 import { GameState } from "./game_state";
 import { createLogger } from "./logging";
@@ -7,21 +9,20 @@ import { MOD_SIGNALS } from "../mods/mod_signals";
 
 const logger = createLogger("state_manager");
 
-/**
- * This is the main state machine which drives the game states.
- */
+/** This is the main state machine which drives the game states. */
 export class StateManager {
+    public app = app;
+
     public currentState: GameState = null;
+
     public stateClasses: {
         [idx: string]: new () => GameState;
     } = {};
 
-    constructor(public app: Application) {}
+    constructor(app) {}
 
-    /**
-     * Registers a new state class, should be a GameState derived class
-     */
-    register(stateClass: { new (): GameState }) {
+    /** Registers a new state class, should be a GameState derived class */
+    register(stateClass: object) {
         // Create a dummy to retrieve the key
         const dummy = new stateClass();
         assert(dummy instanceof GameState, "Not a state!");
@@ -30,9 +31,7 @@ export class StateManager {
         this.stateClasses[key] = stateClass;
     }
 
-    /**
-     * Constructs a new state or returns the instance from the cache
-     */
+    /** Constructs a new state or returns the instance from the cache */
     constructState(key: string) {
         if (this.stateClasses[key]) {
             return new this.stateClasses[key]();
@@ -42,8 +41,9 @@ export class StateManager {
 
     /**
      * Moves to a given state
+     * @param key State Key
      */
-    moveToState(key: string, payload: object = {}) {
+    moveToState(key: string, payload = {}) {
         if (window.APP_ERROR_OCCURED) {
             console.warn("Skipping state transition because of application crash");
             return;
@@ -112,9 +112,7 @@ export class StateManager {
         return true;
     }
 
-    /**
-     * Returns the current state
-     */
+    /** Returns the current state */
     getCurrentState(): GameState {
         return this.currentState;
     }

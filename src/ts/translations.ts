@@ -11,13 +11,12 @@ export let T = baseTranslations;
 
 if (G_IS_DEV && globalConfig.debug.testTranslations) {
     // Replaces all translations by fake translations to see whats translated and what not
-    const mapTranslations = (obj: object) => {
+    const mapTranslations = obj => {
         for (const key in obj) {
             const value = obj[key];
             if (typeof value === "string") {
                 obj[key] = value.replace(/[a-z]/gi, "x");
-            }
-            else {
+            } else {
                 mapTranslations(value);
             }
         }
@@ -25,9 +24,8 @@ if (G_IS_DEV && globalConfig.debug.testTranslations) {
     mapTranslations(T);
 }
 
-
 // Language key is something like de-DE or en or en-US
-function mapLanguageCodeToId(languageKey: string) {
+function mapLanguageCodeToId(languageKey) {
     const key = languageKey.toLowerCase();
     const shortKey = key.split("-")[0];
 
@@ -60,21 +58,18 @@ function mapLanguageCodeToId(languageKey: string) {
             return id;
         }
     }
+
     return null;
 }
 
-/**
- * Tries to auto-detect a language
- */
+/** Tries to auto-detect a language */
 export function autoDetectLanguageId(): string {
-    let languages:string[] = [];
+    let languages = [];
     if (navigator.languages) {
         languages = navigator.languages.slice();
-    }
-    else if (navigator.language) {
+    } else if (navigator.language) {
         languages = [navigator.language];
-    }
-    else {
+    } else {
         logger.warn("Navigator has no languages prop");
     }
 
@@ -90,7 +85,7 @@ export function autoDetectLanguageId(): string {
     return "en";
 }
 
-export function matchDataRecursive(dest: object, src: object, addNewKeys: boolean = false) {
+export function matchDataRecursive(dest, src, addNewKeys = false) {
     if (typeof dest !== "object" || typeof src !== "object") {
         return;
     }
@@ -104,12 +99,10 @@ export function matchDataRecursive(dest: object, src: object, addNewKeys: boolea
             const data = dest[key];
             if (typeof data === "object") {
                 matchDataRecursive(dest[key], src[key], addNewKeys);
-            }
-            else if (typeof data === "string" || typeof data === "number") {
+            } else if (typeof data === "string" || typeof data === "number") {
                 // console.log("match string", key);
                 dest[key] = src[key];
-            }
-            else {
+            } else {
                 logger.log("Unknown type:", typeof data, "in key", key);
             }
         }
@@ -124,7 +117,7 @@ export function matchDataRecursive(dest: object, src: object, addNewKeys: boolea
     }
 }
 
-export function updateApplicationLanguage(id: string) {
+export function updateApplicationLanguage(id) {
     logger.log("Setting application language:", id);
 
     const data = LANGUAGES[id];

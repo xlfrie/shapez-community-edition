@@ -8,18 +8,23 @@ import { Entity } from "../entity";
 import { defaultBuildingVariant, MetaBuilding } from "../meta_building";
 import { GameRoot } from "../root";
 import { enumHubGoalRewards } from "../tutorial_goals";
-/** @enum {string} */
+
+/**
+ @enum 
+*/
 export const enumRotaterVariants = { ccw: "ccw", rotate180: "rotate180" };
+
 const overlayMatrices = {
     [defaultBuildingVariant]: generateMatrixRotations([0, 1, 1, 1, 1, 0, 0, 1, 1]),
     [enumRotaterVariants.ccw]: generateMatrixRotations([1, 1, 0, 0, 1, 1, 1, 1, 0]),
     [enumRotaterVariants.rotate180]: generateMatrixRotations([1, 1, 0, 1, 1, 1, 0, 1, 1]),
 };
-export class MetaRotaterBuilding extends MetaBuilding {
 
+export class MetaRotaterBuilding extends MetaBuilding {
     constructor() {
         super("rotater");
     }
+
     static getAllVariantCombinations() {
         return [
             {
@@ -36,26 +41,25 @@ export class MetaRotaterBuilding extends MetaBuilding {
             },
         ];
     }
+
     getSilhouetteColor() {
         return "#7dc6cd";
     }
-    /**
-     * {}
-     */
-    getSpecialOverlayRenderMatrix(rotation: number, rotationVariant: number, variant: string, entity: Entity): Array<number> | null {
+
+    getSpecialOverlayRenderMatrix(
+        rotation: number,
+        rotationVariant: number,
+        variant: string,
+        entity: Entity
+    ): Array<number> | null {
         const matrix = overlayMatrices[variant];
         if (matrix) {
             return matrix[rotation];
         }
         return null;
     }
-    /**
-     * {}
-     */
-    getAdditionalStatistics(root: GameRoot, variant: string): Array<[
-        string,
-        string
-    ]> {
+
+    getAdditionalStatistics(root: GameRoot, variant: string): Array<[string, string]> {
         if (root.gameMode.throughputDoesNotMatter()) {
             return [];
         }
@@ -74,7 +78,8 @@ export class MetaRotaterBuilding extends MetaBuilding {
             }
         }
     }
-        getAvailableVariants(root: GameRoot) {
+
+    getAvailableVariants(root: GameRoot) {
         let variants = [defaultBuildingVariant];
         if (root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_rotater_ccw)) {
             variants.push(enumRotaterVariants.ccw);
@@ -84,31 +89,39 @@ export class MetaRotaterBuilding extends MetaBuilding {
         }
         return variants;
     }
-        getIsUnlocked(root: GameRoot) {
+
+    getIsUnlocked(root: GameRoot) {
         return root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_rotater);
     }
-    /**
-     * Creates the entity at the given location
-     */
+
+    /** Creates the entity at the given location */
     setupEntityComponents(entity: Entity) {
-        entity.addComponent(new ItemProcessorComponent({
-            inputsPerCharge: 1,
-            processorType: enumItemProcessorTypes.rotater,
-        }));
-        entity.addComponent(new ItemEjectorComponent({
-            slots: [{ pos: new Vector(0, 0), direction: enumDirection.top }],
-        }));
-        entity.addComponent(new ItemAcceptorComponent({
-            slots: [
-                {
-                    pos: new Vector(0, 0),
-                    direction: enumDirection.bottom,
-                    filter: "shape",
-                },
-            ],
-        }));
+        entity.addComponent(
+            new ItemProcessorComponent({
+                inputsPerCharge: 1,
+                processorType: enumItemProcessorTypes.rotater,
+            })
+        );
+
+        entity.addComponent(
+            new ItemEjectorComponent({
+                slots: [{ pos: new Vector(0, 0), direction: enumDirection.top }],
+            })
+        );
+        entity.addComponent(
+            new ItemAcceptorComponent({
+                slots: [
+                    {
+                        pos: new Vector(0, 0),
+                        direction: enumDirection.bottom,
+                        filter: "shape",
+                    },
+                ],
+            })
+        );
     }
-        updateVariants(entity: Entity, rotationVariant: number, variant: string) {
+
+    updateVariants(entity: Entity, rotationVariant: number, variant: string) {
         switch (variant) {
             case defaultBuildingVariant: {
                 entity.components.ItemProcessor.type = enumItemProcessorTypes.rotater;

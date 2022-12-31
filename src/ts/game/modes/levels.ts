@@ -3,58 +3,12 @@ import type { Application } from "../../application";
 /* typehints:end */
 import { WEB_STEAM_SSO_AUTHENTICATED } from "../../core/steam_sso";
 import { enumHubGoalRewards } from "../tutorial_goals";
+
 export const finalGameShape = "RuCw--Cw:----Ru--";
+
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
-/**
- *
- * 
-/**
- *
- */
-cons
-/**
- *
- * 
-/**
- *
- * 
-/**
- *
- * 
-/**
- *
- * @param {} app
- 
- */
-const
-/**
- *
- * 
-/**
- *
- * 
-/**
- *
- * 
-/**
- *
- * @param {} app
- * @
-/**
- *
- * 
-/**
- *
- * 
-/**
- *
- * 
-/**
- *
- * @param {Application} app
- * @returns
- */
+
 const WEB_DEMO_LEVELS = (app: Application) => {
     const levels = [
         // 1
@@ -64,6 +18,7 @@ const WEB_DEMO_LEVELS = (app: Application) => {
             required: 10,
             reward: enumHubGoalRewards.reward_cutter_and_trash,
         },
+
         // 2
         // Cutter
         {
@@ -71,6 +26,7 @@ const WEB_DEMO_LEVELS = (app: Application) => {
             required: 20,
             reward: enumHubGoalRewards.no_reward,
         },
+
         // 3
         // Rectangle
         {
@@ -78,12 +34,14 @@ const WEB_DEMO_LEVELS = (app: Application) => {
             required: 30,
             reward: enumHubGoalRewards.reward_balancer,
         },
+
         // 4
         {
             shape: "RuRu----",
             required: 30,
             reward: enumHubGoalRewards.reward_rotater,
         },
+
         // 5
         // Rotater
         {
@@ -91,6 +49,7 @@ const WEB_DEMO_LEVELS = (app: Application) => {
             required: 75,
             reward: enumHubGoalRewards.reward_tunnel,
         },
+
         // 6
         // Painter
         {
@@ -98,12 +57,14 @@ const WEB_DEMO_LEVELS = (app: Application) => {
             required: 50,
             reward: enumHubGoalRewards.reward_painter,
         },
+
         // 7
         {
             shape: "CrCrCrCr",
             required: 85,
             reward: enumHubGoalRewards.reward_rotater_ccw,
         },
+
         // 8
         {
             shape: "RbRb----",
@@ -116,10 +77,13 @@ const WEB_DEMO_LEVELS = (app: Application) => {
             reward: enumHubGoalRewards.reward_demo_end,
         },
     ];
+
     return levels;
 };
+
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
+
 const STEAM_DEMO_LEVELS = () => [
     // 1
     // Circle
@@ -128,6 +92,7 @@ const STEAM_DEMO_LEVELS = () => [
         required: 35,
         reward: enumHubGoalRewards.reward_cutter_and_trash,
     },
+
     // 2
     // Cutter
     {
@@ -135,6 +100,7 @@ const STEAM_DEMO_LEVELS = () => [
         required: 45,
         reward: enumHubGoalRewards.no_reward,
     },
+
     // 3
     // Rectangle
     {
@@ -142,12 +108,14 @@ const STEAM_DEMO_LEVELS = () => [
         required: 90,
         reward: enumHubGoalRewards.reward_balancer,
     },
+
     // 4
     {
         shape: "RuRu----",
         required: 70,
         reward: enumHubGoalRewards.reward_rotater,
     },
+
     // 5
     // Rotater
     {
@@ -155,12 +123,14 @@ const STEAM_DEMO_LEVELS = () => [
         required: 160,
         reward: enumHubGoalRewards.reward_tunnel,
     },
+
     // 6
     {
         shape: "Cu------",
         required: 160,
         reward: enumHubGoalRewards.reward_painter,
     },
+
     // 7
     // Painter
     {
@@ -181,8 +151,10 @@ const STEAM_DEMO_LEVELS = () => [
         reward: enumHubGoalRewards.reward_demo_end,
     },
 ];
+
 ////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
+
 const STANDALONE_LEVELS = () => [
     // 1
     // Circle
@@ -191,6 +163,7 @@ const STANDALONE_LEVELS = () => [
         required: 30,
         reward: enumHubGoalRewards.reward_cutter_and_trash,
     },
+
     // 2
     // Cutter
     {
@@ -198,6 +171,7 @@ const STANDALONE_LEVELS = () => [
         required: 40,
         reward: enumHubGoalRewards.no_reward,
     },
+
     // 3
     // Rectangle
     {
@@ -205,12 +179,14 @@ const STANDALONE_LEVELS = () => [
         required: 70,
         reward: enumHubGoalRewards.reward_balancer,
     },
+
     // 4
     {
         shape: "RuRu----",
         required: 70,
         reward: enumHubGoalRewards.reward_rotater,
     },
+
     // 5
     // Rotater
     {
@@ -218,12 +194,14 @@ const STANDALONE_LEVELS = () => [
         required: 170,
         reward: enumHubGoalRewards.reward_tunnel,
     },
+
     // 6
     {
         shape: "Cu------",
         required: 270,
         reward: enumHubGoalRewards.reward_painter,
     },
+
     // 7
     // Painter
     {
@@ -244,6 +222,7 @@ const STANDALONE_LEVELS = () => [
         required: 600,
         reward: enumHubGoalRewards.reward_merger,
     },
+
     // 10
     // STACKER: Star shape + cyan
     {
@@ -251,6 +230,7 @@ const STANDALONE_LEVELS = () => [
         required: 800,
         reward: enumHubGoalRewards.reward_stacker,
     },
+
     // 11
     // Chainable miner
     {
@@ -258,6 +238,7 @@ const STANDALONE_LEVELS = () => [
         required: 1000,
         reward: enumHubGoalRewards.reward_miner_chainable,
     },
+
     // 12
     // Blueprints
     {
@@ -272,6 +253,7 @@ const STANDALONE_LEVELS = () => [
         required: 3800,
         reward: enumHubGoalRewards.reward_underground_belt_tier_2,
     },
+
     // 14
     // Belt reader
     {
@@ -280,6 +262,7 @@ const STANDALONE_LEVELS = () => [
         reward: enumHubGoalRewards.reward_belt_reader,
         throughputOnly: true,
     },
+
     // 15
     // Storage
     {
@@ -287,6 +270,7 @@ const STANDALONE_LEVELS = () => [
         required: 10000,
         reward: enumHubGoalRewards.reward_storage,
     },
+
     // 16
     // Quad Cutter
     {
@@ -294,6 +278,7 @@ const STANDALONE_LEVELS = () => [
         required: 6000,
         reward: enumHubGoalRewards.reward_cutter_quad,
     },
+
     // 17
     // Double painter
     {
@@ -301,6 +286,7 @@ const STANDALONE_LEVELS = () => [
         required: 20000,
         reward: enumHubGoalRewards.reward_painter_double,
     },
+
     // 18
     // Rotater (180deg)
     {
@@ -308,6 +294,7 @@ const STANDALONE_LEVELS = () => [
         required: 20000,
         reward: enumHubGoalRewards.reward_rotater_180,
     },
+
     // 19
     // Compact splitter
     {
@@ -315,6 +302,7 @@ const STANDALONE_LEVELS = () => [
         required: 25000,
         reward: enumHubGoalRewards.reward_splitter,
     },
+
     // 20
     // WIRES
     {
@@ -322,6 +310,7 @@ const STANDALONE_LEVELS = () => [
         required: 25000,
         reward: enumHubGoalRewards.reward_wires_painter_and_levers,
     },
+
     // 21
     // Filter
     {
@@ -329,6 +318,7 @@ const STANDALONE_LEVELS = () => [
         required: 25000,
         reward: enumHubGoalRewards.reward_filter,
     },
+
     // 22
     // Constant signal
     {
@@ -336,6 +326,7 @@ const STANDALONE_LEVELS = () => [
         required: 25000,
         reward: enumHubGoalRewards.reward_constant_signal,
     },
+
     // 23
     // Display
     {
@@ -343,18 +334,21 @@ const STANDALONE_LEVELS = () => [
         required: 25000,
         reward: enumHubGoalRewards.reward_display,
     },
+
     // 24 Logic gates
     {
         shape: "CcRcCcRc:RwCwRwCw:Sr--Sw--:CyCyCyCy",
         required: 25000,
         reward: enumHubGoalRewards.reward_logic_gates,
     },
+
     // 25 Virtual Processing
     {
         shape: "Rg--Rg--:CwRwCwRw:--Rg--Rg",
         required: 25000,
         reward: enumHubGoalRewards.reward_virtual_processing,
     },
+
     // 26 Freeplay
     {
         shape: "CbCuCbCu:Sr------:--CrSrCr:CwCwCwCw",
@@ -362,9 +356,8 @@ const STANDALONE_LEVELS = () => [
         reward: enumHubGoalRewards.reward_freeplay,
     },
 ];
-/**
- * Generates the level definitions
- */
+
+/** Generates the level definitions */
 export function generateLevelsForVariant(app) {
     if (G_IS_STANDALONE || WEB_STEAM_SSO_AUTHENTICATED) {
         return STANDALONE_LEVELS();

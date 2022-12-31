@@ -3,8 +3,9 @@ import { AtlasSprite, BaseSprite, RegularSprite, SpriteAtlasLink } from "./sprit
 import { cachebust } from "./cachebust";
 import { createLogger } from "./logging";
 
-import type { Application } from "../application";
-import type { AtlasDefinition } from "./atlas_definitions";
+export type Application = import("../application").Application;
+
+export type AtlasDefinition = import("./atlas_definitions").AtlasDefinition;
 
 const logger = createLogger("loader");
 
@@ -12,18 +13,19 @@ const missingSpriteIds = {};
 
 class LoaderImpl {
     public app = null;
+
     public sprites: Map<string, BaseSprite> = new Map();
+
     public rawImages = [];
-    public spriteNotFoundSprite: AtlasSprite;
+
+    constructor() {}
 
     linkAppAfterBoot(app: Application) {
         this.app = app;
         this.makeSpriteNotFoundCanvas();
     }
 
-    /**
-     * Fetches a given sprite from the cache
-     */
+    /** Fetches a given sprite from the cache */
     getSpriteInternal(key: string): BaseSprite {
         const sprite = this.sprites.get(key);
         if (!sprite) {
@@ -37,18 +39,14 @@ class LoaderImpl {
         return sprite;
     }
 
-    /**
-     * Returns an atlas sprite from the cache
-     */
+    /** Returns an atlas sprite from the cache */
     getSprite(key: string): AtlasSprite {
         const sprite = this.getSpriteInternal(key);
         assert(sprite instanceof AtlasSprite || sprite === this.spriteNotFoundSprite, "Not an atlas sprite");
         return sprite as AtlasSprite;
     }
 
-    /**
-     * Returns a regular sprite from the cache
-     */
+    /** Returns a regular sprite from the cache */
     getRegularSprite(key: string): RegularSprite {
         const sprite = this.getSpriteInternal(key);
         assert(
@@ -58,12 +56,9 @@ class LoaderImpl {
         return sprite as RegularSprite;
     }
 
-    /**
-     *
-     */
     internalPreloadImage(
         key: string,
-        progressHandler: (progress: number) => void
+        progressHandler?: (progress: number) => void /*--REMOVE_PREV--*/
     ): Promise<HTMLImageElement | null> {
         return this.app.backgroundResourceLoader
             .preloadWithProgress("res/" + key, progress => {
@@ -81,10 +76,11 @@ class LoaderImpl {
             });
     }
 
-    /**
-     * Preloads a sprite
-     */
-    preloadCSSSprite(key: string, progressHandler: (progress: number) => void): Promise<void> {
+    /** Preloads a sprite */
+    preloadCSSSprite(
+        key: string,
+        progressHandler?: (progress: number) => void /*--REMOVE_PREV--*/
+    ): Promise<void> {
         return this.internalPreloadImage(key, progressHandler).then(image => {
             if (key.indexOf("game_misc") >= 0) {
                 // Allow access to regular sprites
@@ -94,10 +90,11 @@ class LoaderImpl {
         });
     }
 
-    /**
-     * Preloads an atlas
-     */
-    preloadAtlas(atlas: AtlasDefinition, progressHandler: (progress: number) => void): Promise<void> {
+    /** Preloads an atlas */
+    preloadAtlas(
+        atlas: AtlasDefinition,
+        progressHandler?: (progress: number) => void /*--REMOVE_PREV--*/
+    ): Promise<void> {
         return this.internalPreloadImage(atlas.getFullSourcePath(), progressHandler).then(image => {
             // @ts-ignore
             image.label = atlas.sourceFileName;
@@ -137,25 +134,27 @@ class LoaderImpl {
         }
     }
 
-    /**
-     * Makes the canvas which shows the question mark, shown when a sprite was not found
-     */
+    /** Makes the canvas which shows the question mark, shown when a sprite was not found */
     makeSpriteNotFoundCanvas() {
         const dims = 128;
+
         const [canvas, context] = makeOffscreenBuffer(dims, dims, {
             smooth: false,
             label: "not-found-sprite",
         });
         context.fillStyle = "#f77";
         context.fillRect(0, 0, dims, dims);
+
         context.textAlign = "center";
         context.textBaseline = "middle";
         context.fillStyle = "#eee";
         context.font = "25px Arial";
         context.fillText("???", dims / 2, dims / 2);
+
         // TODO: Not sure why this is set here
         // @ts-ignore
         canvas.src = "not-found";
+
         const sprite = new AtlasSprite("not-found");
         ["0.1", "0.25", "0.5", "0.75", "1"].forEach(resolution => {
             sprite.linksByResolution[resolution] = new SpriteAtlasLink({
@@ -170,6 +169,7 @@ class LoaderImpl {
                 atlas: canvas,
             });
         });
+
         this.spriteNotFoundSprite = sprite;
     }
 }

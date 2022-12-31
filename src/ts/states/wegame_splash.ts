@@ -1,9 +1,10 @@
 import { GameState } from "../core/game_state";
-export class WegameSplashState extends GameState {
 
+export class WegameSplashState extends GameState {
     constructor() {
         super("WegameSplashState");
     }
+
     getInnerHTML() {
         return `
         <div class="wrapper">
@@ -16,8 +17,11 @@ export class WegameSplashState extends GameState {
 `;
     }
     onEnter() {
-        setTimeout(() => {
-            this.app.stateMgr.moveToState("PreloadState");
-        }, G_IS_DEV ? 1 : 6000);
+        setTimeout(
+            () => {
+                this.app.stateMgr.moveToState("PreloadState");
+            },
+            G_IS_DEV ? 1 : 6000
+        );
     }
 }

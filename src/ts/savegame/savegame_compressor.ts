@@ -1,17 +1,19 @@
-const charmap = "!#%&'()*+,-./:;<=>?@[]^_`{|}~¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const charmap =
+    "!#%&'()*+,-./:;<=>?@[]^_`{|}~¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 let compressionCache = {};
 let decompressionCache = {};
-/**
- * Compresses an integer into a tight string representation
- * {}
- */
+
+/** Compresses an integer into a tight string representation */
 function compressInt(i: number): string {
     // Zero value breaks
     i += 1;
+
     // save `i` as the cache key
     // to avoid it being modified by the
     // rest of the function.
     const cache_key = i;
+
     if (compressionCache[cache_key]) {
         return compressionCache[cache_key];
     }
@@ -22,10 +24,8 @@ function compressInt(i: number): string {
     } while (i > 0);
     return (compressionCache[cache_key] = result);
 }
-/**
- * Decompresses an integer from its tight string representation
- * {}
- */
+
+/** Decompresses an integer from its tight string representation */
 function decompressInt(s: string): number {
     if (decompressionCache[s]) {
         return decompressionCache[s];
@@ -39,22 +39,23 @@ function decompressInt(s: string): number {
     result -= 1;
     return (decompressionCache[s] = result);
 }
+
 // Sanity
 if (G_IS_DEV) {
     for (let i = 0; i < 10000; ++i) {
         if (decompressInt(compressInt(i)) !== i) {
-            throw new Error("Bad compression for: " +
-                i +
-                " compressed: " +
-                compressInt(i) +
-                " decompressed: " +
-                decompressInt(compressInt(i)));
+            throw new Error(
+                "Bad compression for: " +
+                    i +
+                    " compressed: " +
+                    compressInt(i) +
+                    " decompressed: " +
+                    decompressInt(compressInt(i))
+            );
         }
     }
 }
-/**
- * {}
- */
+
 function compressObjectInternal(obj: any, keys: Map, values: Map): any[] | object | number | string {
     if (Array.isArray(obj)) {
         let result = [];
@@ -62,8 +63,7 @@ function compressObjectInternal(obj: any, keys: Map, values: Map): any[] | objec
             result.push(compressObjectInternal(obj[i], keys, values));
         }
         return result;
-    }
-    else if (typeof obj === "object" && obj !== null) {
+    } else if (typeof obj === "object" && obj !== null) {
         let result = {};
         for (const key in obj) {
             let index = keys.get(key);
@@ -75,8 +75,7 @@ function compressObjectInternal(obj: any, keys: Map, values: Map): any[] | objec
             result[compressInt(index)] = compressObjectInternal(value, keys, values);
         }
         return result;
-    }
-    else if (typeof obj === "string") {
+    } else if (typeof obj === "string") {
         let index = values.get(obj);
         if (index === undefined) {
             index = values.size;
@@ -86,9 +85,7 @@ function compressObjectInternal(obj: any, keys: Map, values: Map): any[] | objec
     }
     return obj;
 }
-/**
- * {}
- */
+
 function indexMapToArray(hashMap: Map): Array {
     const result = new Array(hashMap.size);
     hashMap.forEach((index, key) => {
@@ -96,6 +93,7 @@ function indexMapToArray(hashMap: Map): Array {
     });
     return result;
 }
+
 export function compressObject(obj: object) {
     const keys = new Map();
     const values = new Map();
@@ -106,9 +104,7 @@ export function compressObject(obj: object) {
         data,
     };
 }
-/**
- * {}
- */
+
 function decompressObjectInternal(obj: object, keys: string[] = [], values: any[] = []): object {
     if (Array.isArray(obj)) {
         let result = [];
@@ -116,8 +112,7 @@ function decompressObjectInternal(obj: object, keys: string[] = [], values: any[
             result.push(decompressObjectInternal(obj[i], keys, values));
         }
         return result;
-    }
-    else if (typeof obj === "object" && obj !== null) {
+    } else if (typeof obj === "object" && obj !== null) {
         let result = {};
         for (const key in obj) {
             const realIndex = decompressInt(key);
@@ -125,13 +120,13 @@ function decompressObjectInternal(obj: object, keys: string[] = [], values: any[
             result[keys[realIndex]] = decompressObjectInternal(value, keys, values);
         }
         return result;
-    }
-    else if (typeof obj === "string") {
+    } else if (typeof obj === "string") {
         const realIndex = decompressInt(obj);
         return values[realIndex];
     }
     return obj;
 }
+
 export function decompressObject(obj: object) {
     if (obj.keys && obj.values && obj.data) {
         const keys = obj.keys;

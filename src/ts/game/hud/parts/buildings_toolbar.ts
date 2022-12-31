@@ -18,8 +18,8 @@ import { MetaItemProducerBuilding } from "../../buildings/item_producer";
 import { MetaConstantProducerBuilding } from "../../buildings/constant_producer";
 import { MetaGoalAcceptorBuilding } from "../../buildings/goal_acceptor";
 import { MetaBlockBuilding } from "../../buildings/block";
-export class HUDBuildingsToolbar extends HUDBaseToolbar {
 
+export class HUDBuildingsToolbar extends HUDBaseToolbar {
     constructor(root) {
         super(root, {
             primaryBuildings: [
@@ -45,7 +45,8 @@ export class HUDBuildingsToolbar extends HUDBaseToolbar {
                 MetaFilterBuilding,
                 MetaDisplayBuilding,
             ],
-            visibilityCondition: () => !this.root.camera.getIsMapOverlayActive() && this.root.currentLayer === "regular",
+            visibilityCondition: () =>
+                !this.root.camera.getIsMapOverlayActive() && this.root.currentLayer === "regular",
             htmlElementId: "ingame_HUD_BuildingsToolbar",
         });
     }

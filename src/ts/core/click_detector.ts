@@ -1,5 +1,5 @@
-import { createLogger } from "./logging";
-import { Signal } from "./signal";
+import { createLogger } from "../core/logging";
+import { Signal } from "../core/signal";
 import { fastArrayDelete, fastArrayDeleteValueIfContained } from "./utils";
 import { Vector } from "./vector";
 import { IS_MOBILE, SUPPORT_TOUCH } from "./config";
@@ -17,6 +17,7 @@ if (registerClickDetectors) {
 }
 
 // Store active click detectors so we can cancel them
+
 const ongoingClickDetectors: Array<ClickDetector> = [];
 
 // Store when the last touch event was registered, to avoid accepting a touch *and* a click event
@@ -25,6 +26,7 @@ export let clickDetectorGlobals = {
     lastTouchTime: -1000,
 };
 
+//// Detects clicks
 export type ClickDetectorConstructorArgs = {
     consumeEvents?: boolean;
     preventDefault?: boolean;
@@ -39,6 +41,7 @@ export type ClickDetectorConstructorArgs = {
 // Detects clicks
 export class ClickDetector {
     public clickDownPosition = null;
+
     public consumeEvents: boolean;
     public preventDefault: boolean;
     public applyCssClass: string;
@@ -48,33 +51,38 @@ export class ClickDetector {
     public maxDistance: number;
     public preventClick: boolean;
 
-    // Bound Methods
-    public handlerTouchStart = this.internalOnPointerDown.bind(this);
-    public handlerTouchEnd = this.internalOnPointerEnd.bind(this);
-    public handlerTouchMove = this.internalOnPointerMove.bind(this);
-    public handlerTouchCancel = this.internalOnTouchCancel.bind(this);
-    public handlerPreventClick = this.internalPreventClick.bind(this);
+    //// Signals
+    public click = new Signal<[Vector, MouseEvent | TouchEvent]>();
+    public rightClick = new Signal<[Vector, MouseEvent | TouchEvent]>();
+    public touchstart = new Signal<[TouchEvent | MouseEvent]>();
+    public touchmove = new Signal<[TouchEvent | MouseEvent]>();
+    public touchend = new Signal<[TouchEvent | MouseEvent]>();
+    public touchcancel = new Signal<[TouchEvent | MouseEvent]>();
 
-    // Signals
-    public click = new Signal<[pos: Vector, ev?: TouchEvent | MouseEvent]>();
-    public rightClick = new Signal<[pos: Vector, ev: MouseEvent]>();
-    public touchstart = new Signal<[ev: TouchEvent | MouseEvent]>();
-    public touchmove = new Signal<[ev: TouchEvent | MouseEvent]>();
-    public touchend = new Signal<[ev: TouchEvent | MouseEvent]>();
-    public touchcancel = new Signal<[ev: TouchEvent | MouseEvent]>();
-
+    //// Simple signals which just receive the touch position
     public touchstartSimple = new Signal<[x: number, y: number]>();
     public touchmoveSimple = new Signal<[x: number, y: number]>();
-    public touchendSimple = new Signal<[ev?: TouchEvent | MouseEvent]>();
+    public touchendSimple = new Signal<[TouchEvent | MouseEvent] | []>();
 
-    public clickStartTime: number = null;
+    //// Store time of touch start
+    public clickStartTime = null;
 
+    //// A click can be cancelled if another detector registers a click
     public cancelled = false;
-
-    public element?: HTMLElement;
+    /**
+     * @param param1.consumeEvents Whether to call stopPropagation
+     * (Useful for nested elements where the parent has a click handler as wel)
+     * @param param1.preventDefault Whether to call preventDefault (Usually makes the handler faster)
+     * @param param1.applyCssClass The css class to add while the element is pressed
+     * @param param1.captureTouchmove Whether to capture touchmove events as well
+     * @param param1.targetOnly Whether to also accept clicks on child elements (e.target !== element)
+     * @param param1.maxDistance The maximum distance in pixels to accept clicks
+     * @param param1.clickSound Sound key to play on touchdown
+     * @param param1.preventClick Whether to prevent click events
+     */
 
     constructor(
-        element: Element,
+        public element: HTMLElement,
         {
             consumeEvents = false,
             preventDefault = true,
@@ -100,9 +108,7 @@ export class ClickDetector {
         this.internalBindTo(element as HTMLElement);
     }
 
-    /**
-     * Cleans up all event listeners of this detector
-     */
+    /** Cleans up all event listeners of this detector */
     cleanup() {
         if (this.element) {
             if (registerClickDetectors) {
@@ -131,6 +137,7 @@ export class ClickDetector {
                 }
                 this.element.removeEventListener("mousemove", this.handlerTouchMove, options);
             }
+
             if (this.preventClick) {
                 this.element.removeEventListener("click", this.handlerPreventClick, options);
             }
@@ -144,6 +151,41 @@ export class ClickDetector {
             this.element = null;
         }
     }
+
+    // @Bagel03 wtf
+    // handlerTouchStart(arg0: string, handlerTouchStart: any, options: { capture: boolean; passive: boolean; }) {
+    //     throw new Error("Method not implemented.");
+    // }
+    // handlerTouchEnd(arg0: string, handlerTouchEnd: any, options: { capture: boolean; passive: boolean; }) {
+    //     throw new Error("Method not implemented.");
+    // }
+    // handlerTouchCancel(arg0: string, handlerTouchCancel: any, options: { capture: boolean; passive: boolean; }) {
+    //     throw new Error("Method not implemented.");
+    // }
+    // handlerTouchMove(arg0: string, handlerTouchMove: any, options: { capture: boolean; passive: boolean; }) {
+    //     throw new Error("Method not implemented.");
+    // }
+    // handlerPreventClick(arg0: string, handlerPreventClick: any, options: { capture: boolean; passive: boolean; }) {
+    //     throw new Error("Method not implemented.");
+    // }
+
+
+    handlerTouchStart(event: TouchEvent | MouseEvent) {
+        throw new Error("Method not implemented.");
+    }
+
+    handlerTouchEnd(event: TouchEvent | MouseEvent) {
+        throw new Error("Method not implemented.");
+    }
+    handlerTouchCancel(event: TouchEvent | MouseEvent) {
+        throw new Error("Method not implemented.");
+    }
+    handlerTouchMove(event: TouchEvent | MouseEvent) {
+        throw new Error("Method not implemented.");
+    }
+    handlerPreventClick(event: TouchEvent | MouseEvent) {
+        throw new Error("Method not implemented.");
+    }
     // INTERNAL METHODS
 
     internalPreventClick(event: Event) {
@@ -151,9 +193,7 @@ export class ClickDetector {
         event.preventDefault();
     }
 
-    /**
-     * Internal method to get the options to pass to an event listener
-     */
+    /** Internal method to get the options to pass to an event listener */
     internalGetEventListenerOptions() {
         return {
             capture: this.consumeEvents,
@@ -161,45 +201,49 @@ export class ClickDetector {
         };
     }
 
-    /**
-     * Binds the click detector to an element
-     */
+    /** Binds the click detector to an element */
     internalBindTo(element: HTMLElement) {
         const options = this.internalGetEventListenerOptions();
 
+        this.handlerTouchStart = this.internalOnPointerDown.bind(this);
+        this.handlerTouchEnd = this.internalOnPointerEnd.bind(this);
+        this.handlerTouchMove = this.internalOnPointerMove.bind(this);
+        this.handlerTouchCancel = this.internalOnTouchCancel.bind(this);
+
         if (this.preventClick) {
+            this.handlerPreventClick = this.internalPreventClick.bind(this);
             element.addEventListener("click", this.handlerPreventClick, options);
         }
+
         if (SUPPORT_TOUCH) {
             element.addEventListener("touchstart", this.handlerTouchStart, options);
             element.addEventListener("touchend", this.handlerTouchEnd, options);
             element.addEventListener("touchcancel", this.handlerTouchCancel, options);
         }
+
         element.addEventListener("mousedown", this.handlerTouchStart, options);
         element.addEventListener("mouseup", this.handlerTouchEnd, options);
         element.addEventListener("mouseout", this.handlerTouchCancel, options);
+
         if (this.captureTouchmove) {
             if (SUPPORT_TOUCH) {
                 element.addEventListener("touchmove", this.handlerTouchMove, options);
             }
             element.addEventListener("mousemove", this.handlerTouchMove, options);
         }
+
         if (registerClickDetectors) {
             window.activeClickDetectors.push(this);
         }
         this.element = element;
     }
 
-    /**
-     * Returns if the bound element is currently in the DOM.
-     */
+    /** Returns if the bound element is currently in the DOM. */
     internalIsDomElementAttached() {
         return this.element && document.documentElement.contains(this.element);
     }
 
-    /**
-     * Checks if the given event is relevant for this detector
-     */
+    /** Checks if the given event is relevant for this detector */
     internalEventPreHandler(event: TouchEvent | MouseEvent, expectedRemainingTouches = 1) {
         if (!this.element) {
             // Already cleaned up
@@ -239,8 +283,8 @@ export class ClickDetector {
     }
 
     /**
-     * Extracts the mouse position from an event
-     * @param event The client space position
+     * Extracts the mous position from an event
+     * @returns The client space position
      */
     static extractPointerPosition(event: TouchEvent | MouseEvent): Vector {
         if (window.TouchEvent && event instanceof TouchEvent) {
@@ -267,9 +311,7 @@ export class ClickDetector {
         return new Vector(0, 0);
     }
 
-    /**
-     * Cancels all ongoing events on this detector
-     */
+    /** Cacnels all ongoing events on this detector */
     cancelOngoingEvents() {
         if (this.applyCssClass && this.element) {
             this.element.classList.remove(this.applyCssClass);
@@ -280,9 +322,7 @@ export class ClickDetector {
         fastArrayDeleteValueIfContained(ongoingClickDetectors, this);
     }
 
-    /**
-     * Internal pointer down handler
-     */
+    /** Internal pointer down handler */
     internalOnPointerDown(event: TouchEvent | MouseEvent) {
         window.focus();
 
@@ -336,22 +376,19 @@ export class ClickDetector {
         return false;
     }
 
-    /**
-     * Internal pointer move handler
-     */
+    /** Internal pointer move handler */
     internalOnPointerMove(event: TouchEvent | MouseEvent) {
         if (!this.internalEventPreHandler(event, 1)) {
             return false;
         }
         this.touchmove.dispatch(event);
+
         const pos = (this.constructor as typeof ClickDetector).extractPointerPosition(event);
         this.touchmoveSimple.dispatch(pos.x, pos.y);
         return false;
     }
 
-    /**
-     * Internal pointer end handler
-     */
+    /** Internal pointer end handler */
     internalOnPointerEnd(event: TouchEvent | MouseEvent) {
         window.focus();
 
@@ -417,9 +454,7 @@ export class ClickDetector {
         return false;
     }
 
-    /**
-     * Internal touch cancel handler
-     */
+    /** Internal touch cancel handler */
     internalOnTouchCancel(event: TouchEvent | MouseEvent) {
         if (!this.internalEventPreHandler(event, 0)) {
             return false;

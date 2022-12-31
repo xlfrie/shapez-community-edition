@@ -1,7 +1,10 @@
 import { makeDiv } from "../../../core/utils";
 import { T } from "../../../translations";
 import { BaseHUDPart } from "../base_hud_part";
-/** @enum {string} */
+
+/**
+ @enum 
+*/
 export const enumNotificationType = {
     saved: "saved",
     upgrade: "upgrade",
@@ -10,25 +13,35 @@ export const enumNotificationType = {
     warning: "warning",
     error: "error",
 };
+
 const notificationDuration = 3;
+
 export class HUDNotifications extends BaseHUDPart {
     createElements(parent) {
         this.element = makeDiv(parent, "ingame_HUD_Notifications", [], ``);
     }
+
     initialize() {
         this.root.hud.signals.notification.add(this.internalShowNotification, this);
-                this.notificationElements = [];
+
+        this.notificationElements = [];
+
         // Automatic notifications
-        this.root.signals.gameSaved.add(() => this.internalShowNotification(T.ingame.notifications.gameSaved, enumNotificationType.saved));
+        this.root.signals.gameSaved.add(() =>
+            this.internalShowNotification(T.ingame.notifications.gameSaved, enumNotificationType.saved)
+        );
     }
-        internalShowNotification(message: string, type: enumNotificationType) {
+
+    internalShowNotification(message: string, type: enumNotificationType) {
         const element = makeDiv(this.element, null, ["notification", "type-" + type], message);
         element.setAttribute("data-icon", "icons/notification_" + type + ".png");
+
         this.notificationElements.push({
             element,
             expireAt: this.root.time.realtimeNow() + notificationDuration,
         });
     }
+
     update() {
         const now = this.root.time.realtimeNow();
         for (let i = 0; i < this.notificationElements.length; ++i) {

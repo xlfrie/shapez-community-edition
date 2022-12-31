@@ -1,6 +1,7 @@
 /* typehints:start */
 import type { Application } from "../../../application";
 /* typehints:end */
+
 import { SOUNDS } from "../../../platform/sound";
 import { DynamicDomAttach } from "../dynamic_dom_attach";
 import { BaseHUDPart } from "../base_hud_part";
@@ -8,8 +9,10 @@ import { Dialog, DialogLoading, DialogOptionChooser } from "../../../core/modal_
 import { makeDiv } from "../../../core/utils";
 import { T } from "../../../translations";
 import { openStandaloneLink } from "../../../core/config";
+
 export class HUDModalDialogs extends BaseHUDPart {
     public app: Application = root ? root.app : app;
+
     public dialogParent = null;
     public dialogStack = [];
 
@@ -17,33 +20,41 @@ export class HUDModalDialogs extends BaseHUDPart {
         // Important: Root is not always available here! Its also used in the main menu
         super(root);
     }
+
     // For use inside of the game, implementation of base hud part
     initialize() {
         this.dialogParent = document.getElementById("ingame_HUD_ModalDialogs");
         this.domWatcher = new DynamicDomAttach(this.root, this.dialogParent);
     }
+
     shouldPauseRendering() {
         // return this.dialogStack.length > 0;
         // @todo: Check if change this affects anything
         return false;
     }
+
     shouldPauseGame() {
         // @todo: Check if this change affects anything
         return false;
     }
+
     createElements(parent) {
         return makeDiv(parent, "ingame_HUD_ModalDialogs");
     }
+
     // For use outside of the game
     initializeToElement(element) {
         assert(element, "No element for dialogs given");
         this.dialogParent = element;
     }
+
     isBlockingOverlay() {
         return this.dialogStack.length > 0;
     }
+
     // Methods
-        showInfo(title: string, text: string, buttons: Array<string> = ["ok:good"]) {
+
+    showInfo(title: string, text: string, buttons: Array<string> = ["ok:good"]) {
         const dialog = new Dialog({
             app: this.app,
             title: title,
@@ -52,12 +63,15 @@ export class HUDModalDialogs extends BaseHUDPart {
             type: "info",
         });
         this.internalShowDialog(dialog);
+
         if (this.app) {
             this.app.sound.playUiSound(SOUNDS.dialogOk);
         }
+
         return dialog.buttonSignals;
     }
-        showWarning(title: string, text: string, buttons: Array<string> = ["ok:good"]) {
+
+    showWarning(title: string, text: string, buttons: Array<string> = ["ok:good"]) {
         const dialog = new Dialog({
             app: this.app,
             title: title,
@@ -66,12 +80,15 @@ export class HUDModalDialogs extends BaseHUDPart {
             type: "warning",
         });
         this.internalShowDialog(dialog);
+
         if (this.app) {
             this.app.sound.playUiSound(SOUNDS.dialogError);
         }
+
         return dialog.buttonSignals;
     }
-        showFeatureRestrictionInfo(feature: string, textPrefab: string = T.dialogs.featureRestriction.desc) {
+
+    showFeatureRestrictionInfo(feature: string, textPrefab: string = T.dialogs.featureRestriction.desc) {
         const dialog = new Dialog({
             app: this.app,
             title: T.dialogs.featureRestriction.title,
@@ -80,14 +97,18 @@ export class HUDModalDialogs extends BaseHUDPart {
             type: "warning",
         });
         this.internalShowDialog(dialog);
+
         if (this.app) {
             this.app.sound.playUiSound(SOUNDS.dialogOk);
         }
+
         dialog.buttonSignals.getStandalone.add(() => {
             openStandaloneLink(this.app, "shapez_demo_dialog");
         });
+
         return dialog.buttonSignals;
     }
+
     showOptionChooser(title, options) {
         const dialog = new DialogOptionChooser({
             app: this.app,
@@ -97,36 +118,47 @@ export class HUDModalDialogs extends BaseHUDPart {
         this.internalShowDialog(dialog);
         return dialog.buttonSignals;
     }
+
     // Returns method to be called when laoding finishd
     showLoadingDialog(text = "") {
         const dialog = new DialogLoading(this.app, text);
         this.internalShowDialog(dialog);
         return this.closeDialog.bind(this, dialog);
     }
+
     internalShowDialog(dialog) {
         const elem = dialog.createElement();
         dialog.setIndex(1000 + this.dialogStack.length);
+
         // Hide last dialog in queue
         if (this.dialogStack.length > 0) {
             this.dialogStack[this.dialogStack.length - 1].hide();
         }
+
         this.dialogStack.push(dialog);
+
         // Append dialog
         dialog.show();
         dialog.closeRequested.add(this.closeDialog.bind(this, dialog));
+
         // Append to HTML
         this.dialogParent.appendChild(elem);
+
         document.body.classList.toggle("modalDialogActive", this.dialogStack.length > 0);
+
         // IMPORTANT: Attach element directly, otherwise double submit is possible
         this.update();
     }
+
     update() {
         if (this.domWatcher) {
             this.domWatcher.update(this.dialogStack.length > 0);
         }
     }
+
     closeDialog(dialog) {
         dialog.destroy();
+
         let index = -1;
         for (let i = 0; i < this.dialogStack.length; ++i) {
             if (this.dialogStack[i] === dialog) {
@@ -136,12 +168,15 @@ export class HUDModalDialogs extends BaseHUDPart {
         }
         assert(index >= 0, "Dialog not in dialog stack");
         this.dialogStack.splice(index, 1);
+
         if (this.dialogStack.length > 0) {
             // Show the dialog which was previously open
             this.dialogStack[this.dialogStack.length - 1].show();
         }
+
         document.body.classList.toggle("modalDialogActive", this.dialogStack.length > 0);
     }
+
     close() {
         for (let i = 0; i < this.dialogStack.length; ++i) {
             const dialog = this.dialogStack[i];
@@ -149,6 +184,7 @@ export class HUDModalDialogs extends BaseHUDPart {
         }
         this.dialogStack = [];
     }
+
     cleanup() {
         super.cleanup();
         for (let i = 0; i < this.dialogStack.length; ++i) {

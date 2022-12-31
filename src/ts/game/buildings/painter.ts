@@ -3,19 +3,27 @@ import { enumDirection, Vector } from "../../core/vector";
 import { T } from "../../translations";
 import { ItemAcceptorComponent } from "../components/item_acceptor";
 import { ItemEjectorComponent } from "../components/item_ejector";
-import { enumItemProcessorTypes, ItemProcessorComponent, enumItemProcessorRequirements, } from "../components/item_processor";
+import {
+    enumItemProcessorTypes,
+    ItemProcessorComponent,
+    enumItemProcessorRequirements,
+} from "../components/item_processor";
 import { Entity } from "../entity";
 import { defaultBuildingVariant, MetaBuilding } from "../meta_building";
 import { GameRoot } from "../root";
 import { enumHubGoalRewards } from "../tutorial_goals";
 import { WiredPinsComponent, enumPinSlotType } from "../components/wired_pins";
-/** @enum {string} */
-export const enumPainterVariants = { mirrored: "mirrored", double: "double", quad: "quad" };
-export class MetaPainterBuilding extends MetaBuilding {
 
+/**
+ @enum 
+*/
+export const enumPainterVariants = { mirrored: "mirrored", double: "double", quad: "quad" };
+
+export class MetaPainterBuilding extends MetaBuilding {
     constructor() {
         super("painter");
     }
+
     static getAllVariantCombinations() {
         return [
             {
@@ -36,6 +44,7 @@ export class MetaPainterBuilding extends MetaBuilding {
             },
         ];
     }
+
     getDimensions(variant) {
         switch (variant) {
             case defaultBuildingVariant:
@@ -49,16 +58,12 @@ export class MetaPainterBuilding extends MetaBuilding {
                 assertAlways(false, "Unknown painter variant: " + variant);
         }
     }
+
     getSilhouetteColor() {
         return "#cd9b7d";
     }
-    /**
-     * {}
-     */
-    getAdditionalStatistics(root: GameRoot, variant: string): Array<[
-        string,
-        string
-    ]> {
+
+    getAdditionalStatistics(root: GameRoot, variant: string): Array<[string, string]> {
         if (root.gameMode.throughputDoesNotMatter()) {
             return [];
         }
@@ -78,51 +83,62 @@ export class MetaPainterBuilding extends MetaBuilding {
             }
         }
     }
-        getAvailableVariants(root: GameRoot) {
+
+    getAvailableVariants(root: GameRoot) {
         let variants = [defaultBuildingVariant, enumPainterVariants.mirrored];
         if (root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_painter_double)) {
             variants.push(enumPainterVariants.double);
         }
-        if (root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_wires_painter_and_levers) &&
-            root.gameMode.getSupportsWires()) {
+        if (
+            root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_wires_painter_and_levers) &&
+            root.gameMode.getSupportsWires()
+        ) {
             variants.push(enumPainterVariants.quad);
         }
         return variants;
     }
-        getIsUnlocked(root: GameRoot) {
+
+    getIsUnlocked(root: GameRoot) {
         return root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_painter);
     }
-    /**
-     * Creates the entity at the given location
-     */
+
+    /** Creates the entity at the given location */
     setupEntityComponents(entity: Entity) {
         entity.addComponent(new ItemProcessorComponent({}));
-        entity.addComponent(new ItemEjectorComponent({
-            slots: [{ pos: new Vector(1, 0), direction: enumDirection.right }],
-        }));
-        entity.addComponent(new ItemAcceptorComponent({
-            slots: [
-                {
-                    pos: new Vector(0, 0),
-                    direction: enumDirection.left,
-                    filter: "shape",
-                },
-                {
-                    pos: new Vector(1, 0),
-                    direction: enumDirection.top,
-                    filter: "color",
-                },
-            ],
-        }));
+
+        entity.addComponent(
+            new ItemEjectorComponent({
+                slots: [{ pos: new Vector(1, 0), direction: enumDirection.right }],
+            })
+        );
+        entity.addComponent(
+            new ItemAcceptorComponent({
+                slots: [
+                    {
+                        pos: new Vector(0, 0),
+                        direction: enumDirection.left,
+                        filter: "shape",
+                    },
+                    {
+                        pos: new Vector(1, 0),
+                        direction: enumDirection.top,
+                        filter: "color",
+                    },
+                ],
+            })
+        );
     }
-        updateVariants(entity: Entity, rotationVariant: number, variant: string) {
+
+    updateVariants(entity: Entity, rotationVariant: number, variant: string) {
         switch (variant) {
             case defaultBuildingVariant:
             case enumPainterVariants.mirrored: {
                 // REGULAR PAINTER
+
                 if (entity.components.WiredPins) {
                     entity.removeComponent(WiredPinsComponent);
                 }
+
                 entity.components.ItemAcceptor.setSlots([
                     {
                         pos: new Vector(0, 0),
@@ -131,23 +147,30 @@ export class MetaPainterBuilding extends MetaBuilding {
                     },
                     {
                         pos: new Vector(1, 0),
-                        direction: variant === defaultBuildingVariant ? enumDirection.top : enumDirection.bottom,
+                        direction:
+                            variant === defaultBuildingVariant ? enumDirection.top : enumDirection.bottom,
                         filter: "color",
                     },
                 ]);
+
                 entity.components.ItemEjector.setSlots([
                     { pos: new Vector(1, 0), direction: enumDirection.right },
                 ]);
+
                 entity.components.ItemProcessor.type = enumItemProcessorTypes.painter;
                 entity.components.ItemProcessor.processingRequirement = null;
                 entity.components.ItemProcessor.inputsPerCharge = 2;
+
                 break;
             }
+
             case enumPainterVariants.double: {
                 // DOUBLE PAINTER
+
                 if (entity.components.WiredPins) {
                     entity.removeComponent(WiredPinsComponent);
                 }
+
                 entity.components.ItemAcceptor.setSlots([
                     {
                         pos: new Vector(0, 0),
@@ -165,19 +188,24 @@ export class MetaPainterBuilding extends MetaBuilding {
                         filter: "color",
                     },
                 ]);
+
                 entity.components.ItemEjector.setSlots([
                     { pos: new Vector(1, 0), direction: enumDirection.right },
                 ]);
+
                 entity.components.ItemProcessor.type = enumItemProcessorTypes.painterDouble;
                 entity.components.ItemProcessor.processingRequirement = null;
                 entity.components.ItemProcessor.inputsPerCharge = 3;
                 break;
             }
+
             case enumPainterVariants.quad: {
                 // QUAD PAINTER
+
                 if (!entity.components.WiredPins) {
                     entity.addComponent(new WiredPinsComponent({ slots: [] }));
                 }
+
                 entity.components.WiredPins.setSlots([
                     {
                         pos: new Vector(0, 0),
@@ -200,6 +228,7 @@ export class MetaPainterBuilding extends MetaBuilding {
                         type: enumPinSlotType.logicalAcceptor,
                     },
                 ]);
+
                 entity.components.ItemAcceptor.setSlots([
                     {
                         pos: new Vector(0, 0),
@@ -227,15 +256,19 @@ export class MetaPainterBuilding extends MetaBuilding {
                         filter: "color",
                     },
                 ]);
+
                 entity.components.ItemEjector.setSlots([
                     { pos: new Vector(0, 0), direction: enumDirection.top },
                 ]);
+
                 entity.components.ItemProcessor.type = enumItemProcessorTypes.painterQuad;
                 entity.components.ItemProcessor.processingRequirement =
                     enumItemProcessorRequirements.painterQuad;
                 entity.components.ItemProcessor.inputsPerCharge = 5;
+
                 break;
             }
+
             default:
                 assertAlways(false, "Unknown painter variant: " + variant);
         }

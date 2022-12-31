@@ -1,13 +1,18 @@
 import { AnalyticsInterface } from "../analytics";
 import { createLogger } from "../../core/logging";
+
 const logger = createLogger("ga");
+
 export class GoogleAnalyticsImpl extends AnalyticsInterface {
     initialize() {
         this.lastUiClickTracked = -1000;
+
         setInterval(() => this.internalTrackAfkEvent(), 120 * 1000);
+
         // Analytics is already loaded in the html
         return Promise.resolve();
     }
+
     setUserContext(userName) {
         try {
             if (window.gtag) {
@@ -16,11 +21,11 @@ export class GoogleAnalyticsImpl extends AnalyticsInterface {
                     player: userName,
                 });
             }
-        }
-        catch (ex) {
+        } catch (ex) {
             logger.warn("📊 Failed to set user context:", ex);
         }
     }
+
     trackStateEnter(stateId) {
         const nonInteractionStates = [
             "LoginState",
@@ -29,6 +34,7 @@ export class GoogleAnalyticsImpl extends AnalyticsInterface {
             "RegisterState",
             "WatchAdState",
         ];
+
         try {
             if (window.gtag) {
                 logger.log("📊 Tracking state enter:", stateId);
@@ -38,11 +44,11 @@ export class GoogleAnalyticsImpl extends AnalyticsInterface {
                     non_interaction: nonInteractionStates.indexOf(stateId) >= 0,
                 });
             }
-        }
-        catch (ex) {
+        } catch (ex) {
             logger.warn("📊 Failed to track state analytcis:", ex);
         }
     }
+
     trackDecision(decisionName) {
         try {
             if (window.gtag) {
@@ -53,14 +59,12 @@ export class GoogleAnalyticsImpl extends AnalyticsInterface {
                     non_interaction: true,
                 });
             }
-        }
-        catch (ex) {
+        } catch (ex) {
             logger.warn("📊 Failed to track state analytcis:", ex);
         }
     }
-    /**
-     * Tracks an event so GA keeps track of the user
-     */
+
+    /** Tracks an event so GA keeps track of the user */
     internalTrackAfkEvent() {
         if (window.gtag) {
             window.gtag("event", "afk", {

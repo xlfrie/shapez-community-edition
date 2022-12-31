@@ -9,12 +9,14 @@ import { Entity } from "../entity";
 import { defaultBuildingVariant, MetaBuilding } from "../meta_building";
 import { GameRoot } from "../root";
 import { enumHubGoalRewards } from "../tutorial_goals";
-const storageSize = 5000;
-export class MetaStorageBuilding extends MetaBuilding {
 
+const storageSize = 5000;
+
+export class MetaStorageBuilding extends MetaBuilding {
     constructor() {
         super("storage");
     }
+
     static getAllVariantCombinations() {
         return [
             {
@@ -23,69 +25,77 @@ export class MetaStorageBuilding extends MetaBuilding {
             },
         ];
     }
+
     getSilhouetteColor() {
         return "#bbdf6d";
     }
-    /**
-     * {}
-     */
-    getAdditionalStatistics(root, variant): Array<[
-        string,
-        string
-    ]> {
+
+    getAdditionalStatistics(root, variant): Array<[string, string]> {
         return [[T.ingame.buildingPlacement.infoTexts.storage, formatBigNumber(storageSize)]];
     }
+
     getDimensions() {
         return new Vector(2, 2);
     }
-        getIsUnlocked(root: GameRoot) {
+
+    getIsUnlocked(root: GameRoot) {
         return root.hubGoals.isRewardUnlocked(enumHubGoalRewards.reward_storage);
     }
-    /**
-     * Creates the entity at the given location
-     */
+
+    /** Creates the entity at the given location */
     setupEntityComponents(entity: Entity) {
         // Required, since the item processor needs this.
-        entity.addComponent(new ItemEjectorComponent({
-            slots: [
-                {
-                    pos: new Vector(0, 0),
-                    direction: enumDirection.top,
-                },
-                {
-                    pos: new Vector(1, 0),
-                    direction: enumDirection.top,
-                },
-            ],
-        }));
-        entity.addComponent(new ItemAcceptorComponent({
-            slots: [
-                {
-                    pos: new Vector(0, 1),
-                    direction: enumDirection.bottom,
-                },
-                {
-                    pos: new Vector(1, 1),
-                    direction: enumDirection.bottom,
-                },
-            ],
-        }));
-        entity.addComponent(new StorageComponent({
-            maximumStorage: storageSize,
-        }));
-        entity.addComponent(new WiredPinsComponent({
-            slots: [
-                {
-                    pos: new Vector(1, 1),
-                    direction: enumDirection.right,
-                    type: enumPinSlotType.logicalEjector,
-                },
-                {
-                    pos: new Vector(0, 1),
-                    direction: enumDirection.left,
-                    type: enumPinSlotType.logicalEjector,
-                },
-            ],
-        }));
+        entity.addComponent(
+            new ItemEjectorComponent({
+                slots: [
+                    {
+                        pos: new Vector(0, 0),
+                        direction: enumDirection.top,
+                    },
+                    {
+                        pos: new Vector(1, 0),
+                        direction: enumDirection.top,
+                    },
+                ],
+            })
+        );
+
+        entity.addComponent(
+            new ItemAcceptorComponent({
+                slots: [
+                    {
+                        pos: new Vector(0, 1),
+                        direction: enumDirection.bottom,
+                    },
+                    {
+                        pos: new Vector(1, 1),
+                        direction: enumDirection.bottom,
+                    },
+                ],
+            })
+        );
+
+        entity.addComponent(
+            new StorageComponent({
+                maximumStorage: storageSize,
+            })
+        );
+
+        entity.addComponent(
+            new WiredPinsComponent({
+                slots: [
+                    {
+                        pos: new Vector(1, 1),
+                        direction: enumDirection.right,
+                        type: enumPinSlotType.logicalEjector,
+                    },
+                    {
+                        pos: new Vector(0, 1),
+                        direction: enumDirection.left,
+                        type: enumPinSlotType.logicalEjector,
+                    },
+                ],
+            })
+        );
     }
 }

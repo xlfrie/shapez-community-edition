@@ -1,37 +1,44 @@
-import { globalConfig } from "./config";
+import { globalConfig } from "../core/config";
 const circularJson = require("circular-json");
+
 /*
 Logging functions
 - To be extended
 */
-/**
- * Base logger class
- */
+
+/** Base logger class */
 class Logger {
-    constructor(public context: string) {}
+    public context = context;
+
+    constructor(context) {}
+
     debug(...args) {
         globalDebug(this.context, ...args);
     }
+
     log(...args) {
         globalLog(this.context, ...args);
     }
+
     warn(...args) {
         globalWarn(this.context, ...args);
     }
+
     error(...args) {
         globalError(this.context, ...args);
     }
 }
 
-export function createLogger(context: string) {
+export function createLogger(context) {
     return new Logger(context);
 }
 
-function prepareObjectForLogging(obj: object, maxDepth = 1) {
+function prepareObjectForLogging(obj, maxDepth = 1) {
     if (!window.Sentry) {
         // Not required without sentry
         return obj;
     }
+
     if (typeof obj !== "object" && !Array.isArray(obj)) {
         return obj;
     }
@@ -52,28 +59,12 @@ function prepareObjectForLogging(obj: object, maxDepth = 1) {
     return result;
 }
 
-type SerializedError = {
-    type: string;
-
-    message?: string;
-    name?: string;
-    stack?: string;
-
-    filename?: string;
-    lineno?: number;
-    colno?: number;
-    error?: string | SerializedError;
-};
-
-/**
- * Serializes an error
- */
+/** Serializes an error */
 export function serializeError(err: Error | ErrorEvent) {
     if (!err) {
         return null;
     }
-
-    const result: SerializedError = {
+    const result = {
         type: err.constructor.name,
     };
 
@@ -88,6 +79,7 @@ export function serializeError(err: Error | ErrorEvent) {
         result.lineno = err.lineno;
         result.colno = err.colno;
         result.type = "{type.ErrorEvent}";
+
         if (err.error) {
             result.error = serializeError(err.error);
         } else {
@@ -100,19 +92,16 @@ export function serializeError(err: Error | ErrorEvent) {
     return result;
 }
 
-/**
- * Serializes an event
- */
+/** Serializes an event */
 function serializeEvent(event: Event) {
-    return {
+    let result = {
         type: "{type.Event:" + typeof event + "}",
-        eventType: event.type,
     };
+    result.eventType = event.type;
+    return result;
 }
 
-/**
- * Prepares a json payload
- */
+/** Prepares a json payload */
 function preparePayload(key: string, value: any) {
     if (value instanceof Error || value instanceof ErrorEvent) {
         return serializeError(value);
@@ -126,9 +115,7 @@ function preparePayload(key: string, value: any) {
     return value;
 }
 
-/**
- * Stringifies an object containing circular references and errors
- */
+/** Stringifies an object containing circular references and errors */
 export function stringifyObjectContainingErrors(payload: any) {
     return circularJson.stringify(payload, preparePayload);
 }
@@ -153,6 +140,7 @@ export function globalError(context, ...args) {
     args = prepareArgsForLogging(args);
     // eslint-disable-next-line no-console
     logInternal(context, console.error, args);
+
     if (window.Sentry) {
         window.Sentry.withScope(scope => {
             scope.setExtra("args", args);
@@ -161,7 +149,7 @@ export function globalError(context, ...args) {
     }
 }
 
-function prepareArgsForLogging(args: any[]) {
+function prepareArgsForLogging(args) {
     let result = [];
     for (let i = 0; i < args.length; ++i) {
         result.push(prepareObjectForLogging(args[i]));
@@ -191,7 +179,7 @@ function internalBuildStringFromArgs(args: Array<any>) {
     return result.join(" ");
 }
 
-export function logSection(name: string, color: string) {
+export function logSection(name, color) {
     while (name.length <= 14) {
         name = " " + name + " ";
     }
@@ -203,8 +191,9 @@ export function logSection(name: string, color: string) {
     console.log("\n" + line + " %c" + name + " " + line + "\n", lineCss, "color: " + color, lineCss);
 }
 
-function extractHandleContext(handle: string | ({ new (): any; name: string } & Function)) {
+function extractHandleContext(handle) {
     let context = handle || "unknown";
+
     if (handle && handle.constructor && handle.constructor.name) {
         context = handle.constructor.name;
         if (context === "String") {
@@ -212,7 +201,7 @@ function extractHandleContext(handle: string | ({ new (): any; name: string } & 
         }
     }
 
-    if (handle && typeof handle !== "string" && handle.name) {
+    if (handle && handle.name) {
         context = handle.name;
     }
     return context + "";
@@ -221,6 +210,7 @@ function extractHandleContext(handle: string | ({ new (): any; name: string } & 
 function logInternal(handle, consoleMethod, args) {
     const context = extractHandleContext(handle).padEnd(20, " ");
     const labelColor = handle && handle.LOG_LABEL_COLOR ? handle.LOG_LABEL_COLOR : "#aaa";
+
     if (G_IS_DEV && globalConfig.debug.logTimestamps) {
         const timestamp = "⏱ %c" + (Math.floor(performance.now()) + "").padEnd(6, " ") + "";
         consoleMethod.call(

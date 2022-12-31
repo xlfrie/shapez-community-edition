@@ -1,6 +1,7 @@
 /* typehints:start */
 import type { GameRoot } from "../root";
 /* typehints:end */
+
 import { enumGameModeIds } from "../game_mode";
 import { PuzzleGameMode } from "./puzzle";
 import { MetaStorageBuilding } from "../buildings/storage";
@@ -22,13 +23,16 @@ import { HUDPuzzleEditorControls } from "../hud/parts/puzzle_editor_controls";
 import { HUDPuzzleEditorReview } from "../hud/parts/puzzle_editor_review";
 import { HUDPuzzleEditorSettings } from "../hud/parts/puzzle_editor_settings";
 import { HUDConstantSignalEdit } from "../hud/parts/constant_signal_edit";
+
 export class PuzzleEditGameMode extends PuzzleGameMode {
     static getId() {
         return enumGameModeIds.puzzleEdit;
     }
+
     static getSchema() {
         return {};
     }
+
     public hiddenBuildings = [
         MetaStorageBuilding,
         MetaReaderBuilding,
@@ -37,6 +41,7 @@ export class PuzzleEditGameMode extends PuzzleGameMode {
         MetaLeverBuilding,
         MetaItemProducerBuilding,
         MetaMinerBuilding,
+
         MetaWireBuilding,
         MetaWireTunnelBuilding,
         MetaConstantSignalBuilding,
@@ -47,13 +52,15 @@ export class PuzzleEditGameMode extends PuzzleGameMode {
         MetaTransistorBuilding,
     ];
 
-        constructor(root) {
+    constructor(root) {
         super(root);
+
         this.additionalHudParts.puzzleEditorControls = HUDPuzzleEditorControls;
         this.additionalHudParts.puzzleEditorReview = HUDPuzzleEditorReview;
         this.additionalHudParts.puzzleEditorSettings = HUDPuzzleEditorSettings;
         this.additionalHudParts.constantSignalEdit = HUDConstantSignalEdit;
     }
+
     getIsEditor() {
         return true;
     }

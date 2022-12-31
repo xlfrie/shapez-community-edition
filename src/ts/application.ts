@@ -39,14 +39,17 @@ import { MODS } from "./mods/modloader";
 import { MOD_SIGNALS } from "./mods/mod_signals";
 import { ModsState } from "./states/mods";
 
-import type { AchievementProviderInterface } from "./platform/achievement_provider";
-import type { SoundInterface } from "./platform/sound";
-import type { StorageInterface } from "./platform/storage";
+export type AchievementProviderInterface =
+    import("./platform/achievement_provider").AchievementProviderInterface;
+
+export type SoundInterface = import("./platform/sound").SoundInterface;
+
+export type StorageInterface = import("./platform/storage").StorageInterface;
 
 const logger = createLogger("application");
 
 // Set the name of the hidden property and the change event for visibility
-let pageHiddenPropName: string, pageVisibilityEventName: string;
+let pageHiddenPropName, pageVisibilityEventName;
 if (typeof document.hidden !== "undefined") {
     // Opera 12.10 and Firefox 18 and later support
     pageHiddenPropName = "hidden";
@@ -62,35 +65,33 @@ if (typeof document.hidden !== "undefined") {
 }
 
 export class Application {
-    public unloaded = false;
-    public settings = new ApplicationSettings(this);
-    public ticker = new AnimationFrame();
-    public stateMgr = new StateManager(this);
-    public savegameMgr = new SavegameManager(this);
-    public inputMgr = new InputDistributor(this);
-    public backgroundResourceLoader = new BackgroundResourcesLoader(this);
-    public clientApi = new ClientAPI(this);
-    public restrictionMgr = new RestrictionManager(this);
-    public storage: StorageInterface = null;
-    public sound: SoundInterface = null;
-    public platformWrapper: PlatformWrapperInterface = null;
-    public achievementProvider: AchievementProviderInterface = null;
-    public adProvider: AdProviderInterface = null;
-    public analytics: AnalyticsInterface = null;
-    public gameAnalytics: ShapezGameAnalytics = null;
-    public focused = true;
-    public pageVisible = true;
-    public applicationPaused = false;
-    public trackedIsRenderable: TypedTrackedState<boolean> = new TrackedState(this.onAppRenderableStateChanged, this);
-    public trackedIsPlaying: TypedTrackedState<boolean> = new TrackedState(this.onAppPlayingStateChanged, this);
-    public screenWidth = 0;
-    public screenHeight = 0;
-    public lastResizeCheck = null;
-    public mousePosition: Vector | null = null;
+    public unloaded: boolean;
+    public settings: ApplicationSettings;
+    public ticker: AnimationFrame;
+    public stateMgr: StateManager;
+    public savegameMgr: SavegameManager;
+    public inputMgr: InputDistributor;
+    public backgroundResourceLoader: BackgroundResourcesLoader;
+    public clientApi: ClientAPI;
+    public restrictionMgr: RestrictionManager;
+    public storage: StorageInterface;
+    public sound: any; // @Bagel03
+    public platformWrapper: PlatformWrapperInterface;
+    public achievementProvider: AchievementProviderInterface;
+    public adProvider: AdProviderInterface;
+    public analytics: AnalyticsInterface;
+    public gameAnalytics: ShapezGameAnalytics;
+    public focused: boolean;
+    public pageVisible: boolean;
+    public applicationPaused: boolean;
+    public trackedIsRenderable: TrackedState;
+    public trackedIsPlaying: TrackedState;
+    public screenWidth: number;
+    public screenHeight: number;
+    public lastResizeCheck: number;
+    public mousePosition: Vector;
 
-    /**
-     * Boots the application
-     */
+    /** Boots the application */
     async boot() {
         console.log("Booting ...");
 
@@ -103,12 +104,66 @@ export class Application {
 
         try {
             await MODS.initMods();
-        }
-        catch (ex) {
+        } catch (ex) {
             alert("Failed to load mods (launch with --dev for more info): \n\n" + ex);
         }
 
+        this.unloaded = false;
+
+        // Global stuff
+        this.settings = new ApplicationSettings(this);
+        this.ticker = new AnimationFrame();
+        this.stateMgr = new StateManager(this);
+        this.savegameMgr = new SavegameManager(this);
+        this.inputMgr = new InputDistributor(this);
+        this.backgroundResourceLoader = new BackgroundResourcesLoader(this);
+        this.clientApi = new ClientAPI(this);
+
+        // Restrictions (Like demo etc)
+        this.restrictionMgr = new RestrictionManager(this);
+
+        // Platform dependent stuff
+
+        this.storage = null;
+
+        this.sound = null;
+
+        this.platformWrapper = null;
+
+        this.achievementProvider = null;
+
+        this.adProvider = null;
+
+        this.analytics = null;
+
+        this.gameAnalytics = null;
+
         this.initPlatformDependentInstances();
+
+        // Track if the window is focused (only relevant for browser)
+        this.focused = true;
+
+        // Track if the window is visible
+        this.pageVisible = true;
+
+        // Track if the app is paused (cordova)
+        this.applicationPaused = false;
+
+        this.trackedIsRenderable = new TrackedState(this.onAppRenderableStateChanged, this);
+
+        this.trackedIsPlaying = new TrackedState(this.onAppPlayingStateChanged, this);
+
+        // Dimensions
+        this.screenWidth = 0;
+        this.screenHeight = 0;
+
+        // Store the timestamp where we last checked for a screen resize, since orientationchange is unreliable with cordova
+        this.lastResizeCheck = null;
+
+        // Store the mouse position, or null if not available
+
+        this.mousePosition = null;
+
         this.registerStates();
         this.registerEventListeners();
 
@@ -117,8 +172,7 @@ export class Application {
         // Check for mobile
         if (IS_MOBILE) {
             this.stateMgr.moveToState("MobileWarningState");
-        }
-        else {
+        } else {
             this.stateMgr.moveToState("PreloadState");
         }
 
@@ -132,16 +186,13 @@ export class Application {
         MOD_SIGNALS.appBooted.dispatch();
     }
 
-    /**
-     * Initializes all platform instances
-     */
+    /** Initializes all platform instances */
     initPlatformDependentInstances() {
         logger.log("Creating platform dependent instances (standalone=", G_IS_STANDALONE, ")");
 
         if (G_IS_STANDALONE) {
             this.platformWrapper = new PlatformWrapperImplElectron(this);
-        }
-        else {
+        } else {
             this.platformWrapper = new PlatformWrapperImplBrowser(this);
         }
 
@@ -152,9 +203,8 @@ export class Application {
         this.gameAnalytics = new ShapezGameAnalytics(this);
         this.achievementProvider = new NoAchievementProvider(this);
     }
-    /**
-     * Registers all game states
-     */
+
+    /** Registers all game states */
     registerStates() {
         const states: Array<typeof GameState> = [
             WegameSplashState,
@@ -176,9 +226,7 @@ export class Application {
         }
     }
 
-    /**
-     * Registers all event listeners
-     */
+    /** Registers all event listeners */
     registerEventListeners() {
         window.addEventListener("focus", this.onFocus.bind(this));
         window.addEventListener("blur", this.onBlur.bind(this));
@@ -193,15 +241,15 @@ export class Application {
 
         // Unload events
         window.addEventListener("beforeunload", this.onBeforeUnload.bind(this), true);
+
         document.addEventListener(pageVisibilityEventName, this.handleVisibilityChange.bind(this), false);
 
         // Track touches so we can update the focus appropriately
         document.addEventListener("touchstart", this.updateFocusAfterUserInteraction.bind(this), true);
         document.addEventListener("touchend", this.updateFocusAfterUserInteraction.bind(this), true);
     }
-    /**
-     * Checks the focus after a touch
-     */
+
+    /** Checks the focus after a touch */
     updateFocusAfterUserInteraction(event: TouchEvent) {
         const target = event.target as HTMLElement;
         if (!target || !target.tagName) {
@@ -226,9 +274,7 @@ export class Application {
         }
     }
 
-    /**
-     * Handles a page visibility change event
-     */
+    /** Handles a page visibility change event */
     handleVisibilityChange(event: Event) {
         window.focus();
         const pageVisible = !document[pageHiddenPropName];
@@ -239,35 +285,27 @@ export class Application {
         }
     }
 
-    /**
-     * Handles a mouse move event
-     */
+    /** Handles a mouse move event */
     handleMousemove(event: MouseEvent) {
         this.mousePosition = new Vector(event.clientX, event.clientY);
     }
 
-    /**
-     * Internal on focus handler
-     */
+    /** Internal on focus handler */
     onFocus() {
         this.focused = true;
     }
 
-    /**
-     * Internal blur handler
-     */
+    /** Internal blur handler */
     onBlur() {
         this.focused = false;
     }
 
-    /**
-     * Returns if the app is currently visible
-     */
+    /** Returns if the app is currently visible */
     isRenderable() {
         return !this.applicationPaused && this.pageVisible;
     }
 
-    onAppRenderableStateChanged(renderable: boolean) {
+    onAppRenderableStateChanged(renderable) {
         logger.log("Application renderable:", renderable);
         window.focus();
         const currentState = this.stateMgr.getCurrentState();
@@ -275,8 +313,7 @@ export class Application {
             if (currentState) {
                 currentState.onAppPause();
             }
-        }
-        else {
+        } else {
             if (currentState) {
                 currentState.onAppResume();
             }
@@ -286,21 +323,19 @@ export class Application {
         this.sound.onPageRenderableStateChanged(renderable);
     }
 
-    onAppPlayingStateChanged(playing: boolean) {
+    onAppPlayingStateChanged(playing) {
         try {
             this.adProvider.setPlayStatus(playing);
-        }
-        catch (ex) {
+        } catch (ex) {
             console.warn("Play status changed");
         }
     }
 
-    /**
-     * Internal before-unload handler
-     */
+    /** Internal before-unload handler */
     onBeforeUnload(event) {
         logSection("BEFORE UNLOAD HANDLER", "#f77");
         const currentState = this.stateMgr.getCurrentState();
+
         if (!G_IS_DEV && currentState && currentState.getHasUnloadConfirmation()) {
             if (!G_IS_STANDALONE) {
                 // Need to show a "Are you sure you want to exit"
@@ -309,16 +344,13 @@ export class Application {
             }
         }
     }
-    /**
-     * Deinitializes the application
-     */
-    deinitialize(): Promise<void> {
+
+    /** Deinitializes the application */
+    deinitialize() {
         return this.sound.deinitialize();
     }
 
-    /**
-     * Background frame update callback
-     */
+    /** Background frame update callback */
     onBackgroundFrame(dt: number) {
         if (this.isRenderable()) {
             return;
@@ -330,9 +362,7 @@ export class Application {
         }
     }
 
-    /**
-     * Frame update callback
-     */
+    /** Frame update callback */
     onFrameEmitted(dt: number) {
         if (!this.isRenderable()) {
             return;
@@ -355,6 +385,7 @@ export class Application {
 
     /**
      * Checks if the app resized. Only does this once in a while
+     * @param forceUpdate Forced update of the dimensions
      */
     checkResize(forceUpdate: boolean = false) {
         const w = window.innerWidth;
@@ -373,16 +404,12 @@ export class Application {
         }
     }
 
-    /**
-     * Returns the effective ui sclae
-     */
-    getEffectiveUiScale(): number {
+    /** Returns the effective ui sclae */
+    getEffectiveUiScale() {
         return this.platformWrapper.getUiScale() * this.settings.getInterfaceScaleValue();
     }
 
-    /**
-     * Callback after ui scale has changed
-     */
+    /** Callback after ui scale has changed */
     updateAfterUiScaleChanged() {
         this.checkResize(true);
     }

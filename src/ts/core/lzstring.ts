@@ -7,13 +7,14 @@
 // http://pieroxy.net/blog/pages/lz-string/testing.html
 //
 // LZ-based compression algorithm, version 1.4.4
+
 const fromCharCode = String.fromCharCode;
 const hasOwnProperty = Object.prototype.hasOwnProperty;
 
 const keyStrUriSafe = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$";
 const baseReverseDic = {};
 
-function getBaseValue(alphabet: string, character: string) {
+function getBaseValue(alphabet, character) {
     if (!baseReverseDic[alphabet]) {
         baseReverseDic[alphabet] = {};
         for (let i = 0; i < alphabet.length; i++) {
@@ -24,9 +25,10 @@ function getBaseValue(alphabet: string, character: string) {
 }
 
 //compress into uint8array (UCS-2 big endian format)
-export function compressU8(uncompressed: string) {
+export function compressU8(uncompressed) {
     let compressed = compress(uncompressed);
     let buf = new Uint8Array(compressed.length * 2); // 2 bytes per character
+
     for (let i = 0, TotalLen = compressed.length; i < TotalLen; i++) {
         let current_value = compressed.charCodeAt(i);
         buf[i * 2] = current_value >>> 8;
@@ -36,6 +38,7 @@ export function compressU8(uncompressed: string) {
 }
 
 // Compreses with header
+
 export function compressU8WHeader(uncompressed: string, header: number) {
     let compressed = compress(uncompressed);
     let buf = new Uint8Array(2 + compressed.length * 2); // 2 bytes per character
@@ -51,11 +54,13 @@ export function compressU8WHeader(uncompressed: string, header: number) {
 }
 
 //decompress from uint8array (UCS-2 big endian format)
+
 export function decompressU8WHeader(compressed: Uint8Array) {
     // let buf = new Array(compressed.length / 2); // 2 bytes per character
     // for (let i = 0, TotalLen = buf.length; i < TotalLen; i++) {
     //     buf[i] = compressed[i * 2] * 256 + compressed[i * 2 + 1];
     // }
+
     // let result = [];
     // buf.forEach(function (c) {
     //     result.push(fromCharCode(c));
@@ -69,7 +74,7 @@ export function decompressU8WHeader(compressed: Uint8Array) {
 }
 
 //compress into a string that is already URI encoded
-export function compressX64(input: string) {
+export function compressX64(input) {
     if (input == null) return "";
     return _compress(input, 6, function (a) {
         return keyStrUriSafe.charAt(a);
@@ -92,7 +97,7 @@ function compress(uncompressed) {
     });
 }
 
-function _compress(uncompressed: string, bitsPerChar: number, getCharFromInt: (char: number) => string) {
+function _compress(uncompressed, bitsPerChar, getCharFromInt) {
     if (uncompressed == null) return "";
     let i,
         value,
@@ -200,6 +205,7 @@ function _compress(uncompressed: string, bitsPerChar: number, getCharFromInt: (c
             context_w = String(context_c);
         }
     }
+
     // Output the code for w.
     if (context_w !== "") {
         if (hasOwnProperty.call(context_dictionaryToCreate, context_w)) {
@@ -305,7 +311,7 @@ function _compress(uncompressed: string, bitsPerChar: number, getCharFromInt: (c
     return context_data.join("");
 }
 
-function decompress(compressed: string) {
+function decompress(compressed) {
     if (compressed == null) return "";
     if (compressed == "") return null;
     return _decompress(compressed.length, 32768, function (index) {
@@ -313,7 +319,7 @@ function decompress(compressed: string) {
     });
 }
 
-function _decompress(length: number, resetValue, getNextValue) {
+function _decompress(length, resetValue, getNextValue) {
     let dictionary = [],
         next,
         enlargeIn = 4,
@@ -329,6 +335,7 @@ function _decompress(length: number, resetValue, getNextValue) {
         power,
         c,
         data = { val: getNextValue(0), position: resetValue, index: 1 };
+
     for (i = 0; i < 3; i += 1) {
         dictionary[i] = i;
     }
@@ -392,6 +399,7 @@ function _decompress(length: number, resetValue, getNextValue) {
         if (data.index > length) {
             return "";
         }
+
         bits = 0;
         maxpower = Math.pow(2, numBits);
         power = 1;
@@ -405,6 +413,7 @@ function _decompress(length: number, resetValue, getNextValue) {
             bits |= (resb > 0 ? 1 : 0) * power;
             power <<= 1;
         }
+
         switch ((c = bits)) {
             case 0:
                 bits = 0;
@@ -420,6 +429,7 @@ function _decompress(length: number, resetValue, getNextValue) {
                     bits |= (resb > 0 ? 1 : 0) * power;
                     power <<= 1;
                 }
+
                 dictionary[dictSize++] = fromCharCode(bits);
                 c = dictSize - 1;
                 enlargeIn--;
@@ -466,7 +476,9 @@ function _decompress(length: number, resetValue, getNextValue) {
         // Add w+entry[0] to the dictionary.
         dictionary[dictSize++] = w + entry.charAt(0);
         enlargeIn--;
+
         w = entry;
+
         if (enlargeIn == 0) {
             enlargeIn = Math.pow(2, numBits);
             numBits++;

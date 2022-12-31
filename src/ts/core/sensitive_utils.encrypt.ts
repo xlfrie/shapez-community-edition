@@ -14,9 +14,7 @@ export function getNameOfProvider() {
 // Distinguish legacy crc prefixes
 export const CRC_PREFIX = "crc32".padEnd(32, "-");
 
-/**
- * Computes the crc for a given string
- */
+/** Computes the crc for a given string */
 export function computeCrc(str: string) {
     return CRC_PREFIX + crc32(str).toString(16).padStart(8, "0");
 }
