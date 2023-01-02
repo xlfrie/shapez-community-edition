@@ -29,27 +29,33 @@ const kbCancel = 27;
 
 const logger = createLogger("dialogs");
 
+
+export type DialogButtonStr<T extends string> = `${T}:${string}`
+
 /** Basic text based dialog */
-export class Dialog {
-    public app = app;
-    public title = title;
-    public contentHTML = contentHTML;
-    public type = type;
-    public buttonIds = buttons;
-    public closeButton = closeButton;
+export class Dialog<T extends string> {
+    public title: string;
+    public app: Application;
+    public contentHTML: string;
+    public type: string;
+    public buttonIds: string[];
+    public closeButton: boolean;
+    public dialogElem: HTMLDivElement;
+    public element: HTMLDivElement;
 
     public closeRequested = new Signal();
-    public buttonSignals = {};
+    public buttonSignals: Record<T, Signal>;
 
     public valueChosen = new Signal();
 
     public timeouts = [];
     public clickDetectors = [];
 
-    public inputReciever = new InputReceiver("dialog-" + this.title);
-
+    public inputReciever: InputReceiver;
     public enterHandler = null;
     public escapeHandler = null;
+
+
     /**
      * Constructs a new dialog with the given options
      * @param param0.title Title of the dialog
@@ -65,7 +71,23 @@ export class Dialog {
      * @param param0.closeButton Whether this dialog has a close button
      */
 
-    constructor({ app, title, contentHTML, buttons, type = "info", closeButton = false }) {
+    constructor({ app, title, contentHTML, buttons, type = "info", closeButton = false }: {
+        app: Application,
+        title: string,
+        contentHTML: string,
+        buttons: DialogButtonStr<T>[],
+        type: "info" | "warn" | "loading" | "warning",
+        closeButton?: boolean
+    }) {
+        this.app = app;
+        this.title = title;
+        this.contentHTML = contentHTML;
+        this.type = type;
+        this.buttonIds = buttons;
+        this.closeButton = closeButton;
+
+        this.inputReciever = new InputReceiver("dialog-" + this.title);
+
         for (let i = 0; i < buttons.length; ++i) {
             if (G_IS_DEV && globalConfig.debug.disableTimedButtons) {
                 this.buttonIds[i] = this.buttonIds[i].replace(":timeout", "");
@@ -260,10 +282,9 @@ export class Dialog {
 }
 
 /** Dialog which simply shows a loading spinner */
-export class DialogLoading extends Dialog {
-    public text = text;
+export class DialogLoading extends Dialog<never> {
 
-    constructor(app, text = "") {
+    constructor(app: Application, public text: string = "") {
         super({
             app,
             title: "",
@@ -301,20 +322,30 @@ export class DialogLoading extends Dialog {
     }
 }
 
-export class DialogOptionChooser extends Dialog {
-    public options = options;
-    public initialOption = options.active;
+export class DialogOptionChooser extends Dialog<"optionSelected"> {
+    public options: {
+        options: { value: string, text: string, desc?: string, iconPrefix?: string }[],
+        active: string
+    };
+    public initialOption: string;
 
-    constructor({ app, title, options }) {
+    constructor({ app, title, options }: {
+        app: Application,
+        title: string,
+        options: {
+            options: { value: string, text: string, desc?: string, iconPrefix?: string }[],
+            active: string
+        }
+    }) {
+
         let html = "<div class='optionParent'>";
 
         options.options.forEach(({ value, text, desc = null, iconPrefix = null }) => {
             const descHtml = desc ? `<span class="desc">${desc}</span>` : "";
             let iconHtml = iconPrefix ? `<span class="icon icon-${iconPrefix}-${value}"></span>` : "";
             html += `
-                <div class='option ${value === options.active ? "active" : ""} ${
-                iconPrefix ? "hasIcon" : ""
-            }' data-optionvalue='${value}'>
+                <div class='option ${value === options.active ? "active" : ""} ${iconPrefix ? "hasIcon" : ""
+                }' data-optionvalue='${value}'>
                     ${iconHtml}
                     <span class='title'>${text}</span>
                     ${descHtml}
@@ -332,6 +363,8 @@ export class DialogOptionChooser extends Dialog {
             closeButton: true,
         });
 
+        this.options = options;
+        this.initialOption = options.active;
         this.buttonSignals.optionSelected = new Signal();
     }
 
@@ -371,22 +404,37 @@ export class DialogOptionChooser extends Dialog {
         });
         return div;
     }
+    internalButtonHandler(arg0: string, value: any) {
+        throw new Error("Method not implemented.");
+    }
 }
 
-export class DialogWithForm extends Dialog {
-    public confirmButtonId = confirmButtonId;
-    public formElements = formElements;
+export class DialogWithForm<T extends string = "cancel" | "ok"> extends Dialog<T> {
+    public confirmButtonId: string// = confirmButtonId;
+    public formElements: FormElement[];// = formElements;
 
-    public enterHandler = confirmButtonId;
+    public enterHandler: string //= confirmButtonId;
+    valueChosen: Signal;
 
     constructor({
         app,
         title,
         desc,
         formElements,
+        // @Bagel03 IDK
+        // @ts-ignore
         buttons = ["cancel", "ok:good"],
+        // @ts-ignore
         confirmButtonId = "ok",
         closeButton = true,
+    }: {
+        app: Application,
+        title: string,
+        desc: string,
+        formElements: FormElement[],
+        buttons?: DialogButtonStr<T>[],
+        confirmButtonId?: T,
+        closeButton?: boolean
     }) {
         let html = "";
         html += desc + "<br>";
@@ -402,6 +450,11 @@ export class DialogWithForm extends Dialog {
             type: "info",
             closeButton,
         });
+
+        this.confirmButtonId = confirmButtonId;
+        this.formElements = formElements;
+
+        this.enterHandler = confirmButtonId;
     }
 
     internalButtonHandler(id, ...payload) {

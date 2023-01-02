@@ -86,7 +86,7 @@ export class GamedistributionAdProvider extends AdProviderInterface {
         this.app.sound.setMusicVolume(0);
         this.app.sound.setSoundVolume(0);
 
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             // So, wait for the remove call but also remove after N seconds
             this.videoAdResolveFunction = () => {
                 this.videoAdResolveFunction = null;

@@ -10,7 +10,9 @@ export const enumDirection = {
     right: "right",
     bottom: "bottom",
     left: "left",
-};
+} as const;
+export type enumDirection = keyof typeof enumDirection;
+
 
 /** @enum */
 export const enumInvertedDirections = {
@@ -44,10 +46,7 @@ export const arrayAllDirections: Array<enumDirection> = [
 ];
 
 export class Vector {
-    public x = x || 0;
-    public y = y || 0;
-
-    constructor(x, y) {}
+    constructor(public x: number = 0, public y: number = 0) { }
 
     /** return a copy of the vector */
     copy(): Vector {

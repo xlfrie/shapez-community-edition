@@ -41,6 +41,19 @@ export type Waypoint = {
 const MAX_LABEL_LENGTH = 71;
 
 export class HUDWaypoints extends BaseHUDPart {
+    public hintElement: HTMLDivElement;
+    public waypointsListElement: HTMLDivElement;
+    public waypoints: Waypoint[];
+    public waypointSprites: { regular: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite; wires: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite; };
+    public directionIndicatorSprite: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
+    public dummyBuffer: CanvasRenderingContext2D;
+    public domAttach: DynamicDomAttach;
+    public currentMarkerOpacity: number;
+    public currentCompassOpacity: number;
+    public compassBuffer: { canvas: HTMLCanvasElement; context: CanvasRenderingContext2D; };
+    public cachedKeyToCanvas: {};
+    public cachedTextWidths: {};
+
     /** Creates the overview of waypoints */
     createElements(parent: HTMLElement) {
         // Create the helper box on the lower right when zooming out
@@ -52,11 +65,11 @@ export class HUDWaypoints extends BaseHUDPart {
                 `
             <strong class='title'>${T.ingame.waypoints.waypoints}</strong>
             <span class='desc'>${T.ingame.waypoints.description.replace(
-                "<keybinding>",
-                `<code class='keybinding'>${this.root.keyMapper
-                    .getBinding(KEYMAPPINGS.navigation.createMarker)
-                    .getKeyCodeString()}</code>`
-            )}</span>
+                    "<keybinding>",
+                    `<code class='keybinding'>${this.root.keyMapper
+                        .getBinding(KEYMAPPINGS.navigation.createMarker)
+                        .getKeyCodeString()}</code>`
+                )}</span>
         `
             );
         }
@@ -246,7 +259,7 @@ export class HUDWaypoints extends BaseHUDPart {
         {
             worldPos = null,
             waypoint = null,
-        }?: {
+        }: {
             worldPos?: Vector;
             waypoint?: Waypoint;
         } /*--REMOVE_PREV--*/

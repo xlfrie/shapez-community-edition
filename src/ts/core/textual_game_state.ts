@@ -7,6 +7,11 @@ import { T } from "../translations";
  * scrollable content.
  */
 export class TextualGameState extends GameState {
+    public backToStateId: string;
+    public headerElement: HTMLElement;
+    public dialogs: HUDModalDialogs;
+    public htmlElement: HTMLElement;
+    public containerElement: HTMLElement;
     ///// INTERFACE ////
 
     /**
@@ -47,6 +52,9 @@ export class TextualGameState extends GameState {
             this.moveToState(this.getDefaultPreviousState());
         }
     }
+    backToStatePayload(backToStateId: any, backToStatePayload: any) {
+        throw new Error("Method not implemented.");
+    }
 
     /** Returns the default state to go back to */
     getDefaultPreviousState() {
@@ -86,7 +94,7 @@ export class TextualGameState extends GameState {
         if (this.getStateHeaderTitle()) {
             headerHtml = `
             <div class="headerBar">
-            
+
                 <h1><button class="backButton"></button> ${this.getStateHeaderTitle()}</h1>
             </div>`;
         }

@@ -7,8 +7,29 @@ import { KeyActionMapper, KEYMAPPINGS } from "../../key_action_mapper";
 import { BaseHUDPart } from "../base_hud_part";
 import { DynamicDomAttach } from "../dynamic_dom_attach";
 
+export type handle = {
+    // @bagel03
+    requireIndexToElement: any[];
+    elem: HTMLDivElement;
+    elemTierLabel: HTMLDivElement;
+    icon: HTMLDivElement;
+    elemDescription: HTMLDivElement;
+    elemRequirements: HTMLDivElement;
+    buyButton: HTMLButtonElement;
+}
 export class HUDShop extends BaseHUDPart {
-    createElements(parent) {
+    public background: HTMLDivElement;
+    public dialogInner: HTMLDivElement;
+    public title: HTMLDivElement;
+    public closeButton: HTMLDivElement;
+    public contentDiv: HTMLDivElement;
+    public upgradeToElements: Record<string, handle>;
+    public domAttach: DynamicDomAttach;
+    public inputReciever: InputReceiver;
+    public keyActionMapper: KeyActionMapper;
+    public visible: boolean;
+
+    createElements(parent: HTMLElement) {
         this.background = makeDiv(parent, "ingame_HUD_Shop", ["ingameDialog"]);
 
         // DIALOG Inner / Wrapper
@@ -22,7 +43,7 @@ export class HUDShop extends BaseHUDPart {
 
         // Upgrades
         for (const upgradeId in this.root.gameMode.getUpgrades()) {
-            const handle = {};
+            const handle = {} as handle;
             handle.requireIndexToElement = [];
 
             // Wrapper

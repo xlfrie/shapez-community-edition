@@ -49,7 +49,7 @@ export class BaseDataType {
      * Verifies a given serialized value
      * @returns String error code or null on success
      */
-    verifySerializedValue(value: any): string | void {}
+    verifySerializedValue(value: any): string | void { }
 
     /**
      * Deserializes a serialized value into the target object under the given key
@@ -447,10 +447,10 @@ export class TypePositiveNumber extends BaseDataType {
 }
 
 export class TypeEnum extends BaseDataType {
-    public availableValues = Object.values(enumeration);
-
+    public availableValues: any[]
     constructor(enumeration = {}) {
         super();
+        this.availableValues = Object.values(enumeration);
     }
 
     serialize(value) {
@@ -574,10 +574,7 @@ export class TypeEntityWeakref extends BaseDataType {
 }
 
 export class TypeClass extends BaseDataType {
-    public registry = registry;
-    public customResolver = customResolver;
-
-    constructor(registry, customResolver = null) {
+    constructor(public registry: FactoryTemplate<any>, public customResolver: (root: GameRoot, val: object) => object = null) {
         super();
     }
 
@@ -653,9 +650,7 @@ export class TypeClass extends BaseDataType {
 }
 
 export class TypeClassData extends BaseDataType {
-    public registry = registry;
-
-    constructor(registry) {
+    constructor(public registry: FactoryTemplate<any>) {
         super();
     }
 
@@ -694,10 +689,7 @@ export class TypeClassData extends BaseDataType {
 }
 
 export class TypeClassFromMetaclass extends BaseDataType {
-    public registry = registry;
-    public classHandle = classHandle;
-
-    constructor(classHandle, registry) {
+    constructor(public classHandle: typeof BasicSerializableObject, public registry: SingletonFactoryTemplate<any>) {
         super();
     }
 
@@ -757,9 +749,7 @@ export class TypeClassFromMetaclass extends BaseDataType {
 }
 
 export class TypeMetaClass extends BaseDataType {
-    public registry = registry;
-
-    constructor(registry) {
+    constructor(public registry: SingletonFactoryTemplate<any>) {
         super();
     }
 
@@ -806,10 +796,7 @@ export class TypeMetaClass extends BaseDataType {
 }
 
 export class TypeArray extends BaseDataType {
-    public fixedSize = fixedSize;
-    public innerType = innerType;
-
-    constructor(innerType, fixedSize = false) {
+    constructor(public innerType: BaseDataType, public fixedSize = false) {
         super();
     }
 
@@ -861,9 +848,7 @@ export class TypeArray extends BaseDataType {
 }
 
 export class TypeFixedClass extends BaseDataType {
-    public baseclass = baseclass;
-
-    constructor(baseclass) {
+    constructor(public baseclass: typeof BasicSerializableObject) {
         super();
     }
 
@@ -903,10 +888,7 @@ export class TypeFixedClass extends BaseDataType {
 }
 
 export class TypeKeyValueMap extends BaseDataType {
-    public valueType = valueType;
-    public includeEmptyValues = includeEmptyValues;
-
-    constructor(valueType, includeEmptyValues = true) {
+    constructor(public valueType: BaseDataType, public includeEmptyValues = true) {
         super();
     }
 
@@ -966,9 +948,7 @@ export class TypeKeyValueMap extends BaseDataType {
 }
 
 export class TypeClassId extends BaseDataType {
-    public registry = registry;
-
-    constructor(registry) {
+    constructor(public registry: FactoryTemplate<any> | SingletonFactoryTemplate<any>) {
         super();
     }
 
@@ -1008,10 +988,7 @@ export class TypeClassId extends BaseDataType {
 }
 
 export class TypePair extends BaseDataType {
-    public type1 = type1;
-    public type2 = type2;
-
-    constructor(type1, type2) {
+    constructor(public type1: BaseDataType, public type2: BaseDataType) {
         super();
         assert(type1 && type1 instanceof BaseDataType, "bad first type given for pair");
         assert(type2 && type2 instanceof BaseDataType, "bad second type given for pair");
@@ -1074,9 +1051,8 @@ export class TypePair extends BaseDataType {
 }
 
 export class TypeNullable extends BaseDataType {
-    public wrapped = wrapped;
 
-    constructor(wrapped) {
+    constructor(public wrapped: BaseDataType) {
         super();
     }
 
@@ -1127,9 +1103,7 @@ export class TypeNullable extends BaseDataType {
 }
 
 export class TypeStructuredObject extends BaseDataType {
-    public descriptor = descriptor;
-
-    constructor(descriptor) {
+    constructor(public descriptor: Record<string, BaseDataType>) {
         super();
     }
 

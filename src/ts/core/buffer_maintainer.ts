@@ -14,14 +14,12 @@ const logger = createLogger("buffers");
 const bufferGcDurationSeconds = 0.5;
 
 export class BufferMaintainer {
-    public root = root;
-
     public cache: Map<string, Map<string, CacheEntry>> = new Map();
 
     public iterationIndex = 1;
     public lastIteration = 0;
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         this.root.signals.gameFrameStarted.add(this.update, this);
     }
 

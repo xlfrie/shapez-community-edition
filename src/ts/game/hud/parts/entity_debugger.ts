@@ -7,6 +7,12 @@ import { DynamicDomAttach } from "../dynamic_dom_attach";
 
 /** Allows to inspect entities by pressing F8 while hovering them */
 export class HUDEntityDebugger extends BaseHUDPart {
+    public element: HTMLDivElement;
+    public componentsElem: HTMLElement;
+    public selectedEntity: Entity;
+    public lastUpdate: number;
+    public domAttach: DynamicDomAttach;
+
     createElements(parent) {
         this.element = makeDiv(
             parent,
@@ -55,7 +61,7 @@ export class HUDEntityDebugger extends BaseHUDPart {
         }
     }
 
-    propertyToHTML(name: string, val: any, indent: number = 0, recursion: Array = []) {
+    propertyToHTML(name: string, val: any, indent: number = 0, recursion: Array<any> = []) {
         if (indent > 20) {
             return;
         }

@@ -4,7 +4,7 @@ import { typeItemSingleton } from "../item_resolver";
 import { types } from "../../savegame/serialization";
 
 /**
- @enum 
+ @enum
 */
 export const enumBeltReaderType = {
     wired: "wired",
@@ -12,6 +12,8 @@ export const enumBeltReaderType = {
 };
 
 export class BeltReaderComponent extends Component {
+    lastItemTimes: any;
+    lastItem: BaseItem;
     static getId() {
         return "BeltReader";
     }

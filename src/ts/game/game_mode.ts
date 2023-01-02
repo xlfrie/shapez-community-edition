@@ -8,9 +8,10 @@ import { types, BasicSerializableObject } from "../savegame/serialization";
 import { MetaBuilding } from "./meta_building";
 import { MetaItemProducerBuilding } from "./buildings/item_producer";
 import { BaseHUDPart } from "./hud/base_hud_part";
+import { LevelDefinition } from "./modes/regular";
 
 /**
- @enum 
+ @enum
 */
 export const enumGameModeIds = {
     puzzleEdit: "puzzleEditMode",
@@ -19,7 +20,7 @@ export const enumGameModeIds = {
 };
 
 /**
- @enum 
+ @enum
 */
 export const enumGameModeTypes = {
     default: "defaultModeType",
@@ -44,13 +45,12 @@ export class GameMode extends BasicSerializableObject {
     ) {
         return new (gGameModeRegistry.findById(id))(root, payload);
     }
-    public root = root;
 
     public additionalHudParts: Record<string, typeof BaseHUDPart> = {};
 
     public hiddenBuildings: typeof MetaBuilding[] = [MetaItemProducerBuilding];
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         super();
     }
 
@@ -61,7 +61,7 @@ export class GameMode extends BasicSerializableObject {
         };
     }
 
-    deserialize({ data }: object) {
+    deserialize({ data }: any) {
         super.deserialize(data, this.root);
     }
 
@@ -110,7 +110,7 @@ export class GameMode extends BasicSerializableObject {
         return 3.5;
     }
 
-    getUpgrades(): Object<string, Array> {
+    getUpgrades(): Record<string, Array<any>> {
         return {
             belt: [],
             miner: [],
@@ -129,7 +129,7 @@ export class GameMode extends BasicSerializableObject {
         return;
     }
 
-    getLevelDefinitions(): array {
+    getLevelDefinitions(): LevelDefinition[] {
         return [];
     }
 

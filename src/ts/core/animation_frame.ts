@@ -10,8 +10,8 @@ const maxDtMs = 1000;
 const resetDtMs = 16;
 
 export class AnimationFrame {
-    public frameEmitted = new Signal();
-    public bgFrameEmitted = new Signal();
+    public frameEmitted = new Signal<[number]>();
+    public bgFrameEmitted = new Signal<[number]>();
 
     public lastTime = performance.now();
     public bgLastTime = performance.now();
@@ -45,7 +45,7 @@ export class AnimationFrame {
         this.handleAnimationFrame();
     }
 
-    handleAnimationFrame(time) {
+    handleAnimationFrame(time?: number) {
         let dt = time - this.lastTime;
 
         if (dt > maxDtMs) {

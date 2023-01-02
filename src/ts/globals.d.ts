@@ -1,7 +1,7 @@
 // Globals defined by webpack
 
 declare const G_IS_DEV: boolean;
-declare function assert(condition: boolean | object | string, ...errorMessage: string[]): void;
+declare function assert(condition: boolean | any | string, ...errorMessage: string[]): void;
 declare function assertAlways(condition: boolean | object | string, ...errorMessage: string[]): void;
 
 declare const abstract: void;
@@ -125,6 +125,8 @@ declare interface WebpackContext {
 declare interface NodeRequire {
     context(src: string, flag: boolean, regexp: RegExp): WebpackContext;
 }
+
+declare const require: NodeRequire & { (path: string): any };
 
 declare interface Object {
     entries(obj: object): Array<[string, any]>;

@@ -8,6 +8,13 @@ import { DynamicDomAttach } from "../dynamic_dom_attach";
 import { TrackedState } from "../../../core/tracked_state";
 
 export class HUDGameMenu extends BaseHUDPart {
+    public element: HTMLDivElement;
+    public badgesToUpdate: any[];
+    public visibilityToUpdate: any[];
+    public saveButton: HTMLDivElement;
+    public settingsButton: HTMLDivElement;
+    public trackedIsSaving: TrackedState;
+
     createElements(parent) {
         this.element = makeDiv(parent, "ingame_HUD_GameMenu");
 

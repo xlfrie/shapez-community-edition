@@ -15,6 +15,7 @@ import { StorageImplBrowserIndexedDB } from "./storage_indexed_db";
 const logger = createLogger("platform/browser");
 
 export class PlatformWrapperImplBrowser extends PlatformWrapperInterface {
+    embedProvider: any;
     initialize() {
         this.recaptchaTokenCallback = null;
 

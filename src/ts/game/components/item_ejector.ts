@@ -18,6 +18,7 @@ export type ItemEjectorSlot = {
 };
 
 export class ItemEjectorComponent extends Component {
+    slots: any;
     static getId() {
         return "ItemEjector";
     }

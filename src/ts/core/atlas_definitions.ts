@@ -27,16 +27,20 @@ export type AtlasMeta = {
 };
 
 export type SourceData = {
-    frames: Object<string, SpriteDefinition>;
+    frames: Record<string, SpriteDefinition>;
     meta: AtlasMeta;
 };
 
 export class AtlasDefinition {
-    public meta = meta;
-    public sourceData = frames;
-    public sourceFileName = meta.image;
+    public meta: AtlasMeta
+    public sourceData: Record<string, SpriteDefinition>;
+    public sourceFileName: string
 
-    constructor({ frames, meta }) {}
+    constructor({ frames, meta }: SourceData) {
+        this.meta = meta;
+        this.sourceData = frames;
+        this.sourceFileName = meta.image;
+    }
 
     getFullSourcePath() {
         return this.sourceFileName;

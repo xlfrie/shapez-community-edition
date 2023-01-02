@@ -21,6 +21,7 @@ export type ItemAcceptorSlotConfig = {
 };
 
 export class ItemAcceptorComponent extends Component {
+    slots: any;
     static getId() {
         return "ItemAcceptor";
     }

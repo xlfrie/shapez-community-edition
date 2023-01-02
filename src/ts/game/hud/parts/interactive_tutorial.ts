@@ -157,6 +157,12 @@ const tutorialsByLevel = [
 ];
 
 export class HUDInteractiveTutorial extends BaseHUDPart {
+    public element: HTMLDivElement;
+    public elementDescription: HTMLDivElement;
+    public elementGif: HTMLDivElement;
+    public domAttach: DynamicDomAttach;
+    public currentHintId: TrackedState;
+
     createElements(parent) {
         this.element = makeDiv(
             parent,
@@ -360,11 +366,11 @@ export class HUDInteractiveTutorial extends BaseHUDPart {
                             arrowSprite,
                             -6,
                             -globalConfig.halfTileSize -
-                                clamp((this.root.time.realtimeNow() * 1.5) % 1.0, 0, 1) *
-                                    1 *
-                                    globalConfig.tileSize +
-                                globalConfig.halfTileSize -
-                                6,
+                            clamp((this.root.time.realtimeNow() * 1.5) % 1.0, 0, 1) *
+                            1 *
+                            globalConfig.tileSize +
+                            globalConfig.halfTileSize -
+                            6,
                             12,
                             12
                         );

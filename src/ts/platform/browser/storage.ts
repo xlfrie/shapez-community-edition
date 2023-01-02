@@ -1,5 +1,6 @@
 import { FILE_NOT_FOUND, StorageInterface } from "../storage";
 import { createLogger } from "../../core/logging";
+import type { Application } from "../../application";
 
 const logger = createLogger("storage/browser");
 
@@ -16,13 +17,13 @@ if (G_IS_DEV) {
 export class StorageImplBrowser extends StorageInterface {
     public currentBusyFilename = false;
 
-    constructor(app) {
+    constructor(app: Application) {
         super(app);
     }
 
     initialize() {
         logger.error("Using localStorage, please update to a newer browser");
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             // Check for local storage availability in general
             if (!window.localStorage) {
                 alert("Local storage is not available! Please upgrade to a newer browser!");
@@ -51,7 +52,7 @@ export class StorageImplBrowser extends StorageInterface {
 
         this.currentBusyFilename = filename;
         window.localStorage.setItem(filename, contents);
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             setTimeout(() => {
                 this.currentBusyFilename = false;
                 resolve();
@@ -64,7 +65,7 @@ export class StorageImplBrowser extends StorageInterface {
             logger.warn("Attempt to read", filename, "while write progress on it is ongoing!");
         }
 
-        return new Promise((resolve, reject) => {
+        return new Promise<string>((resolve, reject) => {
             const contents = window.localStorage.getItem(filename);
             if (!contents) {
                 // File not found
@@ -83,7 +84,7 @@ export class StorageImplBrowser extends StorageInterface {
         }
 
         this.currentBusyFilename = filename;
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             window.localStorage.removeItem(filename);
             setTimeout(() => {
                 this.currentBusyFilename = false;

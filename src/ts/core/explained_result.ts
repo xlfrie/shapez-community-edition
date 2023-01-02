@@ -1,9 +1,5 @@
 export class ExplainedResult {
-    public result: boolean = result;
-
-    public reason: string = reason;
-
-    constructor(result = true, reason = null, additionalProps = {}) {
+    constructor(public result = true, public reason: string = null, additionalProps = {}) {
         // Copy additional props
         for (const key in additionalProps) {
             this[key] = additionalProps[key];
@@ -22,7 +18,7 @@ export class ExplainedResult {
         return new ExplainedResult(true);
     }
 
-    static bad(reason, additionalProps) {
+    static bad(reason, additionalProps?) {
         return new ExplainedResult(false, reason, additionalProps);
     }
 

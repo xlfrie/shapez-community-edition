@@ -32,22 +32,20 @@ import { BaseItem } from "../game/base_item";
 import { MODS_ADDITIONAL_ITEMS } from "../game/item_resolver";
 
 export type constructable = {
-    new (...args: any);
+    new(...args: any);
     prototype: any;
 };
 
-export type bindThis = (this: T, ...args: Parameters<F>) => ReturnType<F>;
+export type bindThis<T, F extends (...args: any) => any> = (this: T, ...args: Parameters<F>) => ReturnType<F>;
 
-export type beforePrams = (...args: [P, Parameters<F>]) => ReturnType<F>;
+export type beforePrams<F extends (...args: any) => any, P> = (...args: [P, Parameters<F>]) => ReturnType<F>;
 
-export type afterPrams = (...args: [...Parameters<F>, P]) => ReturnType<F>;
+export type afterPrams<F extends (...args: any) => any, P> = (...args: [...Parameters<F>, P]) => ReturnType<F>;
 
-export type extendsPrams = (...args: [...Parameters<F>, ...any]) => ReturnType<F>;
+export type extendsPrams<F extends (...args: any) => any> = (...args: [...Parameters<F>, ...any]) => ReturnType<F>;
 
 export class ModInterface {
-    public modLoader = modLoader;
-
-    constructor(modLoader) {}
+    constructor(public modLoader: ModLoader) { }
 
     registerCss(cssString) {
         // Preprocess css
@@ -291,7 +289,7 @@ export class ModInterface {
             keyCode: number;
             translation: string;
             repeated?: boolean;
-            handler?: (GameRoot) => void;
+            handler?: (root: GameRoot) => void;
             modifiers?: {
                 shift?: boolean;
                 alt?: boolean;
@@ -346,9 +344,9 @@ export class ModInterface {
     }
 
     setBuildingTutorialImage(
-        buildingIdOrClass?: string | (new () => MetaBuilding) /*--REMOVE_PREV--*/,
-        variant: *,
-        imageBase64: *
+        buildingIdOrClass: string | (new () => MetaBuilding) /*--REMOVE_PREV--*/,
+        variant: any,
+        imageBase64: any
     ) {
         if (typeof buildingIdOrClass === "function") {
             buildingIdOrClass = new buildingIdOrClass().id;
@@ -409,7 +407,7 @@ export class ModInterface {
      * @template M the name of the method we are overriding
      * @template O the method that will override the old one
      */
-    replaceMethod(classHandle: C, methodName: M, override: bindThis<beforePrams<O, P[M]>, InstanceType<C>>) {
+    replaceMethod<C extends constructable, M extends keyof P, P extends C["prototype"], O extends extendsPrams<P[M]>>(classHandle: C, methodName: M, override: bindThis<beforePrams<O, P[M]>, InstanceType<C>>) {
         const oldMethod = classHandle.prototype[methodName];
         classHandle.prototype[methodName] = function () {
             //@ts-ignore This is true I just cant tell it that arguments will be Arguments<O>
@@ -424,7 +422,7 @@ export class ModInterface {
      * @template M the name of the method we are overriding
      * @template O the method that will run before the old one
      */
-    runBeforeMethod(classHandle: C, methodName: M, executeBefore: bindThis<O, InstanceType<C>>) {
+    runBeforeMethod<C extends constructable, M extends keyof P, P extends C["prototype"], O extends extendsPrams<P[M]>>(classHandle: C, methodName: M, executeBefore: bindThis<O, InstanceType<C>>) {
         const oldHandle = classHandle.prototype[methodName];
         classHandle.prototype[methodName] = function () {
             //@ts-ignore Same as above
@@ -440,7 +438,7 @@ export class ModInterface {
      * @template M the name of the method we are overriding
      * @template O the method that will run before the old one
      */
-    runAfterMethod(classHandle: C, methodName: M, executeAfter: bindThis<O, InstanceType<C>>) {
+    runAfterMethod<C extends constructable, M extends keyof P, P extends C["prototype"], O extends extendsPrams<P[M]>>(classHandle: C, methodName: M, executeAfter: bindThis<O, InstanceType<C>>) {
         const oldHandle = classHandle.prototype[methodName];
         classHandle.prototype[methodName] = function () {
             const returnValue = oldHandle.apply(this, arguments);
@@ -492,7 +490,7 @@ export class ModInterface {
         }
         this.registerTranslations(language, {
             buildings: {
-                [buildingIdOrClass]: {
+                [buildingIdOrClass as string]: {
                     [variant]: {
                         name,
                         description,
@@ -503,12 +501,12 @@ export class ModInterface {
     }
 
     registerBuildingSprites(
-        buildingIdOrClass?: string | (new () => MetaBuilding) /*--REMOVE_PREV--*/,
+        buildingIdOrClass: string | (new () => MetaBuilding) /*--REMOVE_PREV--*/,
         variant: string,
         {
             regularBase64,
             blueprintBase64,
-        }?: {
+        }: {
             regularBase64?: string;
             blueprintBase64?: string;
         } /*--REMOVE_PREV--*/
@@ -530,7 +528,7 @@ export class ModInterface {
     }
 
     addVariantToExistingBuilding(
-        metaClass?: new () => MetaBuilding /*--REMOVE_PREV--*/,
+        metaClass: new () => MetaBuilding /*--REMOVE_PREV--*/,
         variant: string,
         payload?: {
             rotationVariants?: number[];

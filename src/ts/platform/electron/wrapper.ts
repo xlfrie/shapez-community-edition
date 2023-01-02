@@ -8,6 +8,7 @@ import { PlatformWrapperInterface } from "../wrapper";
 const logger = createLogger("electron-wrapper");
 
 export class PlatformWrapperImplElectron extends PlatformWrapperImplBrowser {
+    dlcs: any;
     initialize() {
         this.dlcs = {
             puzzle: false,

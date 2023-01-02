@@ -8,6 +8,15 @@ import { StaticMapEntityComponent } from "../../components/static_map_entity";
 import { BeltComponent } from "../../components/belt";
 
 export class HUDSettingsMenu extends BaseHUDPart {
+    public background: HTMLDivElement;
+    public menuElement: HTMLDivElement;
+    public statsElement: HTMLDivElement;
+    public buttonContainer: HTMLDivElement;
+    public visible: boolean;
+    public domAttach: DynamicDomAttach;
+    public inputReciever: InputReceiver;
+    public keyActionMapper: KeyActionMapper;
+
     createElements(parent) {
         this.background = makeDiv(parent, "ingame_HUD_SettingsMenu", ["ingameDialog"]);
 
@@ -109,7 +118,7 @@ export class HUDSettingsMenu extends BaseHUDPart {
 
             buildingsPlacedElement.innerText = formatBigNumberFull(
                 this.root.entityMgr.getAllWithComponent(StaticMapEntityComponent).length -
-                    this.root.entityMgr.getAllWithComponent(BeltComponent).length
+                this.root.entityMgr.getAllWithComponent(BeltComponent).length
             );
 
             beltsPlacedElement.innerText = formatBigNumberFull(

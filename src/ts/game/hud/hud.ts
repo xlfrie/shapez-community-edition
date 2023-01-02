@@ -23,6 +23,8 @@ import { TrailerMaker } from "./trailer_maker";
 
 export class GameHUD {
     public root = root;
+    parts: any;
+    signals: any;
 
     constructor(root) { }
 

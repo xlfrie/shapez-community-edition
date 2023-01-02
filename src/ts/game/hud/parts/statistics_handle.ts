@@ -7,12 +7,13 @@ import { GameRoot } from "../../root";
 import { ShapeDefinition } from "../../shape_definition";
 
 /**
- @enum 
+ @enum
 */
 export const enumDisplayMode = {
     icons: "icons",
     detailed: "detailed",
 };
+export type enumDisplayMode = keyof typeof enumDisplayMode;
 
 /** Stores how many seconds one unit is */
 export const statisticsUnitsSeconds: {
@@ -25,13 +26,15 @@ export const statisticsUnitsSeconds: {
 
 /** Simple wrapper for a shape definition within the shape statistics */
 export class HUDShapeStatisticsHandle {
-    public definition = definition;
-    public root = root;
-    public intersectionObserver = intersectionObserver;
 
     public visible = false;
+    public element: HTMLDivElement;
+    public counter: HTMLSpanElement;
+    public shapeCanvas: HTMLCanvasElement;
+    public graphCanvas: HTMLCanvasElement;
+    public graphContext: CanvasRenderingContext2D;
 
-    constructor(root, definition, intersectionObserver) {}
+    constructor(public root: GameRoot, public definition: ShapeDefinition, public intersectionObserver: IntersectionObserver) { }
 
     initElement() {
         this.element = document.createElement("div");

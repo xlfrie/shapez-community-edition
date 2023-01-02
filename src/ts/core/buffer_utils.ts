@@ -74,8 +74,8 @@ export function clearBufferBacklog() {
 
 /** Creates a new offscreen buffer */
 export function makeOffscreenBuffer(
-    w: Number,
-    h: Number,
+    w: number,
+    h: number,
     { smooth = true, reusable = true, label = "buffer" }
 ): [HTMLCanvasElement, CanvasRenderingContext2D] {
     assert(w > 0 && h > 0, "W or H < 0");

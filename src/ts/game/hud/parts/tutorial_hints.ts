@@ -9,6 +9,15 @@ import { T } from "../../../translations";
 const tutorialVideos = [3, 4, 5, 6, 7, 9, 10, 11];
 
 export class HUDPartTutorialHints extends BaseHUDPart {
+    element: HTMLDivElement;
+    videoElement: HTMLVideoElement;
+    enlarged: boolean;
+    videoAttach: DynamicDomAttach;
+    inputReciever: InputReceiver;
+    keyActionMapper: KeyActionMapper;
+    domAttach: DynamicDomAttach;
+    currentShownLevel: TrackedState;
+
     createElements(parent) {
         this.element = makeDiv(
             parent,

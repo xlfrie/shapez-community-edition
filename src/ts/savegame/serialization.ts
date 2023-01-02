@@ -45,7 +45,7 @@ export const types = {
         return new TypeNullable(wrapped);
     },
 
-    classId(registry: FactoryTemplate<*> | SingletonFactoryTemplate<*>) {
+    classId(registry: FactoryTemplate<any> | SingletonFactoryTemplate<any>) {
         return new TypeClassId(registry);
     },
 
@@ -57,11 +57,11 @@ export const types = {
         return new TypeEnum(values);
     },
 
-    obj(registry: FactoryTemplate<*>, resolver: (GameRoot, any) => object = null) {
+    obj(registry: FactoryTemplate<any>, resolver: (GameRoot, any) => object = null) {
         return new TypeClass(registry, resolver);
     },
 
-    objData(registry: FactoryTemplate<*>) {
+    objData(registry: FactoryTemplate<any>) {
         return new TypeClassData(registry);
     },
 
@@ -89,17 +89,17 @@ export const types = {
         return new TypePair(a, b);
     },
 
-    classWithMetaclass(classHandle: typeof BasicSerializableObject, registry: SingletonFactoryTemplate<*>) {
+    classWithMetaclass(classHandle: typeof BasicSerializableObject, registry: SingletonFactoryTemplate<any>) {
         return new TypeClassFromMetaclass(classHandle, registry);
     },
 };
 
-export type Schema = Object<string, BaseDataType> | object;
+export type Schema = Record<string, BaseDataType> | object;
 
 const globalSchemaCache = {};
 
 /* dev:start */
-const classnamesCache = {};
+const classnamesCache = {} as Record<string, Class<BasicSerializableObject>>;
 /* dev:end*/
 
 export class BasicSerializableObject {
@@ -109,11 +109,12 @@ export class BasicSerializableObject {
      * in non-dev builds
      */
 
-    constructor(...args) {}
+    constructor(...args) { }
 
     /* dev:end */
 
-    static getId() {
+    static getId(): string {
+        return ""
         abstract;
     }
 
@@ -221,7 +222,7 @@ export function serializeSchema(obj: object, schema: Schema, mergeWith: object =
  * @returns String error code or nothing on success
  */
 export function deserializeSchema(
-    obj: object,
+    obj: any,
     schema: Schema,
     data: object,
     baseclassErrorResult: string | void | null = null,

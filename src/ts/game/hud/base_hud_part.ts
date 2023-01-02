@@ -7,14 +7,13 @@ import { ClickDetector } from "../../core/click_detector";
 import { KeyActionMapper } from "../key_action_mapper";
 
 export class BaseHUDPart {
-    public root = root;
 
     public clickDetectors: Array<ClickDetector> = [];
 
-    constructor(root) {}
+    constructor(public root: GameRoot) { }
 
     /** Should create all require elements */
-    createElements(parent: HTMLElement) {}
+    createElements(parent: HTMLElement) { }
 
     /**
      * Should initialize the element, called *after* the elements have been created
@@ -25,13 +24,13 @@ export class BaseHUDPart {
     }
 
     /** Should update any required logic */
-    update() {}
+    update() { }
 
     /** Should draw the hud */
-    draw(parameters: DrawParameters) {}
+    draw(parameters: DrawParameters) { }
 
     /** Should draw any overlays (screen space) */
-    drawOverlays(parameters: DrawParameters) {}
+    drawOverlays(parameters: DrawParameters) { }
 
     /**
      * Should return true if the widget has a modal dialog opened and thus
@@ -67,7 +66,7 @@ export class BaseHUDPart {
     }
 
     /** Should close the element, in case its supported */
-    close() {}
+    close() { }
 
     // Helpers
 
@@ -79,7 +78,7 @@ export class BaseHUDPart {
      */
     trackClicks(
         element: Element,
-        handler: function,
+        handler: (...args: any[]) => any,
         args: import("../../core/click_detector").ClickDetectorConstructorArgs = {}
     ) {
         const detector = new ClickDetector(element, args);
@@ -98,7 +97,7 @@ export class BaseHUDPart {
     }
 
     /** Closes this element when its background is clicked */
-    closeOnBackgroundClick(element: HTMLElement, closeMethod: function = null) {
+    closeOnBackgroundClick(element: HTMLElement, closeMethod: (...args: any[]) => any = null) {
         const bgClickDetector = new ClickDetector(element, {
             preventDefault: true,
             targetOnly: true,

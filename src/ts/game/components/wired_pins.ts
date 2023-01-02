@@ -5,7 +5,7 @@ import { types } from "../../savegame/serialization";
 import { typeItemSingleton } from "../item_resolver";
 
 /**
- @enum 
+ @enum
 */
 export const enumPinSlotType = {
     logicalEjector: "logicalEjector",
@@ -27,6 +27,7 @@ export type WirePinSlot = {
 };
 
 export class WiredPinsComponent extends Component {
+    slots: any;
     static getId() {
         return "WiredPins";
     }

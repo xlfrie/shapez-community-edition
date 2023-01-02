@@ -80,10 +80,9 @@ const WIRE_LAYER: Layer = "wires";
 export class AchievementProviderInterface {
     /* typehints:start */
     collection = null as AchievementCollection | undefined;
-    public app = app;
     /* typehints:end */
 
-    constructor(app) {}
+    constructor(public app: Application) { }
 
     /**
      * Initializes the achievement provider.
@@ -129,18 +128,16 @@ export class AchievementProviderInterface {
 }
 
 export class Achievement {
-    public key = key;
     public activate = null;
     public activatePromise = null;
     public receiver = null;
     public signal = null;
     /**
- @param key - An ACHIEVEMENTS key 
-*/
+    * @param key - An ACHIEVEMENTS key
+    */
+    constructor(public key: string) { }
 
-    constructor(key) {}
-
-    init() {}
+    init() { }
 
     isValid() {
         return true;
@@ -157,10 +154,10 @@ export class Achievement {
 
 export class AchievementCollection {
     public map = new Map();
-    public activate = activate;
-    /** @param activate - Resolves when provider activation is complete */
+    public root: GameRoot;
 
-    constructor(activate) {
+    /** @param activate - Resolves when provider activation is complete */
+    constructor(public activate: () => void) {
         this.add(ACHIEVEMENTS.belt500Tiles, {
             isValid: this.isBelt500TilesValid,
             signal: "entityAdded",
@@ -280,9 +277,9 @@ export class AchievementCollection {
     add(
         key: string,
         options: {
-            init: function;
-            isValid: function;
-            signal: string;
+            init?: (...args: any[]) => any;
+            isValid?: (...args: any[]) => boolean;
+            signal?: string;
         } = {}
     ) {
         if (G_IS_DEV) {
@@ -345,7 +342,7 @@ export class AchievementCollection {
      * @param err - Error is null if activation was successful
      * @param key - Maps to an Achievement
      */
-    onActivate(err: ?Error, key: string) {
+    onActivate(err: Error | undefined, key: string) {
         this.remove(key);
 
         if (!this.hasDefaultReceivers()) {
@@ -354,7 +351,7 @@ export class AchievementCollection {
     }
 
     /**
- @param key - Maps to an Achievement 
+ @param key - Maps to an Achievement
 */
     remove(key: string) {
         const achievement = this.map.get(key);
@@ -431,7 +428,7 @@ export class AchievementCollection {
                         enumAnalyticsDataSource.delivered,
                         this.root.shapeDefinitionMgr.getShapeFromShortKey(shape)
                     ) /
-                        globalConfig.analyticsSliceDurationSeconds >=
+                    globalConfig.analyticsSliceDurationSeconds >=
                     rate
                 );
             },
@@ -467,7 +464,7 @@ export class AchievementCollection {
     }
 
     /**
- @param entity 
+ @param entity
 */
     isBelt500TilesValid(entity: Entity): boolean {
         return entity.components.Belt && entity.components.Belt.assignedPath.totalLength >= 500;
@@ -478,14 +475,14 @@ export class AchievementCollection {
     }
 
     /**
- @param count 
+ @param count
 */
     isDestroy1000Valid(count: number): boolean {
         return count >= 1000;
     }
 
     /**
- @param definition 
+ @param definition
 */
     isIrrelevantShapeValid(definition: ShapeDefinition): boolean {
         const levels = this.root.gameMode.getLevelDefinitions();
@@ -511,7 +508,7 @@ export class AchievementCollection {
     }
 
     /**
- @param item 
+ @param item
 */
     isLogoBefore18Valid(item: ShapeItem): boolean {
         return this.root.hubGoals.level < 18 && this.isShape(item, SHAPE_LOGO);
@@ -522,7 +519,7 @@ export class AchievementCollection {
     }
 
     /**
- @param count 
+ @param count
 */
     isMapMarkers15Valid(count: number): boolean {
         return count >= 15;
@@ -553,21 +550,21 @@ export class AchievementCollection {
     }
 
     /**
- @param level 
+ @param level
 */
     isNoInverseRotaterValid(level: number): boolean {
         return level >= 14 && !this.root.savegame.currentData.stats.usedInverseRotater;
     }
 
     /**
- @param currentLayer 
+ @param currentLayer
 */
     isOpenWiresValid(currentLayer: string): boolean {
         return currentLayer === WIRE_LAYER;
     }
 
     /**
- @param entity 
+ @param entity
 */
     isPlace5000WiresValid(entity: Entity): boolean {
         return (
@@ -578,21 +575,21 @@ export class AchievementCollection {
     }
 
     /**
- @param count 
+ @param count
 */
     isPlaceBlueprintValid(count: number): boolean {
         return count != 0;
     }
 
     /**
- @param count 
+ @param count
 */
     isPlaceBp1000Valid(count: number): boolean {
         return count >= 1000;
     }
 
     /**
- @param item 
+ @param item
 */
     isStack4LayersValid(item: ShapeItem): boolean {
         return item.getItemType() === ITEM_SHAPE && item.definition.layers.length === 4;
@@ -636,7 +633,7 @@ export class AchievementCollection {
     }
 
     /**
- @param count 
+ @param count
 */
     isTrash1000Valid(count: number): boolean {
         this.root.savegame.currentData.stats.trashedCount += count;

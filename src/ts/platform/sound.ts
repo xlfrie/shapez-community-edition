@@ -34,6 +34,9 @@ export const MUSIC = {
     // The theme always depends on the standalone only, even if running the full
     // version in the browser
     theme: G_IS_STANDALONE ? "theme-full" : "theme-short",
+
+    menu: null as string,
+    puzzle: null as string
 };
 
 if (G_IS_STANDALONE) {
@@ -45,10 +48,7 @@ if (G_IS_STANDALONE) {
 }
 
 export class SoundInstanceInterface {
-    public key = key;
-    public url = url;
-
-    constructor(key, url) {}
+    constructor(public key: string, public url: string) { }
 
     load(): Promise<void> {
         abstract;
@@ -59,14 +59,11 @@ export class SoundInstanceInterface {
         abstract;
     }
 
-    deinitialize() {}
+    deinitialize() { }
 }
 
 export class MusicInstanceInterface {
-    public key = key;
-    public url = url;
-
-    constructor(key, url) {}
+    constructor(public key: string, public url: string) { }
 
     stop() {
         abstract;
@@ -90,15 +87,10 @@ export class MusicInstanceInterface {
         return false;
     }
 
-    deinitialize() {}
+    deinitialize() { }
 }
 
 export class SoundInterface {
-    public app: Application = app;
-
-    public soundClass = soundClass;
-    public musicClass = musicClass;
-
     public sounds: {
         [idx: string]: SoundInstanceInterface;
     } = newEmptyMap();
@@ -114,7 +106,7 @@ export class SoundInterface {
     public musicVolume = 1.0;
     public soundVolume = 1.0;
 
-    constructor(app, soundClass, musicClass) {}
+    constructor(public app: Application, public soundClass: Class<SoundInstanceInterface>, public musicClass: Class<MusicInstanceInterface>) { }
 
     /** Initializes the sound */
     initialize(): Promise<any> {

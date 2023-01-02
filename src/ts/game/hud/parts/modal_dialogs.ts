@@ -5,20 +5,23 @@ import type { Application } from "../../../application";
 import { SOUNDS } from "../../../platform/sound";
 import { DynamicDomAttach } from "../dynamic_dom_attach";
 import { BaseHUDPart } from "../base_hud_part";
-import { Dialog, DialogLoading, DialogOptionChooser } from "../../../core/modal_dialog_elements";
+import { Dialog, DialogButtonStr, DialogLoading, DialogOptionChooser } from "../../../core/modal_dialog_elements";
 import { makeDiv } from "../../../core/utils";
 import { T } from "../../../translations";
 import { openStandaloneLink } from "../../../core/config";
+import type { GameRoot } from "../../root";
 
 export class HUDModalDialogs extends BaseHUDPart {
-    public app: Application = root ? root.app : app;
-
-    public dialogParent = null;
+    public app: Application;
+    public dialogParent: HTMLElement = null;
     public dialogStack = [];
+    public domWatcher: DynamicDomAttach;
 
-    constructor(root, app) {
+    constructor(root: GameRoot | undefined, app: Application) {
         // Important: Root is not always available here! Its also used in the main menu
         super(root);
+
+        this.app = root ? root.app : app;
     }
 
     // For use inside of the game, implementation of base hud part
@@ -54,7 +57,7 @@ export class HUDModalDialogs extends BaseHUDPart {
 
     // Methods
 
-    showInfo(title: string, text: string, buttons: Array<string> = ["ok:good"]) {
+    showInfo<T extends string>(title: string, text: string, buttons: DialogButtonStr<T>[] = ["ok:good" as DialogButtonStr<T>]) {
         const dialog = new Dialog({
             app: this.app,
             title: title,
@@ -71,7 +74,7 @@ export class HUDModalDialogs extends BaseHUDPart {
         return dialog.buttonSignals;
     }
 
-    showWarning(title: string, text: string, buttons: Array<string> = ["ok:good"]) {
+    showWarning<T extends string>(title: string, text: string, buttons: Array<DialogButtonStr<T>> = ["ok:good" as DialogButtonStr<T>]) {
         const dialog = new Dialog({
             app: this.app,
             title: title,
@@ -156,7 +159,7 @@ export class HUDModalDialogs extends BaseHUDPart {
         }
     }
 
-    closeDialog(dialog) {
+    closeDialog(dialog: Dialog<string>) {
         dialog.destroy();
 
         let index = -1;

@@ -14,12 +14,9 @@ import { Signal } from "./signal";
  */
 
 export class FormElement {
-    public id = id;
-    public label = label;
+    public valueChosen = new Signal<[val: any]>();
 
-    public valueChosen = new Signal();
-
-    constructor(id, label) {}
+    constructor(public id: string, public label: string) { }
 
     getHtml() {
         abstract;
@@ -34,7 +31,7 @@ export class FormElement {
         abstract;
     }
 
-    focus() {}
+    focus() { }
 
     isValid() {
         return true;
@@ -168,7 +165,7 @@ export class FormElementCheckbox extends FormElement {
         this.element.classList.toggle("checked", this.value);
     }
 
-    focus(parent) {}
+    focus(parent) { }
 }
 
 export class FormElementItemChooser extends FormElement {
@@ -222,5 +219,5 @@ export class FormElementItemChooser extends FormElement {
         return null;
     }
 
-    focus() {}
+    focus() { }
 }

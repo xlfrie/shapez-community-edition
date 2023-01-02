@@ -20,17 +20,12 @@ const logger = createLogger("setting_types");
  */
 
 export class BaseSetting {
-    public id = id;
-    public categoryId = categoryId;
-    public changeCb = changeCb;
-    public enabledCb = enabledCb;
-
     public app: Application = null;
 
     public element = null;
     public dialogs = null;
 
-    constructor(id, categoryId, changeCb, enabledCb = null) {}
+    constructor(public id: string, public categoryId: string, public changeCb: (app: Application, arg: any) => void, public enabledCb: (app: Application) => void = null) { }
 
     apply(app: Application, value: any) {
         if (this.changeCb) {
@@ -125,13 +120,11 @@ export class EnumSetting extends BaseSetting {
 
         return `
             <div class="setting cardbox ${available ? "enabled" : "disabled"}">
-                ${
-                    available
-                        ? ""
-                        : `<span class="standaloneOnlyHint">${
-                              WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
-                          }</span>`
-                }
+                ${available
+                ? ""
+                : `<span class="standaloneOnlyHint">${WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
+                }</span>`
+            }
                 <div class="row">
                     <label>${T.settings.labels[this.id].title}</label>
                     <div class="value enum" data-setting="${this.id}"></div>
@@ -206,12 +199,10 @@ export class BoolSetting extends BaseSetting {
         const available = this.getIsAvailable(app);
         return `
         <div class="setting cardbox ${available ? "enabled" : "disabled"}">
-            ${
-                available
-                    ? ""
-                    : `<span class="standaloneOnlyHint">${
-                          WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
-                      }</span>`
+            ${available
+                ? ""
+                : `<span class="standaloneOnlyHint">${WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
+                }</span>`
             }
 
             <div class="row">
@@ -269,21 +260,18 @@ export class RangeSetting extends BaseSetting {
         const available = this.getIsAvailable(app);
         return `
         <div class="setting cardbox ${available ? "enabled" : "disabled"}">
-            ${
-                available
-                    ? ""
-                    : `<span class="standaloneOnlyHint">${
-                          WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
-                      }</span>`
+            ${available
+                ? ""
+                : `<span class="standaloneOnlyHint">${WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
+                }</span>`
             }
 
             <div class="row">
                 <label>${T.settings.labels[this.id].title}</label>
                 <div class="value rangeInputContainer noPressEffect" data-setting="${this.id}">
                     <label>${this.defaultValue}</label>
-                    <input class="rangeInput" type="range" value="${this.defaultValue}" min="${
-            this.minValue
-        }" max="${this.maxValue}" step="${this.stepSize}">
+                    <input class="rangeInput" type="range" value="${this.defaultValue}" min="${this.minValue
+            }" max="${this.maxValue}" step="${this.stepSize}">
                 </div>
             </div>
             <div class="desc">

@@ -9,6 +9,20 @@ import { DynamicDomAttach } from "../dynamic_dom_attach";
 const copy = require("clipboard-copy");
 
 export class HUDShapeViewer extends BaseHUDPart {
+    public background: HTMLDivElement;
+    public dialogInner: HTMLDivElement;
+    public title: HTMLDivElement;
+    public closeButton: HTMLDivElement;
+    public contentDiv: HTMLDivElement;
+    public renderArea: HTMLDivElement;
+    public infoArea: HTMLDivElement;
+    public copyButton: HTMLButtonElement;
+    public domAttach: DynamicDomAttach;
+    public currentShapeKey: string;
+    public inputReciever: InputReceiver;
+    public keyActionMapper: KeyActionMapper;
+    public visible: boolean;
+
     createElements(parent) {
         this.background = makeDiv(parent, "ingame_HUD_ShapeViewer", ["ingameDialog"]);
 

@@ -9,12 +9,11 @@ import { T } from "../translations";
 const logger = createLogger("puzzle-api");
 
 export class ClientAPI {
-    public app = app;
 
     /** The current users session token */
     public token: string | null = null;
 
-    constructor(app) {}
+    constructor(public app: Application) { }
 
     getEndpoint() {
         if (G_IS_DEV) {

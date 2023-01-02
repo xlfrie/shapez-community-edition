@@ -27,6 +27,10 @@ export type KeyBinding = {
 };
 
 export class HUDKeybindingOverlay extends BaseHUDPart {
+    public keybindings: KeyBinding[];
+    public element: HTMLDivElement;
+    public domAttach: DynamicDomAttach;
+
     /** HELPER / Returns if there is a building selected for placement */
     get buildingPlacementActive() {
         const placer = this.root.hud.parts.buildingPlacer;

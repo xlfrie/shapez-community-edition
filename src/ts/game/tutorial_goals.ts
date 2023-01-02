@@ -35,4 +35,5 @@ export const enumHubGoalRewards = {
 
     no_reward: "no_reward",
     no_reward_freeplay: "no_reward_freeplay",
-};
+} as const;
+export type enumHubGoalRewards = keyof typeof enumHubGoalRewards;

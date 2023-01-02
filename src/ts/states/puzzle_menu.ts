@@ -71,11 +71,11 @@ export class PuzzleMenuState extends TextualGameState {
 
                     <div class="categories rootCategories">
                     ${Object.keys(navigation)
-                        .map(
-                            rootCategory =>
-                                `<button data-root-category="${rootCategory}" class="styledButton category root">${T.puzzleMenu.categories[rootCategory]}</button>`
-                        )
-                        .join("")}
+                .map(
+                    rootCategory =>
+                        `<button data-root-category="${rootCategory}" class="styledButton category root">${T.puzzleMenu.categories[rootCategory]}</button>`
+                )
+                .join("")}
                     </div>
 
                     <div class="categories subCategories">
@@ -446,7 +446,7 @@ export class PuzzleMenuState extends TextualGameState {
         });
     }
 
-    getPuzzlesForCategory(category: *): Promise<import("../savegame/savegame_typedefs").PuzzleMetadata[]> {
+    getPuzzlesForCategory(category: any): Promise<import("../savegame/savegame_typedefs").PuzzleMetadata[]> {
         const result = this.app.clientApi.apiListPuzzles(category);
         return result.catch(err => {
             logger.error("Failed to get", category, ":", err);

@@ -45,14 +45,13 @@ const HARDCODED_FILE_SIZES = {
 };
 
 export class BackgroundResourcesLoader {
-    public app = app;
 
     public mainMenuPromise = null;
     public ingamePromise = null;
 
-    public resourceStateChangedSignal = new Signal();
+    public resourceStateChangedSignal = new Signal<[{ progress: number }]>();
 
-    constructor(app) {}
+    constructor(public app: Application) { }
 
     getMainMenuPromise() {
         if (this.mainMenuPromise) {
@@ -179,15 +178,15 @@ export class BackgroundResourcesLoader {
                         "<demoOnSteamLinkText>",
                         `<a href="https://get.shapez.io/resource_timeout" target="_blank">${T.dialogs.resourceLoadFailed.demoLinkText}</a>`
                     ) +
-                        "<br>" +
-                        err,
+                    "<br>" +
+                    err,
                     ["retry"]
                 )
                 .retry.add(() => window.location.reload());
         }
     }
 
-    preloadWithProgress(src, progressHandler) {
+    preloadWithProgress(src, progressHandler): Promise<string> {
         return new Promise((resolve, reject) => {
             const xhr = new XMLHttpRequest();
             let notifiedNotComputable = false;
@@ -223,7 +222,7 @@ export class BackgroundResourcesLoader {
                         progressHandler(1);
                     }
 
-                    const options = {};
+                    const options = {} as BlobPropertyBag;
                     const headers = xhr.getAllResponseHeaders();
                     const contentType = headers.match(/^Content-Type:\s*(.*?)$/im);
                     if (contentType && contentType[1]) {

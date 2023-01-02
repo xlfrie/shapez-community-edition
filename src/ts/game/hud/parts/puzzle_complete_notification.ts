@@ -10,6 +10,20 @@ import { BaseHUDPart } from "../base_hud_part";
 import { DynamicDomAttach } from "../dynamic_dom_attach";
 
 export class HUDPuzzleCompleteNotification extends BaseHUDPart {
+    public visible: boolean;
+    public domAttach: DynamicDomAttach;
+    public element: HTMLDivElement;
+    public userDidLikePuzzle: boolean;
+    public timeOfCompletion: number;
+    public inputReciever: InputReceiver;
+    public elemTitle: HTMLDivElement;
+    public elemContents: HTMLDivElement;
+    public elemActions: HTMLDivElement;
+    public buttonLikeYes: HTMLButtonElement;
+    public continueBtn: HTMLButtonElement;
+    public menuBtn: HTMLButtonElement;
+    public nextPuzzleBtn: HTMLButtonElement;
+
     initialize() {
         this.visible = false;
 
@@ -108,7 +122,7 @@ export class HUDPuzzleCompleteNotification extends BaseHUDPart {
         });
     }
 
-    close(toMenu) {
+    close(toMenu: boolean) {
         (this.root.gameMode as PuzzlePlayGameMode)
             .trackCompleted(this.userDidLikePuzzle, Math.round(this.timeOfCompletion))
             .then(() => {

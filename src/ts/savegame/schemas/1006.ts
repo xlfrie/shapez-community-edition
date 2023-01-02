@@ -221,9 +221,7 @@ export class SavegameInterface_V1006 extends SavegameInterface_V1005 {
             // UndergroundBelt
             if (components.UndergroundBelt) {
                 // @ts-ignore
-                components.UndergroundBelt = {
-                    pendingItems: [],
-                };
+                components.UndergroundBelt = { pendingItems: [] };
             }
 
             // Miner
@@ -250,7 +248,7 @@ export class SavegameInterface_V1006 extends SavegameInterface_V1005 {
         const spriteMapping = this.computeSpriteMapping();
         const staticComp = entity.components.StaticMapEntity;
 
-        const newStaticComp: StaticMapEntityComponent = {};
+        const newStaticComp: StaticMapEntityComponent = {} as StaticMapEntityComponent;
         newStaticComp.origin = staticComp.origin;
         newStaticComp.originalRotation = staticComp.originalRotation;
         newStaticComp.rotation = staticComp.rotation;

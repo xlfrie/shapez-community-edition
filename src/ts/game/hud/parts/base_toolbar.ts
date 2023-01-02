@@ -13,12 +13,6 @@ import { BaseHUDPart } from "../base_hud_part";
 import { DynamicDomAttach } from "../dynamic_dom_attach";
 
 export class HUDBaseToolbar extends BaseHUDPart {
-    public primaryBuildings = this.filterBuildings(primaryBuildings);
-    public secondaryBuildings = this.filterBuildings(secondaryBuildings);
-    public visibilityCondition = visibilityCondition;
-    public htmlElementId = htmlElementId;
-    public layer = layer;
-
     public buildingHandles: {
         [idx: string]: {
             metaBuilding: MetaBuilding;
@@ -30,11 +24,33 @@ export class HUDBaseToolbar extends BaseHUDPart {
         };
     } = {};
 
+    public primaryBuildings: (typeof MetaBuilding)[];
+    public secondaryBuildings: (typeof MetaBuilding)[];
+    public visibilityCondition: () => boolean;
+    public htmlElementId: string;
+    public layer: string;
+    public element: HTMLDivElement;
+    public secondaryDomAttach: DynamicDomAttach;
+    public domAttach: DynamicDomAttach;
+    public lastSelectedIndex: number;
+
     constructor(
-        root,
-        { primaryBuildings, secondaryBuildings = [], visibilityCondition, htmlElementId, layer = "regular" }
+        root: GameRoot,
+        { primaryBuildings, secondaryBuildings = [], visibilityCondition, htmlElementId, layer = "regular" }: {
+            primaryBuildings: typeof MetaBuilding[]
+            secondaryBuildings?: typeof MetaBuilding[],
+            visibilityCondition: () => boolean,
+            htmlElementId: string,
+            layer?: Layer
+        },
     ) {
         super(root);
+
+        this.primaryBuildings = this.filterBuildings(primaryBuildings);
+        this.secondaryBuildings = this.filterBuildings(secondaryBuildings);
+        this.visibilityCondition = visibilityCondition;
+        this.htmlElementId = htmlElementId;
+        this.layer = layer;
     }
 
     /** Should create all require elements */

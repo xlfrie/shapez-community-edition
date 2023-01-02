@@ -59,7 +59,7 @@ export class CrazygamesAdProvider extends AdProviderInterface {
         this.app.sound.setSoundVolume(0);
 
         return timeoutPromise(
-            new Promise(resolve => {
+            new Promise<void>(resolve => {
                 console.log("🎬 crazygames: Start ad");
                 document.body.classList.add("externalAdOpen");
 

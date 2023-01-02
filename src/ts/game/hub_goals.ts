@@ -24,7 +24,7 @@ export class HubGoals extends BasicSerializableObject {
         };
     }
 
-    deserialize(data: *, root: GameRoot) {
+    deserialize(data: any, root: GameRoot) {
         const errorCode = super.deserialize(data);
         if (errorCode) {
             return errorCode;
@@ -61,8 +61,6 @@ export class HubGoals extends BasicSerializableObject {
         this.computeNextGoal();
     }
 
-    public root = root;
-
     public level = 1;
 
     /** Which story rewards we already gained */
@@ -85,7 +83,9 @@ export class HubGoals extends BasicSerializableObject {
         [idx: string]: number;
     } = {};
 
-    constructor(root) {
+    public currentGoal: { definition: ShapeDefinition; required: number; reward: string; throughputOnly: boolean; };
+
+    constructor(public root: GameRoot) {
         super();
 
         // Reset levels first
@@ -344,7 +344,7 @@ export class HubGoals extends BasicSerializableObject {
         const colors = this.generateRandomColorSet(rng, level > 35);
 
         let pickedSymmetry = null; // pairs of quadrants that must be the same
-        let availableShapes = [enumSubShape.rect, enumSubShape.circle, enumSubShape.star];
+        let availableShapes: enumSubShape[] = [enumSubShape.rect, enumSubShape.circle, enumSubShape.star];
         if (rng.next() < 0.5) {
             pickedSymmetry = [
                 // radial symmetry

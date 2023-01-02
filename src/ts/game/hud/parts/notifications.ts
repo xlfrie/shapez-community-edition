@@ -3,7 +3,7 @@ import { T } from "../../../translations";
 import { BaseHUDPart } from "../base_hud_part";
 
 /**
- @enum 
+ @enum
 */
 export const enumNotificationType = {
     saved: "saved",
@@ -12,11 +12,15 @@ export const enumNotificationType = {
     info: "info",
     warning: "warning",
     error: "error",
-};
+} as const;
+export type enumNotificationType = keyof typeof enumNotificationType;
 
 const notificationDuration = 3;
 
 export class HUDNotifications extends BaseHUDPart {
+    element: HTMLDivElement;
+    notificationElements: { element: HTMLDivElement, expireAt: number }[];
+
     createElements(parent) {
         this.element = makeDiv(parent, "ingame_HUD_Notifications", [], ``);
     }

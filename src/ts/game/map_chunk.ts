@@ -18,47 +18,31 @@ export const MODS_ADDITIONAL_SHAPE_MAP_WEIGHTS: {
 } = {};
 
 export class MapChunk {
-    public root = root;
-    public x = x;
-    public y = y;
-    public tileX = x * globalConfig.mapChunkSize;
-    public tileY = y * globalConfig.mapChunkSize;
+    public tileX: number;
+    public tileY: number;
 
     /** Stores the contents of the lower (= map resources) layer */
-    public lowerLayer: Array<Array<?BaseItem>> = make2DUndefinedArray(
+    public lowerLayer: Array<Array<BaseItem>> = make2DUndefinedArray(
         globalConfig.mapChunkSize,
         globalConfig.mapChunkSize
     );
 
     /** Stores the contents of the regular layer */
-    public contents: Array<Array<?Entity>> = make2DUndefinedArray(
+    public contents: Array<Array<Entity>> = make2DUndefinedArray(
         globalConfig.mapChunkSize,
         globalConfig.mapChunkSize
     );
 
     /** Stores the contents of the wires layer */
-    public wireContents: Array<Array<?Entity>> = make2DUndefinedArray(
+    public wireContents: Array<Array<Entity>> = make2DUndefinedArray(
         globalConfig.mapChunkSize,
         globalConfig.mapChunkSize
     );
 
     public containedEntities: Array<Entity> = [];
 
-    /** World space rectangle, can be used for culling */
-    public worldSpaceRectangle = new Rectangle(
-        this.tileX * globalConfig.tileSize,
-        this.tileY * globalConfig.tileSize,
-        globalConfig.mapChunkWorldSize,
-        globalConfig.mapChunkWorldSize
-    );
-
-    /** Tile space rectangle, can be used for culling */
-    public tileSpaceRectangle = new Rectangle(
-        this.tileX,
-        this.tileY,
-        globalConfig.mapChunkSize,
-        globalConfig.mapChunkSize
-    );
+    public worldSpaceRectangle: Rectangle;
+    public tileSpaceRectangle: Rectangle;
 
     /** Which entities this chunk contains, sorted by layer */
     public containedEntitiesByLayer: Record<Layer, Array<Entity>> = {
@@ -73,7 +57,25 @@ export class MapChunk {
         size: number;
     }> = [];
 
-    constructor(root, x, y) {
+    constructor(public root: GameRoot, public x: number, public y: number) {
+        this.tileX = x * globalConfig.mapChunkSize;
+        this.tileY = y * globalConfig.mapChunkSize;
+
+        /** World space rectangle, can be used for culling */
+        this.worldSpaceRectangle = new Rectangle(
+            this.tileX * globalConfig.tileSize,
+            this.tileY * globalConfig.tileSize,
+            globalConfig.mapChunkWorldSize,
+            globalConfig.mapChunkWorldSize
+        );
+
+        /** Tile space rectangle, can be used for culling */
+        this.tileSpaceRectangle = new Rectangle(
+            this.tileX,
+            this.tileY,
+            globalConfig.mapChunkSize,
+            globalConfig.mapChunkSize
+        );
         this.generateLowerLayer();
     }
 
@@ -173,7 +175,7 @@ export class MapChunk {
     ) {
         let subShapes: [enumSubShape, enumSubShape, enumSubShape, enumSubShape] = null;
 
-        let weights = {};
+        let weights = {} as Record<enumSubShape, number>;
 
         // Later there is a mix of everything
         weights = {
@@ -235,12 +237,10 @@ export class MapChunk {
     /** Chooses a random shape with the given weights */
     internalGenerateRandomSubShape(
         rng: RandomNumberGenerator,
-        weights: {
-            [idx: enumSubShape]: number;
-        }
+        weights: Record<enumSubShape, number>
     ): enumSubShape {
         // @ts-ignore
-        const sum = Object.values(weights).reduce((a, b) => a + b, 0);
+        const sum: number = Object.values(weights).reduce((a, b) => a + b, 0);
 
         const chosenNumber = rng.nextIntRange(0, sum - 1);
         let accumulated = 0;

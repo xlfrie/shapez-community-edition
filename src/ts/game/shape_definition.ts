@@ -37,17 +37,19 @@ const arrayQuadrantIndexToOffset = [
 ];
 
 /**
- @enum 
+ @enum
 */
 export const enumSubShape = {
     rect: "rect",
     circle: "circle",
     star: "star",
     windmill: "windmill",
-};
+} as const;
+export type enumSubShape = keyof typeof enumSubShape;
+
 
 /**
- @enum 
+ @enum
 */
 export const enumSubShapeToShortcode = {
     [enumSubShape.rect]: "R",
@@ -57,7 +59,7 @@ export const enumSubShapeToShortcode = {
 };
 
 /**
- @enum 
+ @enum
 */
 export const enumShortcodeToSubShape = {};
 for (const key in enumSubShapeToShortcode) {
@@ -65,7 +67,7 @@ for (const key in enumSubShapeToShortcode) {
 }
 
 /** Converts the given parameters to a valid shape definition */
-export function createSimpleShape(layers: *): Array<ShapeLayer> {
+export function createSimpleShape(layers: any): Array<ShapeLayer> {
     layers.forEach(layer => {
         layer.forEach(item => {
             if (item) {

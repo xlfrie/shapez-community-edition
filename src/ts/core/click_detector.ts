@@ -82,7 +82,7 @@ export class ClickDetector {
      */
 
     constructor(
-        public element: HTMLElement,
+        public element: Element,
         {
             consumeEvents = false,
             preventDefault = true,
@@ -170,22 +170,23 @@ export class ClickDetector {
     // }
 
 
-    handlerTouchStart(event: TouchEvent | MouseEvent) {
+    handlerTouchStart(event: any) {
         throw new Error("Method not implemented.");
     }
 
-    handlerTouchEnd(event: TouchEvent | MouseEvent) {
+    handlerTouchEnd(event: any) {
         throw new Error("Method not implemented.");
     }
-    handlerTouchCancel(event: TouchEvent | MouseEvent) {
+    handlerTouchCancel(event: any) {
         throw new Error("Method not implemented.");
     }
-    handlerTouchMove(event: TouchEvent | MouseEvent) {
+    handlerTouchMove(event: any) {
         throw new Error("Method not implemented.");
     }
-    handlerPreventClick(event: TouchEvent | MouseEvent) {
+    handlerPreventClick(event: any) {
         throw new Error("Method not implemented.");
     }
+
     // INTERNAL METHODS
 
     internalPreventClick(event: Event) {

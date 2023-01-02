@@ -26,28 +26,47 @@ export class BaseSprite {
 
 /** Position of a sprite within an atlas */
 export class SpriteAtlasLink {
-    public packedX = packedX;
-    public packedY = packedY;
-    public packedW = packedW;
-    public packedH = packedH;
-    public packOffsetX = packOffsetX;
-    public packOffsetY = packOffsetY;
-    public atlas = atlas;
-    public w = w;
-    public h = h;
+    public packedX: number
+    public packedY: number
+    public packedW: number
+    public packedH: number
+    public packOffsetX: number
+    public packOffsetY: number
+    public atlas: HTMLImageElement | HTMLCanvasElement;
+    public w: number
+    public h: number
 
-    constructor({ w, h, packedX, packedY, packOffsetX, packOffsetY, packedW, packedH, atlas }) {}
+    constructor({ w, h, packedX, packedY, packOffsetX, packOffsetY, packedW, packedH, atlas }: {
+        w: number,
+        h: number,
+        packedX: number,
+        packedY: number,
+        packOffsetX: number,
+        packOffsetY: number,
+        packedW: number,
+        packedH: number,
+        atlas: HTMLImageElement | HTMLCanvasElement
+    }) {
+        this.packedW = packedW;
+        this.packedH = packedH;
+        this.packedX = packedX;
+        this.packedY = packedY;
+        this.packOffsetX = packOffsetX;
+        this.packOffsetY = packOffsetY;
+        this.atlas = atlas;
+        this.w = w;
+        this.h = h;
+    }
 }
 
 export class AtlasSprite extends BaseSprite {
     public linksByResolution: {
         [idx: string]: SpriteAtlasLink;
     } = {};
-    public spriteName = spriteName;
 
     public frozen = false;
 
-    constructor(spriteName = "sprite") {
+    constructor(public spriteName = "sprite") {
         super();
     }
 
@@ -69,12 +88,12 @@ export class AtlasSprite extends BaseSprite {
         if (!link) {
             throw new Error(
                 "draw: Link for " +
-                    this.spriteName +
-                    " not known: " +
-                    ORIGINAL_SPRITE_SCALE +
-                    " (having " +
-                    Object.keys(this.linksByResolution) +
-                    ")"
+                this.spriteName +
+                " not known: " +
+                ORIGINAL_SPRITE_SCALE +
+                " (having " +
+                Object.keys(this.linksByResolution) +
+                ")"
             );
         }
 
@@ -139,12 +158,12 @@ export class AtlasSprite extends BaseSprite {
         if (!link) {
             throw new Error(
                 "drawCached: Link for " +
-                    this.spriteName +
-                    " at scale " +
-                    scale +
-                    " not known (having " +
-                    Object.keys(this.linksByResolution) +
-                    ")"
+                this.spriteName +
+                " at scale " +
+                scale +
+                " not known (having " +
+                Object.keys(this.linksByResolution) +
+                ")"
             );
         }
 
@@ -227,12 +246,12 @@ export class AtlasSprite extends BaseSprite {
         if (!link) {
             throw new Error(
                 "drawCachedWithClipRect: Link for " +
-                    this.spriteName +
-                    " at scale " +
-                    scale +
-                    " not known (having " +
-                    Object.keys(this.linksByResolution) +
-                    ")"
+                this.spriteName +
+                " at scale " +
+                scale +
+                " not known (having " +
+                Object.keys(this.linksByResolution) +
+                ")"
             );
         }
 
@@ -281,11 +300,11 @@ export class AtlasSprite extends BaseSprite {
         if (!link) {
             throw new Error(
                 "getAsHTML: Link for " +
-                    this.spriteName +
-                    " at scale 0.5" +
-                    " not known (having " +
-                    Object.keys(this.linksByResolution) +
-                    ")"
+                this.spriteName +
+                " at scale 0.5" +
+                " not known (having " +
+                Object.keys(this.linksByResolution) +
+                ")"
             );
         }
 
@@ -340,11 +359,7 @@ export class AtlasSprite extends BaseSprite {
 }
 
 export class RegularSprite extends BaseSprite {
-    public w = w;
-    public h = h;
-    public sprite = sprite;
-
-    constructor(sprite, w, h) {
+    constructor(public sprite: HTMLImageElement | HTMLCanvasElement, public w: number, public h: number) {
         super();
     }
 

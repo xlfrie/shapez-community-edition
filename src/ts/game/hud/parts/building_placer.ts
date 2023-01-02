@@ -22,10 +22,26 @@ import { layers } from "../../root";
 import { getCodeFromBuildingData } from "../../building_codes";
 
 export class HUDBuildingPlacer extends HUDBuildingPlacerLogic {
+    public element: HTMLDivElement;
+    public buildingInfoElements: {
+        label: HTMLDivElement,
+        desc: HTMLDivElement,
+        descText: HTMLDivElement,
+        additionalInfo: HTMLDivElement,
+        hotkey: HTMLDivElement,
+        tutorialImage: HTMLDivElement
+    };
+    public variantsElement: HTMLDivElement;
+    public domAttach: DynamicDomAttach;
+    public variantsAttach: DynamicDomAttach;
+    public currentInterpolatedCornerTile: Vector;
+    public lockIndicatorSprites: {};
+    public variantClickDetectors: ClickDetector[];
+
     createElements(parent: HTMLElement) {
         this.element = makeDiv(parent, "ingame_HUD_PlacementHints", [], ``);
 
-        this.buildingInfoElements = {};
+        this.buildingInfoElements = {} as any;
         this.buildingInfoElements.label = makeDiv(this.element, null, ["buildingLabel"], "Extract");
         this.buildingInfoElements.desc = makeDiv(this.element, null, ["description"], "");
         this.buildingInfoElements.descText = makeDiv(this.buildingInfoElements.desc, null, ["text"], "");
@@ -128,9 +144,9 @@ export class HUDBuildingPlacer extends HUDBuildingPlacerLogic {
         this.buildingInfoElements.tutorialImage.setAttribute(
             "data-icon",
             "building_tutorials/" +
-                metaBuilding.getId() +
-                (variant === defaultBuildingVariant ? "" : "-" + variant) +
-                ".png"
+            metaBuilding.getId() +
+            (variant === defaultBuildingVariant ? "" : "-" + variant) +
+            ".png"
         );
 
         removeAllChildren(this.buildingInfoElements.additionalInfo);
@@ -183,10 +199,10 @@ export class HUDBuildingPlacer extends HUDBuildingPlacerLogic {
             T.ingame.buildingPlacement.cycleBuildingVariants.replace(
                 "<key>",
                 "<code class='keybinding'>" +
-                    this.root.keyMapper
-                        .getBinding(KEYMAPPINGS.placement.cycleBuildingVariants)
-                        .getKeyCodeString() +
-                    "</code>"
+                this.root.keyMapper
+                    .getBinding(KEYMAPPINGS.placement.cycleBuildingVariants)
+                    .getKeyCodeString() +
+                "</code>"
             )
         );
 
@@ -471,9 +487,9 @@ export class HUDBuildingPlacer extends HUDBuildingPlacerLogic {
                 arrowSprite,
                 -6,
                 -globalConfig.halfTileSize -
-                    clamp((this.root.time.realtimeNow() * 1.5) % 1.0, 0, 1) * 1 * globalConfig.tileSize +
-                    globalConfig.halfTileSize -
-                    6,
+                clamp((this.root.time.realtimeNow() * 1.5) % 1.0, 0, 1) * 1 * globalConfig.tileSize +
+                globalConfig.halfTileSize -
+                6,
                 12,
                 12
             );
@@ -550,7 +566,7 @@ export class HUDBuildingPlacer extends HUDBuildingPlacerLogic {
                 } else if (
                     sourceBeltComp &&
                     sourceStaticComp.localDirectionToWorld(sourceBeltComp.direction) ===
-                        enumInvertedDirections[worldDirection]
+                    enumInvertedDirections[worldDirection]
                 ) {
                     // Belt connected
                     isConnected = true;

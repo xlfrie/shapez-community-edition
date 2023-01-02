@@ -7,6 +7,18 @@ import { BaseHUDPart } from "../base_hud_part";
 import { DynamicDomAttach } from "../dynamic_dom_attach";
 
 export class HUDStandaloneAdvantages extends BaseHUDPart {
+    public background: HTMLDivElement;
+    public dialogInner: HTMLDivElement;
+    public title: HTMLDivElement;
+    public subTitle: HTMLDivElement;
+    public contentDiv: HTMLDivElement;
+    public visible: boolean;
+    public domAttach: DynamicDomAttach;
+    public inputReciever: InputReceiver;
+    public lastShown: number;
+    public final: boolean;
+
+
     createElements(parent) {
         this.background = makeDiv(parent, "ingame_HUD_StandaloneAdvantages", ["ingameDialog"]);
 
@@ -22,35 +34,32 @@ export class HUDStandaloneAdvantages extends BaseHUDPart {
             `
             <div class="points">
                 ${Object.entries(T.ingame.standaloneAdvantages.points)
-                    .map(
-                        ([key, trans]) => `
+                .map(
+                    ([key, trans]) => `
                 <div class="point ${key}">
                     <strong>${trans.title}</strong>
                     <p>${trans.desc}</p>
                 </div>`
-                    )
-                    .join("")}
+                )
+                .join("")}
 
             </div>
 
             <div class="lowerBar">
 
-            <div class="playtimeDisclaimerDownload"><span class="inner">${
-                T.demoBanners.playtimeDisclaimerDownload
+            <div class="playtimeDisclaimerDownload"><span class="inner">${T.demoBanners.playtimeDisclaimerDownload
             }</span></div>
 
             <button class="steamLinkButton steam_dlbtn_0">
-            ${
-                globalConfig.currentDiscount > 0
-                    ? `<span class='discount'>${T.global.discount.replace(
-                          "<percentage>",
-                          String(globalConfig.currentDiscount)
-                      )}</span>`
-                    : ""
+            ${globalConfig.currentDiscount > 0
+                ? `<span class='discount'>${T.global.discount.replace(
+                    "<percentage>",
+                    String(globalConfig.currentDiscount)
+                )}</span>`
+                : ""
             }
             </button>
-            <button class="otherCloseButton" data-btn-variant="prod">${
-                T.ingame.standaloneAdvantages.no_thanks
+            <button class="otherCloseButton" data-btn-variant="prod">${T.ingame.standaloneAdvantages.no_thanks
             }</button>
             </div>
         `

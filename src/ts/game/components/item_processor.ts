@@ -3,7 +3,7 @@ import { BaseItem } from "../base_item";
 import { Component } from "../component";
 
 /**
- @enum 
+ @enum
 */
 export const enumItemProcessorTypes = {
     balancer: "balancer",
@@ -22,14 +22,16 @@ export const enumItemProcessorTypes = {
     filter: "filter",
     reader: "reader",
     goal: "goal",
-};
+} as const;
+export type enumItemProcessorTypes = keyof typeof enumItemProcessorTypes
 
 /**
- @enum 
+ @enum
 */
 export const enumItemProcessorRequirements = {
     painterQuad: "painterQuad",
-};
+} as const;
+export type enumItemProcessorRequirements = keyof typeof enumItemProcessorRequirements;
 
 export type EjectorItemToEject = {
     item: BaseItem;
@@ -43,6 +45,13 @@ export type EjectorCharge = {
 };
 
 export class ItemProcessorComponent extends Component {
+    public ongoingCharges: EjectorCharge[];
+    public bonusTime: number;
+    public queuedEjects: EjectorItemToEject[];
+    public inputCount: number;
+    public nextOutputSlot: number;
+
+
     static getId() {
         return "ItemProcessor";
     }
@@ -54,13 +63,13 @@ export class ItemProcessorComponent extends Component {
     }
 
     //// How many inputs we need for one charge
-    public inputsPerCharge = inputsPerCharge;
+    public inputsPerCharge: number;
 
     //// Type of the processor
-    public type = processorType;
+    public type: enumItemProcessorTypes;
 
     //// Type of processing requirement
-    public processingRequirement = processingRequirement;
+    public processingRequirement: enumItemProcessorRequirements
 
     /** Our current inputs */
     public inputSlots: Map<number, BaseItem> = new Map();
@@ -75,8 +84,16 @@ export class ItemProcessorComponent extends Component {
         processorType = enumItemProcessorTypes.balancer,
         processingRequirement = null,
         inputsPerCharge = 1,
+    }: {
+        processorType?: enumItemProcessorTypes,
+        processingRequirement?: enumItemProcessorRequirements,
+        inputsPerCharge?: number
     }) {
         super();
+
+        this.inputsPerCharge = inputsPerCharge;
+        this.type = processorType;
+        this.processingRequirement = processingRequirement;
 
         this.clear();
     }

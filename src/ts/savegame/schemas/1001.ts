@@ -50,7 +50,7 @@ export class SavegameInterface_V1001 extends SavegameInterface_V1000 {
  OldStaticMapEntity *
 */
             //// @ts-ignore
-            export type OldStaticMapEntity = {
+            type OldStaticMapEntity = {
                 origin: TypeVector;
                 tileSize: TypeVector;
                 rotation: TypeNumber;

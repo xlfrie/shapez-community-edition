@@ -8,9 +8,7 @@ Logging functions
 
 /** Base logger class */
 class Logger {
-    public context = context;
-
-    constructor(context) {}
+    constructor(public context: string) { }
 
     debug(...args) {
         globalDebug(this.context, ...args);
@@ -66,7 +64,7 @@ export function serializeError(err: Error | ErrorEvent) {
     }
     const result = {
         type: err.constructor.name,
-    };
+    } as any;
 
     if (err instanceof Error) {
         result.message = err.message;
@@ -96,7 +94,7 @@ export function serializeError(err: Error | ErrorEvent) {
 function serializeEvent(event: Event) {
     let result = {
         type: "{type.Event:" + typeof event + "}",
-    };
+    } as any;
     result.eventType = event.type;
     return result;
 }

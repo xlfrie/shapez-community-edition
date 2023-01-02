@@ -6,9 +6,10 @@ import { Vector } from "../../../core/vector";
 import { TrackedState } from "../../../core/tracked_state";
 
 /**
- @enum 
+ @enum
 */
 const enumDebugOverlayMode = { disabled: "disabled", regular: "regular", detailed: "detailed" };
+type enumDebugOverlayMode = keyof typeof enumDebugOverlayMode;
 
 /**
  * Specifies which mode follows after which mode
@@ -23,6 +24,17 @@ const enumDebugOverlayModeNext = {
 const UPDATE_INTERVAL_SECONDS = 0.25;
 
 export class HUDDebugInfo extends BaseHUDPart {
+    public element: HTMLDivElement;
+    public trackedTickRate: TrackedState;
+    public trackedTickDuration: TrackedState;
+    public trackedFPS: TrackedState;
+    public trackedMousePosition: TrackedState;
+    public trackedCameraPosition: TrackedState;
+    public versionElement: HTMLDivElement;
+    public lastTick: number;
+    public trackedMode: TrackedState;
+    public domAttach: DynamicDomAttach;
+
     createElements(parent) {
         this.element = makeDiv(parent, "ingame_HUD_DebugInfo", []);
 
@@ -67,10 +79,10 @@ export class HUDDebugInfo extends BaseHUDPart {
         this.trackedTickRate.set("Tickrate: " + this.root.dynamicTickrate.currentTickRate);
         this.trackedFPS.set(
             "FPS: " +
-                Math.round(this.root.dynamicTickrate.averageFps) +
-                " (" +
-                round2Digits(1000 / this.root.dynamicTickrate.averageFps) +
-                " ms)"
+            Math.round(this.root.dynamicTickrate.averageFps) +
+            " (" +
+            round2Digits(1000 / this.root.dynamicTickrate.averageFps) +
+            " ms)"
         );
         this.trackedTickDuration.set(
             "Tick: " + round3Digits(this.root.dynamicTickrate.averageTickDuration) + "ms"

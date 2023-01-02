@@ -1,11 +1,9 @@
 import { Signal } from "./signal";
 
 export class InputReceiver {
-    public context = context;
-
     public backButton = new Signal();
 
-    public keydown = new Signal();
+    public keydown = new Signal<[{ keyCode: number; shift: boolean; alt: boolean; ctrl: boolean; }]>();
     public keyup = new Signal();
     public pageBlur = new Signal();
 
@@ -14,7 +12,7 @@ export class InputReceiver {
 
     public paste = new Signal();
 
-    constructor(context = "unknown") {}
+    constructor(public context = "unknown") { }
 
     cleanup() {
         this.backButton.removeAll();

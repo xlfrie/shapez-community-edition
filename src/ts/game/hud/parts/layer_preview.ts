@@ -8,12 +8,22 @@ import { BaseHUDPart } from "../base_hud_part";
 
 /** Helper class which allows peaking through to the wires layer */
 export class HUDLayerPreview extends BaseHUDPart {
+    public previewOverlay: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
+    public context: any;
+    public previewSize: number;
+
     initialize() {
         this.initializeCanvas();
         this.root.signals.aboutToDestruct.add(() => freeCanvas(this.canvas));
         this.root.signals.resized.add(this.initializeCanvas, this);
         this.previewOverlay = Loader.getSprite("sprites/wires/wires_preview.png");
     }
+
+    // @Bagel03 WTF
+    public canvas: HTMLCanvasElement;
+    // canvas(canvas: any) {
+    //     throw new Error("Method not implemented.");
+    // }
 
     /** (re) initializes the canvas */
     initializeCanvas() {

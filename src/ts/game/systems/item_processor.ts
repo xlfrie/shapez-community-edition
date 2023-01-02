@@ -48,26 +48,28 @@ export const MODS_CAN_PROCESS: {
 } = {};
 
 export class ItemProcessorSystem extends GameSystemWithFilter {
-    public handlers: {
-        [idx: enumItemProcessorTypes]: (payload: ProcessorImplementationPayload) => string;
-    } = {
-        [enumItemProcessorTypes.balancer]: this.process_BALANCER,
-        [enumItemProcessorTypes.cutter]: this.process_CUTTER,
-        [enumItemProcessorTypes.cutterQuad]: this.process_CUTTER_QUAD,
-        [enumItemProcessorTypes.rotater]: this.process_ROTATER,
-        [enumItemProcessorTypes.rotaterCCW]: this.process_ROTATER_CCW,
-        [enumItemProcessorTypes.rotater180]: this.process_ROTATER_180,
-        [enumItemProcessorTypes.stacker]: this.process_STACKER,
-        [enumItemProcessorTypes.trash]: this.process_TRASH,
-        [enumItemProcessorTypes.mixer]: this.process_MIXER,
-        [enumItemProcessorTypes.painter]: this.process_PAINTER,
-        [enumItemProcessorTypes.painterDouble]: this.process_PAINTER_DOUBLE,
-        [enumItemProcessorTypes.painterQuad]: this.process_PAINTER_QUAD,
-        [enumItemProcessorTypes.hub]: this.process_HUB,
-        [enumItemProcessorTypes.reader]: this.process_READER,
-        [enumItemProcessorTypes.goal]: this.process_GOAL,
-        ...MOD_ITEM_PROCESSOR_HANDLERS,
-    };
+    // @Bagel03 where is filter
+    // @ts-ignore
+    public handlers: Record<
+        enumItemProcessorTypes, (payload: ProcessorImplementationPayload) => void
+    > = {
+            [enumItemProcessorTypes.balancer]: this.process_BALANCER,
+            [enumItemProcessorTypes.cutter]: this.process_CUTTER,
+            [enumItemProcessorTypes.cutterQuad]: this.process_CUTTER_QUAD,
+            [enumItemProcessorTypes.rotater]: this.process_ROTATER,
+            [enumItemProcessorTypes.rotaterCCW]: this.process_ROTATER_CCW,
+            [enumItemProcessorTypes.rotater180]: this.process_ROTATER_180,
+            [enumItemProcessorTypes.stacker]: this.process_STACKER,
+            [enumItemProcessorTypes.trash]: this.process_TRASH,
+            [enumItemProcessorTypes.mixer]: this.process_MIXER,
+            [enumItemProcessorTypes.painter]: this.process_PAINTER,
+            [enumItemProcessorTypes.painterDouble]: this.process_PAINTER_DOUBLE,
+            [enumItemProcessorTypes.painterQuad]: this.process_PAINTER_QUAD,
+            [enumItemProcessorTypes.hub]: this.process_HUB,
+            [enumItemProcessorTypes.reader]: this.process_READER,
+            [enumItemProcessorTypes.goal]: this.process_GOAL,
+            ...MOD_ITEM_PROCESSOR_HANDLERS,
+        };
 
     constructor(root) {
         super(root, [ItemProcessorComponent]);

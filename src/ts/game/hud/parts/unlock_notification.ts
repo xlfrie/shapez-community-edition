@@ -12,6 +12,16 @@ import { DynamicDomAttach } from "../dynamic_dom_attach";
 import { enumNotificationType } from "./notifications";
 
 export class HUDUnlockNotification extends BaseHUDPart {
+    public visible: boolean;
+    public domAttach: DynamicDomAttach;
+    public element: HTMLDivElement;
+    public buttonShowTimeout: number;
+    public inputReciever: InputReceiver;
+    public elemTitle: HTMLDivElement;
+    public elemSubTitle: HTMLDivElement;
+    public elemContents: HTMLDivElement;
+    public btnClose: HTMLButtonElement;
+
     initialize() {
         this.visible = false;
 
@@ -91,9 +101,8 @@ export class HUDUnlockNotification extends BaseHUDPart {
         if (gained) {
             gained.forEach(([metaBuildingClass, variant]) => {
                 const metaBuilding = gMetaBuildingRegistry.findByClass(metaBuildingClass);
-                html += `<div class="buildingExplanation" data-icon="building_tutorials/${
-                    metaBuilding.getId() + (variant === defaultBuildingVariant ? "" : "-" + variant)
-                }.png"></div>`;
+                html += `<div class="buildingExplanation" data-icon="building_tutorials/${metaBuilding.getId() + (variant === defaultBuildingVariant ? "" : "-" + variant)
+                    }.png"></div>`;
             });
         }
         html += "</div>";

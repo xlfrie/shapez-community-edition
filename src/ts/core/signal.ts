@@ -1,4 +1,4 @@
-export const STOP_PROPAGATION = "stop_propagation";
+export const STOP_PROPAGATION = "stop_propagation" as const;
 export type STOP_PROPAGATION = typeof STOP_PROPAGATION;
 
 export type SignalReceiver<T extends any[]> = (...args: T) => STOP_PROPAGATION | void;
@@ -24,7 +24,7 @@ export class Signal<T extends any[] = []> {
     }
 
     /** Dispatches the signal */
-    dispatch(...args: T) {
+    dispatch(...args: T): void | STOP_PROPAGATION {
         const modifyState = this.modifyCount;
 
         const n = this.receivers.length;

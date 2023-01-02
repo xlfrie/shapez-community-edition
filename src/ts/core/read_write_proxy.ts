@@ -20,16 +20,12 @@ const salt = accessNestedPropertyReverse(globalConfig, ["file", "info"]);
 
 // Helper which only writes / reads if verify() works. Also performs migration
 export class ReadWriteProxy {
-    public app: Application = app;
-
-    public filename = filename;
-
     public currentData: object = null;
 
     /** Store a debounced handler to prevent double writes */
     public debouncedWrite = debounce(this.doWriteAsync.bind(this), 50);
 
-    constructor(app, filename) {
+    constructor(public app: Application, public filename: string) {
         // TODO: EXTREMELY HACKY! To verify we need to do this a step later
         if (G_IS_DEV && IS_DEBUG) {
             setTimeout(() => {

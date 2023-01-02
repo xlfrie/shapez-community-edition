@@ -12,6 +12,13 @@ import { BaseHUDPart } from "../base_hud_part";
 import { DynamicDomAttach } from "../dynamic_dom_attach";
 
 export class HUDBlueprintPlacer extends BaseHUDPart {
+    public costDisplayParent: HTMLDivElement;
+    public costDisplayText: HTMLDivElement;
+    public currentBlueprint: TrackedState;
+    public lastBlueprintUsed: Blueprint;
+    public domAttach: DynamicDomAttach;
+    public trackedCanAfford: TrackedState;
+
     createElements(parent) {
         const blueprintCostShape = this.root.shapeDefinitionMgr.getShapeFromShortKey(
             this.root.gameMode.getBlueprintShapeKey()
