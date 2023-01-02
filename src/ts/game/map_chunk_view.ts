@@ -244,7 +244,7 @@ export class MapChunkView extends MapChunk {
             entity: Entity;
             tileSizePixels: number;
             overrideColor?: string;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         const staticComp = entity.components.StaticMapEntity;
         const data = getBuildingDataFromCode(staticComp.code);

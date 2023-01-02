@@ -51,7 +51,7 @@ export class HUDConstantSignalEdit extends BaseHUDPart {
             deleteOnCancel = true,
         }: {
             deleteOnCancel?: boolean;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         if (!entity.components.ConstantSignal) {
             return;

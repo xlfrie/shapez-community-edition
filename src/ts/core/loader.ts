@@ -60,7 +60,7 @@ class LoaderImpl {
 
     internalPreloadImage(
         key: string,
-        progressHandler?: (progress: number) => void /*--REMOVE_PREV--*/
+        progressHandler?: (progress: number) => void
     ): Promise<HTMLImageElement | null> {
         return this.app.backgroundResourceLoader
             .preloadWithProgress("res/" + key, progress => {
@@ -81,7 +81,7 @@ class LoaderImpl {
     /** Preloads a sprite */
     preloadCSSSprite(
         key: string,
-        progressHandler?: (progress: number) => void /*--REMOVE_PREV--*/
+        progressHandler?: (progress: number) => void
     ): Promise<void> {
         return this.internalPreloadImage(key, progressHandler).then(image => {
             if (key.indexOf("game_misc") >= 0) {
@@ -95,7 +95,7 @@ class LoaderImpl {
     /** Preloads an atlas */
     preloadAtlas(
         atlas: AtlasDefinition,
-        progressHandler?: (progress: number) => void /*--REMOVE_PREV--*/
+        progressHandler?: (progress: number) => void
     ): Promise<void> {
         return this.internalPreloadImage(atlas.getFullSourcePath(), progressHandler).then(image => {
             // @ts-ignore

@@ -465,7 +465,7 @@ export class KeyActionMapper {
             alt: boolean;
             ctrl: boolean;
             initial?: boolean;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         let stop = false;
 

@@ -165,7 +165,7 @@ export class MetaBuilding {
             originalRotation: number;
             rotationVariant: number;
             variant: string;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         const entity = new Entity(root);
         entity.layer = this.getLayer();

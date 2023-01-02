@@ -189,7 +189,7 @@ export class HUDPinnedShapes extends BaseHUDPart {
             canUnpin?: boolean;
             className?: string;
             throughputOnly?: boolean;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         const definition = this.root.shapeDefinitionMgr.getShapeFromShortKey(key);
 

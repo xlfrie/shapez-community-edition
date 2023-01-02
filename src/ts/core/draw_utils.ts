@@ -63,7 +63,7 @@ export function drawRotatedSprite(
         size: number;
         offsetX?: number;
         offsetY?: number;
-    } /*--REMOVE_PREV--*/
+    }
 ) {
     if (angle === 0) {
         sprite.drawCachedCentered(parameters, x + offsetX, y + offsetY, size);

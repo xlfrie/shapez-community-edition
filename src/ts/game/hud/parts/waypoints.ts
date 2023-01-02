@@ -262,7 +262,7 @@ export class HUDWaypoints extends BaseHUDPart {
         }: {
             worldPos?: Vector;
             waypoint?: Waypoint;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         // Construct dialog with input field
         const markerNameInput = new FormElementInput({

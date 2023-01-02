@@ -49,7 +49,7 @@ export class GameLogic {
         }: {
             allowReplaceBuildings?: boolean;
             offset?: Vector;
-        } /*--REMOVE_PREV--*/
+        }
     ): boolean {
         // Compute area of the building
         const rect = entity.components.StaticMapEntity.getTileSpaceBounds();

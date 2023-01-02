@@ -146,7 +146,7 @@ export class ModInterface {
             shortCode: string;
             weightComputation: (distanceToOriginInChunks: number) => number;
             draw: (options: import("../game/shape_definition").SubShapeDrawOptions) => void;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         if (shortCode.length !== 1) {
             throw new Error("Bad short code: " + shortCode);
@@ -171,7 +171,7 @@ export class ModInterface {
         }
     }
 
-    registerItem(item: typeof BaseItem, resolver?: (itemData: any) => BaseItem /*--REMOVE_PREV--*/) {
+    registerItem(item: typeof BaseItem, resolver?: (itemData: any) => BaseItem) {
         gItemRegistry.register(item);
         MODS_ADDITIONAL_ITEMS[item.getId()] = resolver;
     }
@@ -191,7 +191,7 @@ export class ModInterface {
             systemClass: new (any) => GameSystem;
             before?: string;
             drawHooks?: string[];
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         const key = before || "key";
         const payload = { id, systemClass };
@@ -220,7 +220,7 @@ export class ModInterface {
         }: {
             metaClass: typeof ModMetaBuilding;
             buildingIconBase64?: string;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         const id = new (metaClass as new (...args) => ModMetaBuilding)().getId();
         if (gMetaBuildingRegistry.hasId(id)) {
@@ -296,7 +296,7 @@ export class ModInterface {
                 ctrl?: boolean;
             };
             builtin?: boolean;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         if (!KEYMAPPINGS.mods) {
             KEYMAPPINGS.mods = {};
@@ -344,7 +344,7 @@ export class ModInterface {
     }
 
     setBuildingTutorialImage(
-        buildingIdOrClass: string | (new () => MetaBuilding) /*--REMOVE_PREV--*/,
+        buildingIdOrClass: string | (new () => MetaBuilding),
         variant: any,
         imageBase64: any
     ) {
@@ -448,7 +448,7 @@ export class ModInterface {
         };
     }
 
-    extendObject(prototype: Object, extender?: ({ $super, $old }) => any /*--REMOVE_PREV--*/) {
+    extendObject(prototype: Object, extender?: ({ $super, $old }) => any) {
         const $super = Object.getPrototypeOf(prototype);
         const $old = {};
         const extensionMethods = extender({ $super, $old });
@@ -462,11 +462,11 @@ export class ModInterface {
         });
     }
 
-    extendClass(classHandle: Class, extender?: ({ $super, $old }) => any /*--REMOVE_PREV--*/) {
+    extendClass(classHandle: Class, extender?: ({ $super, $old }) => any) {
         this.extendObject(classHandle.prototype, extender);
     }
 
-    registerHudElement(id: string, element?: new (...args) => BaseHUDPart /*--REMOVE_PREV--*/) {
+    registerHudElement(id: string, element?: new (...args) => BaseHUDPart) {
         this.modLoader.signals.hudInitializer.add(root => {
             root.hud.parts[id] = new element(root);
         });
@@ -483,7 +483,7 @@ export class ModInterface {
             name: string;
             description: string;
             language?: string;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         if (typeof buildingIdOrClass === "function") {
             buildingIdOrClass = new buildingIdOrClass().id;
@@ -501,7 +501,7 @@ export class ModInterface {
     }
 
     registerBuildingSprites(
-        buildingIdOrClass: string | (new () => MetaBuilding) /*--REMOVE_PREV--*/,
+        buildingIdOrClass: string | (new () => MetaBuilding),
         variant: string,
         {
             regularBase64,
@@ -509,7 +509,7 @@ export class ModInterface {
         }: {
             regularBase64?: string;
             blueprintBase64?: string;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         if (typeof buildingIdOrClass === "function") {
             buildingIdOrClass = new buildingIdOrClass().id;
@@ -528,7 +528,7 @@ export class ModInterface {
     }
 
     addVariantToExistingBuilding(
-        metaClass: new () => MetaBuilding /*--REMOVE_PREV--*/,
+        metaClass: new () => MetaBuilding,
         variant: string,
         payload?: {
             rotationVariants?: number[];
@@ -540,7 +540,7 @@ export class ModInterface {
             dimensions?: Vector;
             additionalStatistics?: (root: GameRoot) => [string, string][];
             isUnlocked?: (root: GameRoot) => boolean[];
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         if (!payload.rotationVariants) {
             payload.rotationVariants = [0];

@@ -34,7 +34,7 @@ export class ClientAPI {
         options: {
             method?: "GET" | "POST";
             body?: any;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         const headers = {
             "x-api-key": "d5c54aaa491f200709afff082c153ef2",

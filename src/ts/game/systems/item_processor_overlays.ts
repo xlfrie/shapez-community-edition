@@ -97,7 +97,7 @@ export class ItemProcessorOverlaysSystem extends GameSystem {
             drawIfFalse = true,
         }: {
             drawIfFalse?: boolean;
-        } /*--REMOVE_PREV--*/
+        }
     ) {
         const staticComp = entity.components.StaticMapEntity;
         const pinsComp = entity.components.WiredPins;

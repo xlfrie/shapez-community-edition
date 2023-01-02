@@ -139,7 +139,7 @@ export class BufferMaintainer {
                 additionalParams?: any
             ) => void;
             additionalParams?: object;
-        } /*--REMOVE_PREV--*/
+        }
     ): HTMLCanvasElement {
         // First, create parent key
         let parent = this.cache.get(key);
