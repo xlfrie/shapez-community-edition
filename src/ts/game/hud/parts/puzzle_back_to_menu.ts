@@ -16,7 +16,7 @@ export class HUDPuzzleBackToMenu extends BaseHUDPart {
         this.trackClicks(this.button, this.back);
     }
 
-    initialize() { }
+    initialize() {}
 
     back() {
         this.root.gameState.goBackToMenu();

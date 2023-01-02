@@ -32,9 +32,12 @@ export class WireComponent extends Component {
 
     public linkedNetwork: import("../systems/wire").WireNetwork = null;
 
-    constructor({ type = enumWireType.forward, variant = enumWireVariant.first }: {
-        type: enumWireType,
-        variant: enumWireVariant
+    constructor({
+        type = enumWireType.forward,
+        variant = enumWireVariant.first,
+    }: {
+        type: enumWireType;
+        variant: enumWireVariant;
     }) {
         super();
 

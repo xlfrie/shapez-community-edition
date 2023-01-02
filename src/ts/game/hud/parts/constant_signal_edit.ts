@@ -186,7 +186,7 @@ export class HUDConstantSignalEdit extends BaseHUDPart {
         }
 
         // @bagel03 no trim dep
-        code = code.trim()
+        code = code.trim();
         const codeLower = code.toLowerCase();
 
         if (MODS_ADDITIONAL_CONSTANT_SIGNAL_RESOLVER[codeLower]) {

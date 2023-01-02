@@ -19,7 +19,7 @@ const notificationDuration = 3;
 
 export class HUDNotifications extends BaseHUDPart {
     element: HTMLDivElement;
-    notificationElements: { element: HTMLDivElement, expireAt: number }[];
+    notificationElements: { element: HTMLDivElement; expireAt: number }[];
 
     createElements(parent) {
         this.element = makeDiv(parent, "ingame_HUD_Notifications", [], ``);

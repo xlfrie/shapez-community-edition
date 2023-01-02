@@ -17,5 +17,5 @@ export class HUDPuzzleEditorControls extends BaseHUDPart {
         this.titleElement.innerText = T.ingame.puzzleEditorControls.title;
     }
 
-    initialize() { }
+    initialize() {}
 }

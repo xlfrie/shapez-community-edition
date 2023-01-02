@@ -11,7 +11,6 @@ import { HUDMassSelector } from "../hud/parts/mass_selector";
 import { BaseHUDPart } from "../hud/base_hud_part";
 
 export class PuzzleGameMode extends GameMode {
-
     static getType() {
         return enumGameModeTypes.puzzle;
     }

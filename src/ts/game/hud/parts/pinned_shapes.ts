@@ -178,19 +178,17 @@ export class HUDPinnedShapes extends BaseHUDPart {
     }
 
     /** Pins a new shape */
-    internalPinShape(
-        {
-            key,
-            canUnpin = true,
-            className = null,
-            throughputOnly = false,
-        }: {
-            key: string;
-            canUnpin?: boolean;
-            className?: string;
-            throughputOnly?: boolean;
-        }
-    ) {
+    internalPinShape({
+        key,
+        canUnpin = true,
+        className = null,
+        throughputOnly = false,
+    }: {
+        key: string;
+        canUnpin?: boolean;
+        className?: string;
+        throughputOnly?: boolean;
+    }) {
         const definition = this.root.shapeDefinitionMgr.getShapeFromShortKey(key);
 
         const element = makeDiv(this.element, null, ["shape"]);

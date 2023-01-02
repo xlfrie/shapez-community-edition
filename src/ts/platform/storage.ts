@@ -5,8 +5,7 @@ import type { Application } from "../application";
 export const FILE_NOT_FOUND = "file_not_found";
 
 export class StorageInterface {
-
-    constructor(public app: Application) { }
+    constructor(public app: Application) {}
 
     /**
      * Initializes the storage

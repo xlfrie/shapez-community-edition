@@ -7,7 +7,7 @@ import { ACHIEVEMENTS } from "../platform/achievement_provider";
 import { GameRoot } from "./root";
 
 export class Blueprint {
-    constructor(public entities: Entity[]) { }
+    constructor(public entities: Entity[]) {}
 
     /** Returns the layer of this blueprint */
     get layer() {

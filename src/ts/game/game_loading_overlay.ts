@@ -9,7 +9,7 @@ export class GameLoadingOverlay {
     public element: HTMLElement = null;
     public loadingIndicator: HTMLSpanElement;
 
-    constructor(public app: Application, public parent: HTMLElement) { }
+    constructor(public app: Application, public parent: HTMLElement) {}
 
     /** Removes the overlay if its currently visible */
     removeIfAttached() {

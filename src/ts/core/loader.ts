@@ -20,7 +20,7 @@ class LoaderImpl {
 
     public spriteNotFoundSprite: BaseSprite;
 
-    constructor() { }
+    constructor() {}
 
     linkAppAfterBoot(app: Application) {
         this.app = app;
@@ -79,10 +79,7 @@ class LoaderImpl {
     }
 
     /** Preloads a sprite */
-    preloadCSSSprite(
-        key: string,
-        progressHandler?: (progress: number) => void
-    ): Promise<void> {
+    preloadCSSSprite(key: string, progressHandler?: (progress: number) => void): Promise<void> {
         return this.internalPreloadImage(key, progressHandler).then(image => {
             if (key.indexOf("game_misc") >= 0) {
                 // Allow access to regular sprites
@@ -93,10 +90,7 @@ class LoaderImpl {
     }
 
     /** Preloads an atlas */
-    preloadAtlas(
-        atlas: AtlasDefinition,
-        progressHandler?: (progress: number) => void
-    ): Promise<void> {
+    preloadAtlas(atlas: AtlasDefinition, progressHandler?: (progress: number) => void): Promise<void> {
         return this.internalPreloadImage(atlas.getFullSourcePath(), progressHandler).then(image => {
             // @ts-ignore
             image.label = atlas.sourceFileName;

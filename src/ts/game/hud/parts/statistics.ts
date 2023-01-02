@@ -35,7 +35,6 @@ export class HUDStatistics extends BaseHUDPart {
     public lastPartialRerender: number;
     public currentUnit: string;
 
-
     createElements(parent) {
         this.background = makeDiv(parent, "ingame_HUD_Statistics", ["ingameDialog"]);
 
@@ -118,7 +117,6 @@ export class HUDStatistics extends BaseHUDPart {
 
         this.rerenderPartial();
     }
-
 
     initialize() {
         this.domAttach = new DynamicDomAttach(this.root, this.background, {

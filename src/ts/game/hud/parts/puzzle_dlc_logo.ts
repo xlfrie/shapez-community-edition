@@ -9,7 +9,7 @@ export class HUDPuzzleDLCLogo extends BaseHUDPart {
         parent.appendChild(this.element);
     }
 
-    initialize() { }
+    initialize() {}
 
-    next() { }
+    next() {}
 }

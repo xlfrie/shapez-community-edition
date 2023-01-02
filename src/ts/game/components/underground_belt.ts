@@ -20,7 +20,6 @@ export type LinkedUndergroundBelt = {
 };
 
 export class UndergroundBeltComponent extends Component {
-
     static getId() {
         return "UndergroundBelt";
     }
@@ -32,8 +31,8 @@ export class UndergroundBeltComponent extends Component {
     }
 
     public mode: enumUndergroundBeltMode;
-    public tier: number
-    public consumptionAnimations: { item: BaseItem, progress: number }[];
+    public tier: number;
+    public consumptionAnimations: { item: BaseItem; progress: number }[];
     public pendingItems: [BaseItem, number][];
 
     /**

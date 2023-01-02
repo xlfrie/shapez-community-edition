@@ -11,7 +11,7 @@ export class HUDShapeTooltip extends BaseHUDPart {
     public currentEntity: Entity;
     public isPlacingBuilding: boolean | MetaBuilding;
 
-    createElements(parent) { }
+    createElements(parent) {}
 
     initialize() {
         this.currentTile = new Vector(0, 0);

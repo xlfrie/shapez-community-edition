@@ -44,13 +44,16 @@ export class HUDWaypoints extends BaseHUDPart {
     public hintElement: HTMLDivElement;
     public waypointsListElement: HTMLDivElement;
     public waypoints: Waypoint[];
-    public waypointSprites: { regular: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite; wires: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite; };
+    public waypointSprites: {
+        regular: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
+        wires: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
+    };
     public directionIndicatorSprite: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
     public dummyBuffer: CanvasRenderingContext2D;
     public domAttach: DynamicDomAttach;
     public currentMarkerOpacity: number;
     public currentCompassOpacity: number;
-    public compassBuffer: { canvas: HTMLCanvasElement; context: CanvasRenderingContext2D; };
+    public compassBuffer: { canvas: HTMLCanvasElement; context: CanvasRenderingContext2D };
     public cachedKeyToCanvas: {};
     public cachedTextWidths: {};
 
@@ -65,11 +68,11 @@ export class HUDWaypoints extends BaseHUDPart {
                 `
             <strong class='title'>${T.ingame.waypoints.waypoints}</strong>
             <span class='desc'>${T.ingame.waypoints.description.replace(
-                    "<keybinding>",
-                    `<code class='keybinding'>${this.root.keyMapper
-                        .getBinding(KEYMAPPINGS.navigation.createMarker)
-                        .getKeyCodeString()}</code>`
-                )}</span>
+                "<keybinding>",
+                `<code class='keybinding'>${this.root.keyMapper
+                    .getBinding(KEYMAPPINGS.navigation.createMarker)
+                    .getKeyCodeString()}</code>`
+            )}</span>
         `
             );
         }
@@ -255,15 +258,7 @@ export class HUDWaypoints extends BaseHUDPart {
      * @param param0.worldPos Override the world pos, otherwise it is the camera position
      * @param param0.waypoint Waypoint to be edited. If omitted, create new
      */
-    requestSaveMarker(
-        {
-            worldPos = null,
-            waypoint = null,
-        }: {
-            worldPos?: Vector;
-            waypoint?: Waypoint;
-        }
-    ) {
+    requestSaveMarker({ worldPos = null, waypoint = null }: { worldPos?: Vector; waypoint?: Waypoint }) {
         // Construct dialog with input field
         const markerNameInput = new FormElementInput({
             id: "markerName",

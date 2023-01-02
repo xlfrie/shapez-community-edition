@@ -7,7 +7,7 @@ export class Signal<T extends any[] = []> {
     public receivers = [];
     public modifyCount = 0;
 
-    constructor() { }
+    constructor() {}
 
     /** Adds a new signal listener */
     add(receiver: SignalReceiver<T>, scope: object = null) {

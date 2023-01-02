@@ -46,7 +46,7 @@ export class GameCreationPayload {
 
     public gameModeParameters: object | undefined;
 
-    constructor() { }
+    constructor() {}
 }
 
 export class InGameState extends GameState {
@@ -140,7 +140,9 @@ export class InGameState extends GameState {
 
     /** Goes back to the menu state */
     goBackToMenu() {
-        if (([enumGameModeIds.puzzleEdit, enumGameModeIds.puzzlePlay] as string[]).includes(this.gameModeId)) {
+        if (
+            ([enumGameModeIds.puzzleEdit, enumGameModeIds.puzzlePlay] as string[]).includes(this.gameModeId)
+        ) {
             this.saveThenGoToState("PuzzleMenuState");
         } else {
             this.saveThenGoToState("MainMenuState");

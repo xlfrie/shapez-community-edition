@@ -34,7 +34,7 @@ export type AcceptorsAndEjectorsAffectingTile = {
 };
 
 export class GameLogic {
-    constructor(public root: GameRoot) { }
+    constructor(public root: GameRoot) {}
 
     /**
      * Checks if the given entity can be placed

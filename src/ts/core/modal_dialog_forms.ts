@@ -16,7 +16,7 @@ import { Signal } from "./signal";
 export class FormElement {
     public valueChosen = new Signal<[val: any]>();
 
-    constructor(public id: string, public label: string) { }
+    constructor(public id: string, public label: string) {}
 
     getHtml() {
         abstract;
@@ -31,7 +31,7 @@ export class FormElement {
         abstract;
     }
 
-    focus(parent?: HTMLElement) { }
+    focus(parent?: HTMLElement) {}
 
     isValid() {
         return true;
@@ -49,13 +49,20 @@ export class FormElementInput extends FormElement {
     public inputType: string;
     public validator: (input: string) => boolean;
 
-    constructor({ id, label = null, placeholder, defaultValue = "", inputType = "text", validator = null }: {
-        id: string,
-        label: string,
-        placeholder: string,
-        defaultValue?: string,
-        inputType?: string,
-        validator: (input: string) => boolean
+    constructor({
+        id,
+        label = null,
+        placeholder,
+        defaultValue = "",
+        inputType = "text",
+        validator = null,
+    }: {
+        id: string;
+        label: string;
+        placeholder: string;
+        defaultValue?: string;
+        inputType?: string;
+        validator: (input: string) => boolean;
     }) {
         super(id, label);
 
@@ -63,7 +70,6 @@ export class FormElementInput extends FormElement {
         this.defaultValue = defaultValue;
         this.inputType = inputType;
         this.validator = validator;
-
     }
 
     getHtml() {
@@ -138,16 +144,12 @@ export class FormElementInput extends FormElement {
 }
 
 export class FormElementCheckbox extends FormElement {
-    public defaultValue: boolean
-    public value: boolean
+    public defaultValue: boolean;
+    public value: boolean;
 
     public element = null;
 
-    constructor({ id, label, defaultValue = true }: {
-        id: string,
-        label: string,
-        defaultValue: boolean
-    }) {
+    constructor({ id, label, defaultValue = true }: { id: string; label: string; defaultValue: boolean }) {
         super(id, label);
 
         this.defaultValue = defaultValue;
@@ -184,11 +186,11 @@ export class FormElementCheckbox extends FormElement {
         this.element.classList.toggle("checked", this.value);
     }
 
-    focus(parent) { }
+    focus(parent) {}
 }
 
 export class FormElementItemChooser extends FormElement {
-    public items: BaseItem[]
+    public items: BaseItem[];
     public element: HTMLFormElement = null;
 
     public chosenItem: BaseItem = null;
@@ -239,5 +241,5 @@ export class FormElementItemChooser extends FormElement {
         return null;
     }
 
-    focus() { }
+    focus() {}
 }

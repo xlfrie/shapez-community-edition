@@ -7,13 +7,12 @@ import { ClickDetector } from "../../core/click_detector";
 import { KeyActionMapper } from "../key_action_mapper";
 
 export class BaseHUDPart {
-
     public clickDetectors: Array<ClickDetector> = [];
 
-    constructor(public root: GameRoot) { }
+    constructor(public root: GameRoot) {}
 
     /** Should create all require elements */
-    createElements(parent: DocumentFragment) { }
+    createElements(parent: DocumentFragment) {}
 
     /**
      * Should initialize the element, called *after* the elements have been created
@@ -24,13 +23,13 @@ export class BaseHUDPart {
     }
 
     /** Should update any required logic */
-    update() { }
+    update() {}
 
     /** Should draw the hud */
-    draw(parameters: DrawParameters) { }
+    draw(parameters: DrawParameters) {}
 
     /** Should draw any overlays (screen space) */
-    drawOverlays(parameters: DrawParameters) { }
+    drawOverlays(parameters: DrawParameters) {}
 
     /**
      * Should return true if the widget has a modal dialog opened and thus
@@ -66,7 +65,7 @@ export class BaseHUDPart {
     }
 
     /** Should close the element, in case its supported */
-    close() { }
+    close() {}
 
     // Helpers
 

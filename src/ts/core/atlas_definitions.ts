@@ -32,9 +32,9 @@ export type SourceData = {
 };
 
 export class AtlasDefinition {
-    public meta: AtlasMeta
+    public meta: AtlasMeta;
     public sourceData: Record<string, SpriteDefinition>;
-    public sourceFileName: string
+    public sourceFileName: string;
 
     constructor({ frames, meta }: SourceData) {
         this.meta = meta;

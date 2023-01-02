@@ -77,11 +77,11 @@ export class PreloadState extends GameState {
         if (queryParamOptions.campaign) {
             fetch(
                 "https://analytics.shapez.io/campaign/" +
-                queryParamOptions.campaign +
-                "?lpurl=nocontent&fbclid=" +
-                (queryParamOptions.fbclid || "") +
-                "&gclid=" +
-                (queryParamOptions.gclid || "")
+                    queryParamOptions.campaign +
+                    "?lpurl=nocontent&fbclid=" +
+                    (queryParamOptions.fbclid || "") +
+                    "&gclid=" +
+                    (queryParamOptions.gclid || "")
             ).catch(err => {
                 console.warn("Failed to send beacon:", err);
             });
@@ -89,8 +89,8 @@ export class PreloadState extends GameState {
         if (queryParamOptions.embedProvider) {
             fetch(
                 "https://analytics.shapez.io/campaign/embed_" +
-                queryParamOptions.embedProvider +
-                "?lpurl=nocontent"
+                    queryParamOptions.embedProvider +
+                    "?lpurl=nocontent"
             ).catch(err => {
                 console.warn("Failed to send beacon:", err);
             });
@@ -131,8 +131,8 @@ export class PreloadState extends GameState {
                         return new Promise(() => {
                             alert(
                                 "Your brower does not support thirdparty cookies or you have disabled it in your security settings.\n\n" +
-                                "In Chrome this setting is called 'Block third-party cookies and site data'.\n\n" +
-                                "Please allow third party cookies and then reload the page."
+                                    "In Chrome this setting is called 'Block third-party cookies and site data'.\n\n" +
+                                    "Please allow third party cookies and then reload the page."
                             );
                             // Never return
                         });
@@ -259,8 +259,9 @@ export class PreloadState extends GameState {
                         for (let i = 0; i < changelogEntries.length; ++i) {
                             const entry = changelogEntries[i];
                             dialogHtml += `
-                            <div class="changelogDialogEntry" data-changelog-skin="${entry.skin || "default"
-                                }">
+                            <div class="changelogDialogEntry" data-changelog-skin="${
+                                entry.skin || "default"
+                            }">
                                 <span class="version">${entry.version}</span>
                                 <span class="date">${entry.date}</span>
                                 <ul class="changes">

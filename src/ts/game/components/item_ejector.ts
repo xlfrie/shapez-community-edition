@@ -18,7 +18,6 @@ export type ItemEjectorSlot = {
 };
 
 export class ItemEjectorComponent extends Component {
-
     static getId() {
         return "ItemEjector";
     }
@@ -43,7 +42,13 @@ export class ItemEjectorComponent extends Component {
      * @param param0.renderFloatingItems Whether to render items even if they are not connected
      */
 
-    constructor({ slots = [], renderFloatingItems = true }: { slots?: ItemEjectorSlot[], renderFloatingItems?: boolean }) {
+    constructor({
+        slots = [],
+        renderFloatingItems = true,
+    }: {
+        slots?: ItemEjectorSlot[];
+        renderFloatingItems?: boolean;
+    }) {
         super();
 
         this.slots = slots;

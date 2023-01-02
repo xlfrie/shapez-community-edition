@@ -19,7 +19,7 @@ export const enumBalancerVariants = {
     splitter: "splitter",
     splitterInverse: "splitter-inverse",
 } as const;
-export type enumBalancerVariants = keyof typeof enumBalancerVariants
+export type enumBalancerVariants = keyof typeof enumBalancerVariants;
 
 const overlayMatrices = {
     [defaultBuildingVariant]: null,

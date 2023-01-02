@@ -23,7 +23,7 @@ export const arrayUndergroundRotationVariantToMode = [
  @enum
 */
 export const enumUndergroundBeltVariants = { tier2: "tier2" } as const;
-export type enumUndergroundBeltVariants = keyof typeof enumUndergroundBeltVariants
+export type enumUndergroundBeltVariants = keyof typeof enumUndergroundBeltVariants;
 
 export const enumUndergroundBeltVariantToTier = {
     [defaultBuildingVariant]: 0,

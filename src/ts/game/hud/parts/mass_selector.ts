@@ -22,7 +22,7 @@ export class HUDMassSelector extends BaseHUDPart {
     public currentSelectionEnd: Vector;
     public selectedUids: Set<number>;
 
-    createElements(parent) { }
+    createElements(parent) {}
 
     initialize() {
         this.currentSelectionStartWorld = null;

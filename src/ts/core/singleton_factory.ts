@@ -8,7 +8,7 @@ export class SingletonFactory<T> {
     public entries: T[] = [];
     public idToEntry: Record<string, T> = {};
 
-    constructor(public id?: string) { }
+    constructor(public id?: string) {}
 
     getId() {
         return this.id;

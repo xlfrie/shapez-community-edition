@@ -47,7 +47,6 @@ export const enumSubShape = {
 } as const;
 export type enumSubShape = keyof typeof enumSubShape;
 
-
 /**
  @enum
 */

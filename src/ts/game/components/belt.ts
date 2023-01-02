@@ -12,7 +12,8 @@ export const FAKE_BELT_ACCEPTOR_SLOT: import("./item_acceptor").ItemAcceptorSlot
 
 // @ts-ignore @Bagel03
 export const FAKE_BELT_EJECTOR_SLOT_BY_DIRECTION: Record<
-    enumDirection, import("./item_ejector").ItemEjectorSlot
+    enumDirection,
+    import("./item_ejector").ItemEjectorSlot
 > = {
     [enumDirection.top]: {
         pos: new Vector(0, 0),

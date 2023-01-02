@@ -318,21 +318,29 @@ export function getStringForKeyCode(code: number): string {
 }
 
 export class Keybinding {
-
     public keyCode: number;
     public builtin: boolean;
     public repeated: boolean;
-    public modifiers: { shift?: boolean; alt?: boolean; ctrl?: boolean; };
+    public modifiers: { shift?: boolean; alt?: boolean; ctrl?: boolean };
 
     public signal = new Signal();
     public toggled = new Signal();
 
-    constructor(public keyMapper: KeyActionMapper, public app: Application, { keyCode, builtin = false, repeated = false, modifiers = {} }: {
-        keyCode: number,
-        builtin?: boolean,
-        repeated?: boolean,
-        modifiers?: { shift?: boolean; alt?: boolean; ctrl?: boolean; }
-    }) {
+    constructor(
+        public keyMapper: KeyActionMapper,
+        public app: Application,
+        {
+            keyCode,
+            builtin = false,
+            repeated = false,
+            modifiers = {},
+        }: {
+            keyCode: number;
+            builtin?: boolean;
+            repeated?: boolean;
+            modifiers?: { shift?: boolean; alt?: boolean; ctrl?: boolean };
+        }
+    ) {
         assert(keyCode && Number.isInteger(keyCode), "Invalid key code: " + keyCode);
 
         this.keyCode = keyCode;
@@ -452,21 +460,19 @@ export class KeyActionMapper {
     }
 
     /** Internal keydown handler */
-    handleKeydown(
-        {
-            keyCode,
-            shift,
-            alt,
-            ctrl,
-            initial,
-        }: {
-            keyCode: number;
-            shift: boolean;
-            alt: boolean;
-            ctrl: boolean;
-            initial?: boolean;
-        }
-    ) {
+    handleKeydown({
+        keyCode,
+        shift,
+        alt,
+        ctrl,
+        initial,
+    }: {
+        keyCode: number;
+        shift: boolean;
+        alt: boolean;
+        ctrl: boolean;
+        initial?: boolean;
+    }) {
         let stop = false;
 
         // Find mapping

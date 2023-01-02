@@ -79,10 +79,10 @@ export class HUDDebugInfo extends BaseHUDPart {
         this.trackedTickRate.set("Tickrate: " + this.root.dynamicTickrate.currentTickRate);
         this.trackedFPS.set(
             "FPS: " +
-            Math.round(this.root.dynamicTickrate.averageFps) +
-            " (" +
-            round2Digits(1000 / this.root.dynamicTickrate.averageFps) +
-            " ms)"
+                Math.round(this.root.dynamicTickrate.averageFps) +
+                " (" +
+                round2Digits(1000 / this.root.dynamicTickrate.averageFps) +
+                " ms)"
         );
         this.trackedTickDuration.set(
             "Tick: " + round3Digits(this.root.dynamicTickrate.averageTickDuration) + "ms"

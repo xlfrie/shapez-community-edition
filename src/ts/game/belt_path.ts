@@ -20,7 +20,6 @@ const DEBUG = G_IS_DEV && false;
 
 /** Stores a path of belts, used for optimizing performance */
 export class BeltPath extends BasicSerializableObject {
-
     static getId() {
         return "BeltPath";
     }
@@ -61,7 +60,6 @@ export class BeltPath extends BasicSerializableObject {
     public worldBounds: Rectangle;
     public numCompressedItemsAfterFirstItem: number;
     public boundAcceptor: (BaseItem: any, number?: any) => boolean;
-
 
     constructor(public root: GameRoot, public entityPath: Entity[]) {
         super();
@@ -812,11 +810,11 @@ export class BeltPath extends BasicSerializableObject {
                 assert(
                     lastDistance >= 0.0,
                     "Last item distance mismatch: " +
-                    lastDistance +
-                    " -> Total length was " +
-                    this.totalLength +
-                    " and lastItemOffset was " +
-                    lastItemOffset
+                        lastDistance +
+                        " -> Total length was " +
+                        this.totalLength +
+                        " and lastItemOffset was " +
+                        lastItemOffset
                 );
 
                 DEBUG &&

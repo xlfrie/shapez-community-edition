@@ -15,7 +15,7 @@ export class SoundProxy {
     public playing3DSounds = [];
     public playingUiSounds = [];
 
-    constructor(public root: GameRoot) { }
+    constructor(public root: GameRoot) {}
 
     /**
      * Plays a new ui sound

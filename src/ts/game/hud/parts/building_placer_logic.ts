@@ -23,8 +23,8 @@ import { safeModulo } from "../../../core/utils";
 export class HUDBuildingPlacerLogic extends BaseHUDPart {
     public fakeEntity: Entity;
     public signals: {
-        variantChanged: Signal,
-        draggingStarted: Signal
+        variantChanged: Signal;
+        draggingStarted: Signal;
     };
 
     public currentMetaBuilding: TrackedState;
@@ -38,7 +38,6 @@ export class HUDBuildingPlacerLogic extends BaseHUDPart {
     public currentDirectionLockSide: number;
     public currentDirectionLockSideIndeterminate: boolean;
     public initialPlacementVector: any;
-
 
     /**
      * Initializes the logic

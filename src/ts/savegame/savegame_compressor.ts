@@ -46,17 +46,21 @@ if (G_IS_DEV) {
         if (decompressInt(compressInt(i)) !== i) {
             throw new Error(
                 "Bad compression for: " +
-                i +
-                " compressed: " +
-                compressInt(i) +
-                " decompressed: " +
-                decompressInt(compressInt(i))
+                    i +
+                    " compressed: " +
+                    compressInt(i) +
+                    " decompressed: " +
+                    decompressInt(compressInt(i))
             );
         }
     }
 }
 
-function compressObjectInternal(obj: any, keys: Map<any, any>, values: Map<any, any>): any[] | object | number | string {
+function compressObjectInternal(
+    obj: any,
+    keys: Map<any, any>,
+    values: Map<any, any>
+): any[] | object | number | string {
     if (Array.isArray(obj)) {
         let result = [];
         for (let i = 0; i < obj.length; ++i) {

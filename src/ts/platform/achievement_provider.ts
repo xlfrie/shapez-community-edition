@@ -82,7 +82,7 @@ export class AchievementProviderInterface {
     collection = null as AchievementCollection | undefined;
     /* typehints:end */
 
-    constructor(public app: Application) { }
+    constructor(public app: Application) {}
 
     /**
      * Initializes the achievement provider.
@@ -133,11 +133,11 @@ export class Achievement {
     public receiver = null;
     public signal = null;
     /**
-    * @param key - An ACHIEVEMENTS key
-    */
-    constructor(public key: string) { }
+     * @param key - An ACHIEVEMENTS key
+     */
+    constructor(public key: string) {}
 
-    init() { }
+    init() {}
 
     isValid() {
         return true;
@@ -428,7 +428,7 @@ export class AchievementCollection {
                         enumAnalyticsDataSource.delivered,
                         this.root.shapeDefinitionMgr.getShapeFromShortKey(shape)
                     ) /
-                    globalConfig.analyticsSliceDurationSeconds >=
+                        globalConfig.analyticsSliceDurationSeconds >=
                     rate
                 );
             },

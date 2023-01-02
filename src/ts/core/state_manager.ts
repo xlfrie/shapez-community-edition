@@ -17,7 +17,7 @@ export class StateManager {
         [idx: string]: new () => GameState;
     } = {};
 
-    constructor(public app: Application) { }
+    constructor(public app: Application) {}
 
     /** Registers a new state class, should be a GameState derived class */
     register(stateClass: Class<GameState>) {

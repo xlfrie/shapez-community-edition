@@ -39,57 +39,56 @@ export const MODS_ADDITIONAL_SYSTEMS: {
 } = {};
 
 export class GameSystemManager {
-
-    declare public systems: {
+    public declare systems: {
         /* typehints:start */
 
-        belt: BeltSystem,
+        belt: BeltSystem;
 
-        itemEjector: ItemEjectorSystem,
+        itemEjector: ItemEjectorSystem;
 
-        mapResources: MapResourcesSystem,
+        mapResources: MapResourcesSystem;
 
-        miner: MinerSystem,
+        miner: MinerSystem;
 
-        itemProcessor: ItemProcessorSystem,
+        itemProcessor: ItemProcessorSystem;
 
-        undergroundBelt: UndergroundBeltSystem,
+        undergroundBelt: UndergroundBeltSystem;
 
-        hub: HubSystem,
+        hub: HubSystem;
 
-        staticMapEntities: StaticMapEntitySystem,
+        staticMapEntities: StaticMapEntitySystem;
 
-        itemAcceptor: ItemAcceptorSystem,
+        itemAcceptor: ItemAcceptorSystem;
 
-        storage: StorageSystem,
+        storage: StorageSystem;
 
-        wiredPins: WiredPinsSystem,
+        wiredPins: WiredPinsSystem;
 
-        beltUnderlays: BeltUnderlaysSystem,
+        beltUnderlays: BeltUnderlaysSystem;
 
-        wire: WireSystem,
+        wire: WireSystem;
 
-        constantSignal: ConstantSignalSystem,
+        constantSignal: ConstantSignalSystem;
 
-        logicGate: LogicGateSystem,
+        logicGate: LogicGateSystem;
 
-        lever: LeverSystem,
+        lever: LeverSystem;
 
-        display: DisplaySystem,
+        display: DisplaySystem;
 
-        itemProcessorOverlays: ItemProcessorOverlaysSystem,
+        itemProcessorOverlays: ItemProcessorOverlaysSystem;
 
-        beltReader: BeltReaderSystem,
+        beltReader: BeltReaderSystem;
 
-        filter: FilterSystem,
+        filter: FilterSystem;
 
-        itemProducer: ItemProducerSystem,
+        itemProducer: ItemProducerSystem;
 
-        constantProducer: ConstantProducerSystem,
+        constantProducer: ConstantProducerSystem;
 
-        goalAcceptor: GoalAcceptorSystem,
+        goalAcceptor: GoalAcceptorSystem;
 
-        zone: ZoneSystem,
+        zone: ZoneSystem;
 
         /* typehints:end */
     };

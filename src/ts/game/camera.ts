@@ -14,7 +14,10 @@ const logger = createLogger("camera");
 export const USER_INTERACT_MOVE = "move";
 export const USER_INTERACT_ZOOM = "zoom";
 export const USER_INTERACT_TOUCHEND = "touchend";
-export type USER_INTERACT = typeof USER_INTERACT_MOVE | typeof USER_INTERACT_ZOOM | typeof USER_INTERACT_TOUCHEND;
+export type USER_INTERACT =
+    | typeof USER_INTERACT_MOVE
+    | typeof USER_INTERACT_ZOOM
+    | typeof USER_INTERACT_TOUCHEND;
 
 const velocitySmoothing = 0.5;
 const velocityFade = 0.98;
@@ -29,7 +32,6 @@ export const enumMouseButton = {
     right: "right",
 } as const;
 export type enumMouseButton = keyof typeof enumMouseButton;
-
 
 export class Camera extends BasicSerializableObject {
     //// Zoom level, 2 means double size
@@ -559,12 +561,12 @@ export class Camera extends BasicSerializableObject {
                 assert(
                     Number.isFinite(difference),
                     "Invalid pinch difference: " +
-                    difference +
-                    "(last=" +
-                    lastDistance +
-                    ", new = " +
-                    thisDistance +
-                    ")"
+                        difference +
+                        "(last=" +
+                        lastDistance +
+                        ", new = " +
+                        thisDistance +
+                        ")"
                 );
                 this.zoomLevel *= difference;
 

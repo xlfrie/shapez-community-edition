@@ -38,11 +38,19 @@ export class DynamicDomAttach {
      * for fading out the element if its below the cursor for example.
      */
 
-    constructor(public root: GameRoot, public element: HTMLElement, { timeToKeepSeconds = 0, attachClass = null, trackHover = false }: {
-        timeToKeepSeconds?: number,
-        attachClass?: string,
-        trackHover?: boolean
-    } = {}) {
+    constructor(
+        public root: GameRoot,
+        public element: HTMLElement,
+        {
+            timeToKeepSeconds = 0,
+            attachClass = null,
+            trackHover = false,
+        }: {
+            timeToKeepSeconds?: number;
+            attachClass?: string;
+            trackHover?: boolean;
+        } = {}
+    ) {
         assert(this.parent, "Dom attach created without parent");
 
         this.attachClass = attachClass;
@@ -103,9 +111,9 @@ export class DynamicDomAttach {
                 if (mousePos) {
                     this.trackedIsHovered.set(
                         mousePos.x > bounds.left &&
-                        mousePos.x < bounds.right &&
-                        mousePos.y > bounds.top &&
-                        mousePos.y < bounds.bottom
+                            mousePos.x < bounds.right &&
+                            mousePos.y > bounds.top &&
+                            mousePos.y < bounds.bottom
                     );
                 }
             }

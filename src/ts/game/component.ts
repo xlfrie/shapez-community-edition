@@ -16,10 +16,10 @@ export class Component extends BasicSerializableObject {
     }
 
     /** Copy the current state to another component */
-    copyAdditionalStateTo(otherComponent: Component) { }
+    copyAdditionalStateTo(otherComponent: Component) {}
 
     /** Clears all items and state */
-    clear() { }
+    clear() {}
 
     /* dev:start */
 

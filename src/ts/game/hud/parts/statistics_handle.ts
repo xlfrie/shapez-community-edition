@@ -26,7 +26,6 @@ export const statisticsUnitsSeconds: {
 
 /** Simple wrapper for a shape definition within the shape statistics */
 export class HUDShapeStatisticsHandle {
-
     public visible = false;
     public element: HTMLDivElement;
     public counter: HTMLSpanElement;
@@ -34,7 +33,11 @@ export class HUDShapeStatisticsHandle {
     public graphCanvas: HTMLCanvasElement;
     public graphContext: CanvasRenderingContext2D;
 
-    constructor(public root: GameRoot, public definition: ShapeDefinition, public intersectionObserver: IntersectionObserver) { }
+    constructor(
+        public root: GameRoot,
+        public definition: ShapeDefinition,
+        public intersectionObserver: IntersectionObserver
+    ) {}
 
     initElement() {
         this.element = document.createElement("div");

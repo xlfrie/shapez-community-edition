@@ -8,7 +8,6 @@ import { Rectangle } from "./rectangle";
 const logger = createLogger("stale_areas");
 
 export class StaleAreaDetector {
-
     public staleArea: Rectangle = null;
 
     public root: GameRoot;
@@ -19,9 +18,13 @@ export class StaleAreaDetector {
      * @param param0.name The name for reference
      * @param param0.recomputeMethod Method which recomputes the given area
      */
-    constructor({ root, name, recomputeMethod }: {
-        root: GameRoot,
-        name: string,
+    constructor({
+        root,
+        name,
+        recomputeMethod,
+    }: {
+        root: GameRoot;
+        name: string;
         recomputeMethod: (area: Rectangle) => void;
     }) {
         this.root = root;

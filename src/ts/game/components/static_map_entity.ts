@@ -88,11 +88,11 @@ export class StaticMapEntityComponent extends Component {
         originalRotation = 0,
         code = 0,
     }: {
-        origin?: Vector,
-        tileSize?: Vector,
-        rotation?: number,
-        originalRotation?: number,
-        code?: number | string
+        origin?: Vector;
+        tileSize?: Vector;
+        rotation?: number;
+        originalRotation?: number;
+        code?: number | string;
     }) {
         super();
         assert(

@@ -8,5 +8,5 @@ export class HUDVignetteOverlay extends BaseHUDPart {
         this.element = makeDiv(parent, "ingame_VignetteOverlay");
     }
 
-    initialize() { }
+    initialize() {}
 }

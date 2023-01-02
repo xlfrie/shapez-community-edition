@@ -25,7 +25,12 @@ export class BaseSetting {
     public element = null;
     public dialogs = null;
 
-    constructor(public id: string, public categoryId: string, public changeCb: (app: Application, arg: any) => void, public enabledCb: (app: Application) => void = null) { }
+    constructor(
+        public id: string,
+        public categoryId: string,
+        public changeCb: (app: Application, arg: any) => void,
+        public enabledCb: (app: Application) => void = null
+    ) {}
 
     apply(app: Application, value: any) {
         if (this.changeCb) {
@@ -97,7 +102,6 @@ export class EnumSetting extends BaseSetting {
     public iconPrefix: string;
     public magicValue: any;
 
-
     constructor(
         id: string,
         {
@@ -112,16 +116,16 @@ export class EnumSetting extends BaseSetting {
             magicValue = null,
             enabledCb = null,
         }: {
-            options: any[],
-            valueGetter: (value: any) => any,
-            textGetter: (value: any) => string,
-            descGetter?: (value: any) => string,
-            category: string,
-            restartRequired?: boolean,
-            iconPrefix?: string,
-            changeCb?: (app: Application, value: any) => void,
-            magicValue?: any,
-            enabledCb?: (app: Application) => void
+            options: any[];
+            valueGetter: (value: any) => any;
+            textGetter: (value: any) => string;
+            descGetter?: (value: any) => string;
+            category: string;
+            restartRequired?: boolean;
+            iconPrefix?: string;
+            changeCb?: (app: Application, value: any) => void;
+            magicValue?: any;
+            enabledCb?: (app: Application) => void;
         }
     ) {
         super(id, category, changeCb, enabledCb);
@@ -140,11 +144,13 @@ export class EnumSetting extends BaseSetting {
 
         return `
             <div class="setting cardbox ${available ? "enabled" : "disabled"}">
-                ${available
-                ? ""
-                : `<span class="standaloneOnlyHint">${WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
-                }</span>`
-            }
+                ${
+                    available
+                        ? ""
+                        : `<span class="standaloneOnlyHint">${
+                              WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
+                          }</span>`
+                }
                 <div class="row">
                     <label>${T.settings.labels[this.id].title}</label>
                     <div class="value enum" data-setting="${this.id}"></div>
@@ -219,10 +225,12 @@ export class BoolSetting extends BaseSetting {
         const available = this.getIsAvailable(app);
         return `
         <div class="setting cardbox ${available ? "enabled" : "disabled"}">
-            ${available
-                ? ""
-                : `<span class="standaloneOnlyHint">${WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
-                }</span>`
+            ${
+                available
+                    ? ""
+                    : `<span class="standaloneOnlyHint">${
+                          WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
+                      }</span>`
             }
 
             <div class="row">
@@ -275,18 +283,21 @@ export class RangeSetting extends BaseSetting {
         const available = this.getIsAvailable(app);
         return `
         <div class="setting cardbox ${available ? "enabled" : "disabled"}">
-            ${available
-                ? ""
-                : `<span class="standaloneOnlyHint">${WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
-                }</span>`
+            ${
+                available
+                    ? ""
+                    : `<span class="standaloneOnlyHint">${
+                          WEB_STEAM_SSO_AUTHENTICATED ? "" : T.demo.settingNotAvailable
+                      }</span>`
             }
 
             <div class="row">
                 <label>${T.settings.labels[this.id].title}</label>
                 <div class="value rangeInputContainer noPressEffect" data-setting="${this.id}">
                     <label>${this.defaultValue}</label>
-                    <input class="rangeInput" type="range" value="${this.defaultValue}" min="${this.minValue
-            }" max="${this.maxValue}" step="${this.stepSize}">
+                    <input class="rangeInput" type="range" value="${this.defaultValue}" min="${
+            this.minValue
+        }" max="${this.maxValue}" step="${this.stepSize}">
                 </div>
             </div>
             <div class="desc">

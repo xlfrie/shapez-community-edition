@@ -4,7 +4,7 @@ import { HUDModalDialogs } from "../game/hud/parts/modal_dialogs";
 import { T } from "../translations";
 
 export class LoginState extends GameState {
-    public payload: { nextStateId: string; };
+    public payload: { nextStateId: string };
     public dialogs: HUDModalDialogs;
     public hintsText: HTMLElement;
     public lastHintShown: number;
@@ -54,7 +54,9 @@ export class LoginState extends GameState {
                     T.dialogs.offlineMode.desc,
                     ["retry", "playOffline:bad"]
                 );
-                signals.retry.add(() => { setTimeout(() => this.tryLogin(), 2000) }, this);
+                signals.retry.add(() => {
+                    setTimeout(() => this.tryLogin(), 2000);
+                }, this);
                 signals.playOffline.add(this.finishLoading, this);
             } else {
                 this.finishLoading();

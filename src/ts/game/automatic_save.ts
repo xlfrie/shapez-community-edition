@@ -12,13 +12,12 @@ export const enumSavePriority = {
 const logger = createLogger("autosave");
 
 export class AutomaticSave {
-
     //// Store the current maximum save importance
     public saveImportance = enumSavePriority.regular;
 
     public lastSaveAttempt = -1000;
 
-    constructor(public root: GameRoot) { }
+    constructor(public root: GameRoot) {}
 
     setSaveImportance(importance) {
         this.saveImportance = Math.max(this.saveImportance, importance);

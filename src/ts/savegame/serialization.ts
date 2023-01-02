@@ -111,12 +111,12 @@ export class BasicSerializableObject {
      * in non-dev builds
      */
 
-    constructor(...args) { }
+    constructor(...args) {}
 
     /* dev:end */
 
     static getId(): string {
-        return ""
+        return "";
         abstract;
     }
 

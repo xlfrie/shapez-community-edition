@@ -62,10 +62,9 @@ function makeNewRng(seed: number | string) {
 }
 
 export class RandomNumberGenerator {
-    public internalRng: () => number
+    public internalRng: () => number;
     constructor(seed: number | string) {
         this.internalRng = makeNewRng(seed || Math.random());
-
     }
 
     /** Re-seeds the generator */

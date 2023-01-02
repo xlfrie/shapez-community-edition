@@ -23,7 +23,7 @@ export const enumItemProcessorTypes = {
     reader: "reader",
     goal: "goal",
 } as const;
-export type enumItemProcessorTypes = keyof typeof enumItemProcessorTypes
+export type enumItemProcessorTypes = keyof typeof enumItemProcessorTypes;
 
 /**
  @enum
@@ -51,7 +51,6 @@ export class ItemProcessorComponent extends Component {
     public inputCount: number;
     public nextOutputSlot: number;
 
-
     static getId() {
         return "ItemProcessor";
     }
@@ -69,7 +68,7 @@ export class ItemProcessorComponent extends Component {
     public type: enumItemProcessorTypes;
 
     //// Type of processing requirement
-    public processingRequirement: enumItemProcessorRequirements
+    public processingRequirement: enumItemProcessorRequirements;
 
     /** Our current inputs */
     public inputSlots: Map<number, BaseItem> = new Map();
@@ -85,9 +84,9 @@ export class ItemProcessorComponent extends Component {
         processingRequirement = null,
         inputsPerCharge = 1,
     }: {
-        processorType?: enumItemProcessorTypes,
-        processingRequirement?: enumItemProcessorRequirements,
-        inputsPerCharge?: number
+        processorType?: enumItemProcessorTypes;
+        processingRequirement?: enumItemProcessorRequirements;
+        inputsPerCharge?: number;
     }) {
         super();
 

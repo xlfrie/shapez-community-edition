@@ -41,19 +41,23 @@ export class PuzzlePlayGameMode extends PuzzleGameMode {
         return enumGameModeIds.puzzlePlay;
     }
 
-    public hiddenBuildings: Array<typeof MetaBuilding>
+    public hiddenBuildings: Array<typeof MetaBuilding>;
 
-    public puzzle: PuzzleFullData
+    public puzzle: PuzzleFullData;
 
     public nextPuzzles: Array<number>;
 
-    constructor(root: GameRoot, { puzzle, nextPuzzles }: {
-        puzzle: PuzzleFullData,
-        nextPuzzles?: number[]
-    }) {
+    constructor(
+        root: GameRoot,
+        {
+            puzzle,
+            nextPuzzles,
+        }: {
+            puzzle: PuzzleFullData;
+            nextPuzzles?: number[];
+        }
+    ) {
         super(root);
-
-
 
         let excludedBuildings: Array<typeof MetaBuilding> = [
             MetaConstantProducerBuilding,

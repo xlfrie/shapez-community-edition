@@ -13,5 +13,5 @@ export class HUDBetaOverlay extends BaseHUDPart {
         );
     }
 
-    initialize() { }
+    initialize() {}
 }

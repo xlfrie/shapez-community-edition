@@ -443,9 +443,9 @@ export function formatItemsPerSecond(
         (speed === 1.0
             ? T.ingame.buildingPlacement.infoTexts.oneItemPerSecond
             : T.ingame.buildingPlacement.infoTexts.itemsPerSecond.replace(
-                "<x>",
-                round2Digits(speed).toString().replace(".", separator)
-            )) + (double ? "  " + T.ingame.buildingPlacement.infoTexts.itemsPerSecondDouble : "")
+                  "<x>",
+                  round2Digits(speed).toString().replace(".", separator)
+              )) + (double ? "  " + T.ingame.buildingPlacement.infoTexts.itemsPerSecondDouble : "")
     );
 }
 
@@ -496,11 +496,11 @@ export function generateMatrixRotations(originalMatrix: Array<number>): Record<n
 }
 
 export type DirectionalObject = {
-    top: any,
-    right: any,
-    bottom: any,
-    left: any
-}
+    top: any;
+    right: any;
+    bottom: any;
+    left: any;
+};
 
 /** Rotates a directional object */
 export function rotateDirectionalObject(obj: DirectionalObject, rotation): DirectionalObject {

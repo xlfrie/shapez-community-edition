@@ -12,7 +12,7 @@ export const defaultBuildingVariant = "default";
 export class MetaBuilding {
     /** @param id Building id */
 
-    constructor(public id: string) { }
+    constructor(public id: string) {}
 
     /**
      * Should return all possible variants of this building, no matter
@@ -107,9 +107,9 @@ export class MetaBuilding {
     getPreviewSprite(rotationVariant = 0, variant = defaultBuildingVariant): AtlasSprite {
         return Loader.getSprite(
             "sprites/buildings/" +
-            this.id +
-            (variant === defaultBuildingVariant ? "" : "-" + variant) +
-            ".png"
+                this.id +
+                (variant === defaultBuildingVariant ? "" : "-" + variant) +
+                ".png"
         );
     }
 
@@ -117,9 +117,9 @@ export class MetaBuilding {
     getBlueprintSprite(rotationVariant = 0, variant = defaultBuildingVariant): AtlasSprite {
         return Loader.getSprite(
             "sprites/blueprints/" +
-            this.id +
-            (variant === defaultBuildingVariant ? "" : "-" + variant) +
-            ".png"
+                this.id +
+                (variant === defaultBuildingVariant ? "" : "-" + variant) +
+                ".png"
         );
     }
 
@@ -150,23 +150,21 @@ export class MetaBuilding {
      * @param param0.originalRotation Original Rotation
      * @param param0.rotationVariant Rotation variant
      */
-    createEntity(
-        {
-            root,
-            origin,
-            rotation,
-            originalRotation,
-            rotationVariant,
-            variant,
-        }: {
-            root: GameRoot;
-            origin: Vector;
-            rotation?: number;
-            originalRotation: number;
-            rotationVariant: number;
-            variant: string;
-        }
-    ) {
+    createEntity({
+        root,
+        origin,
+        rotation,
+        originalRotation,
+        rotationVariant,
+        variant,
+    }: {
+        root: GameRoot;
+        origin: Vector;
+        rotation?: number;
+        originalRotation: number;
+        rotationVariant: number;
+        variant: string;
+    }) {
         const entity = new Entity(root);
         entity.layer = this.getLayer();
         entity.addComponent(
@@ -187,9 +185,9 @@ export class MetaBuilding {
     getSprite(rotationVariant: number, variant: string): AtlasSprite {
         return Loader.getSprite(
             "sprites/buildings/" +
-            this.id +
-            (variant === defaultBuildingVariant ? "" : "-" + variant) +
-            ".png"
+                this.id +
+                (variant === defaultBuildingVariant ? "" : "-" + variant) +
+                ".png"
         );
     }
 
@@ -227,7 +225,7 @@ export class MetaBuilding {
     }
 
     /** Should update the entity to match the given variants */
-    updateVariants(entity: Entity, rotationVariant: number, variant: string) { }
+    updateVariants(entity: Entity, rotationVariant: number, variant: string) {}
 
     // PRIVATE INTERFACE
 

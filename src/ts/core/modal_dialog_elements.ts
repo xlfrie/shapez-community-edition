@@ -29,8 +29,7 @@ const kbCancel = 27;
 
 const logger = createLogger("dialogs");
 
-
-export type DialogButtonStr<T extends string> = `${T}:${string}` | `${T}`
+export type DialogButtonStr<T extends string> = `${T}:${string}` | `${T}`;
 
 /** Basic text based dialog */
 export class Dialog<T extends string> {
@@ -55,7 +54,6 @@ export class Dialog<T extends string> {
     public enterHandler = null;
     public escapeHandler = null;
 
-
     /**
      * Constructs a new dialog with the given options
      * @param param0.title Title of the dialog
@@ -71,13 +69,20 @@ export class Dialog<T extends string> {
      * @param param0.closeButton Whether this dialog has a close button
      */
 
-    constructor({ app, title, contentHTML, buttons, type = "info", closeButton = false }: {
-        app: Application,
-        title: string,
-        contentHTML: string,
-        buttons: DialogButtonStr<T>[],
-        type: "info" | "warn" | "loading" | "warning",
-        closeButton?: boolean
+    constructor({
+        app,
+        title,
+        contentHTML,
+        buttons,
+        type = "info",
+        closeButton = false,
+    }: {
+        app: Application;
+        title: string;
+        contentHTML: string;
+        buttons: DialogButtonStr<T>[];
+        type: "info" | "warn" | "loading" | "warning";
+        closeButton?: boolean;
     }) {
         this.app = app;
         this.title = title;
@@ -283,7 +288,6 @@ export class Dialog<T extends string> {
 
 /** Dialog which simply shows a loading spinner */
 export class DialogLoading extends Dialog<never> {
-
     constructor(app: Application, public text: string = "") {
         super({
             app,
@@ -324,28 +328,32 @@ export class DialogLoading extends Dialog<never> {
 
 export class DialogOptionChooser extends Dialog<"optionSelected"> {
     public options: {
-        options: { value: string, text: string, desc?: string, iconPrefix?: string }[],
-        active: string
+        options: { value: string; text: string; desc?: string; iconPrefix?: string }[];
+        active: string;
     };
     public initialOption: string;
 
-    constructor({ app, title, options }: {
-        app: Application,
-        title: string,
+    constructor({
+        app,
+        title,
+        options,
+    }: {
+        app: Application;
+        title: string;
         options: {
-            options: { value: string, text: string, desc?: string, iconPrefix?: string }[],
-            active: string
-        }
+            options: { value: string; text: string; desc?: string; iconPrefix?: string }[];
+            active: string;
+        };
     }) {
-
         let html = "<div class='optionParent'>";
 
         options.options.forEach(({ value, text, desc = null, iconPrefix = null }) => {
             const descHtml = desc ? `<span class="desc">${desc}</span>` : "";
             let iconHtml = iconPrefix ? `<span class="icon icon-${iconPrefix}-${value}"></span>` : "";
             html += `
-                <div class='option ${value === options.active ? "active" : ""} ${iconPrefix ? "hasIcon" : ""
-                }' data-optionvalue='${value}'>
+                <div class='option ${value === options.active ? "active" : ""} ${
+                iconPrefix ? "hasIcon" : ""
+            }' data-optionvalue='${value}'>
                     ${iconHtml}
                     <span class='title'>${text}</span>
                     ${descHtml}
@@ -410,10 +418,10 @@ export class DialogOptionChooser extends Dialog<"optionSelected"> {
 }
 
 export class DialogWithForm<T extends string = "cancel" | "ok"> extends Dialog<T> {
-    public confirmButtonId: string// = confirmButtonId;
-    public formElements: FormElement[];// = formElements;
+    public confirmButtonId: string; // = confirmButtonId;
+    public formElements: FormElement[]; // = formElements;
 
-    public enterHandler: string //= confirmButtonId;
+    public enterHandler: string; //= confirmButtonId;
     valueChosen: Signal;
 
     constructor({
@@ -428,13 +436,13 @@ export class DialogWithForm<T extends string = "cancel" | "ok"> extends Dialog<T
         confirmButtonId = "ok",
         closeButton = true,
     }: {
-        app: Application,
-        title: string,
-        desc: string,
-        formElements: FormElement[],
-        buttons?: DialogButtonStr<T>[],
-        confirmButtonId?: T,
-        closeButton?: boolean
+        app: Application;
+        title: string;
+        desc: string;
+        formElements: FormElement[];
+        buttons?: DialogButtonStr<T>[];
+        confirmButtonId?: T;
+        closeButton?: boolean;
     }) {
         let html = "";
         html += desc + "<br>";

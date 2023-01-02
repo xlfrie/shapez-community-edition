@@ -26,22 +26,22 @@ export class BeltSystem extends GameSystem {
     public beltSprites: {
         [idx in enumDirection]: AtlasSprite;
     } = {
-            [enumDirection.top]: Loader.getSprite("sprites/belt/built/forward_0.png"),
-            [enumDirection.left]: Loader.getSprite("sprites/belt/built/left_0.png"),
-            [enumDirection.right]: Loader.getSprite("sprites/belt/built/right_0.png"),
-            // @Bagel03 idk
-            [enumDirection.bottom]: null
-        };
+        [enumDirection.top]: Loader.getSprite("sprites/belt/built/forward_0.png"),
+        [enumDirection.left]: Loader.getSprite("sprites/belt/built/left_0.png"),
+        [enumDirection.right]: Loader.getSprite("sprites/belt/built/right_0.png"),
+        // @Bagel03 idk
+        [enumDirection.bottom]: null,
+    };
 
     public beltAnimations: {
         [idx in enumDirection]: Array<AtlasSprite>;
     } = {
-            [enumDirection.top]: [],
-            [enumDirection.left]: [],
-            [enumDirection.right]: [],
-            // @Bagel03 idk again
-            [enumDirection.bottom]: []
-        };
+        [enumDirection.top]: [],
+        [enumDirection.left]: [],
+        [enumDirection.right]: [],
+        // @Bagel03 idk again
+        [enumDirection.bottom]: [],
+    };
 
     public beltPaths: Array<BeltPath> = [];
 
@@ -463,7 +463,7 @@ export class BeltSystem extends GameSystem {
         // 126 / 42 is the exact animation speed of the png animation
         const animationIndex = Math.floor(
             ((this.root.time.realtimeNow() * speedMultiplier * BELT_ANIM_COUNT * 126) / 42) *
-            globalConfig.itemSpacingOnBelts
+                globalConfig.itemSpacingOnBelts
         );
         const contents = chunk.containedEntitiesByLayer.regular;
 

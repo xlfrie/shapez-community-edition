@@ -178,7 +178,7 @@ export class SavegameManager extends ReadWriteProxy {
             promiseChain = promiseChain
                 .then(() => game.deleteAsync())
                 .then(
-                    () => { },
+                    () => {},
                     err => {
                         logger.error(this, "Failed to remove old savegame:", toRemove, ":", err);
                     }

@@ -19,9 +19,9 @@ export class MapView extends BaseMap {
     public cachedBackgroundCanvases: {
         [idx: string]: HTMLCanvasElement | null;
     } = {
-            regular: null,
-            placing: null,
-        };
+        regular: null,
+        placing: null,
+    };
 
     public cachedBackgroundContext: CanvasRenderingContext2D = null;
 
@@ -125,7 +125,10 @@ export class MapView extends BaseMap {
     }
 
     /** Calls a given method on all given chunks */
-    drawVisibleChunks(parameters: DrawParameters, method: (this: MapChunkAggregate, params: DrawParameters) => void) {
+    drawVisibleChunks(
+        parameters: DrawParameters,
+        method: (this: MapChunkAggregate, params: DrawParameters) => void
+    ) {
         const cullRange = parameters.visibleRect.allScaled(1 / globalConfig.tileSize);
         const top = cullRange.top();
         const right = cullRange.right();
@@ -154,7 +157,10 @@ export class MapView extends BaseMap {
     }
 
     /** Calls a given method on all given chunks */
-    drawVisibleAggregates(parameters: DrawParameters, method: (this: MapChunkAggregate, params: DrawParameters) => void) {
+    drawVisibleAggregates(
+        parameters: DrawParameters,
+        method: (this: MapChunkAggregate, params: DrawParameters) => void
+    ) {
         const cullRange = parameters.visibleRect.allScaled(1 / globalConfig.tileSize);
         const top = cullRange.top();
         const right = cullRange.right();

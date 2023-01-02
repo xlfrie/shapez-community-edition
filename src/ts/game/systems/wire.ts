@@ -69,7 +69,7 @@ export class WireNetwork {
     /** Unique network identifier */
     public uid: number = ++networkUidCounter;
 
-    constructor() { }
+    constructor() {}
 
     /** Returns whether this network currently has a value */
     hasValue(): boolean {
@@ -220,11 +220,11 @@ export class WireSystem extends GameSystem {
                 assert(
                     !wireComp.linkedNetwork || wireComp.linkedNetwork === currentNetwork,
                     "Mismatching wire network on wire entity " +
-                    (wireComp.linkedNetwork ? wireComp.linkedNetwork.uid : "<empty>") +
-                    " vs " +
-                    currentNetwork.uid +
-                    " @ " +
-                    staticComp.origin.toString()
+                        (wireComp.linkedNetwork ? wireComp.linkedNetwork.uid : "<empty>") +
+                        " vs " +
+                        currentNetwork.uid +
+                        " @ " +
+                        staticComp.origin.toString()
                 );
 
                 if (!wireComp.linkedNetwork) {
@@ -263,9 +263,9 @@ export class WireSystem extends GameSystem {
                 assert(
                     !slot.linkedNetwork || slot.linkedNetwork === currentNetwork,
                     "Mismatching wire network on pin slot entity " +
-                    (slot.linkedNetwork ? slot.linkedNetwork.uid : "<empty>") +
-                    " vs " +
-                    currentNetwork.uid
+                        (slot.linkedNetwork ? slot.linkedNetwork.uid : "<empty>") +
+                        " vs " +
+                        currentNetwork.uid
                 );
                 if (!slot.linkedNetwork) {
                     // This one is new

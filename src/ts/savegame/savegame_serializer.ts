@@ -20,7 +20,7 @@ const logger = createLogger("savegame_serializer");
 export class SavegameSerializer {
     public internal = new SerializerInternal();
 
-    constructor() { }
+    constructor() {}
 
     /**
      * Serializes the game root into a dump

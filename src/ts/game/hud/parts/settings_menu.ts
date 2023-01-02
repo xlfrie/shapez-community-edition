@@ -118,7 +118,7 @@ export class HUDSettingsMenu extends BaseHUDPart {
 
             buildingsPlacedElement.innerText = formatBigNumberFull(
                 this.root.entityMgr.getAllWithComponent(StaticMapEntityComponent).length -
-                this.root.entityMgr.getAllWithComponent(BeltComponent).length
+                    this.root.entityMgr.getAllWithComponent(BeltComponent).length
             );
 
             beltsPlacedElement.innerText = formatBigNumberFull(

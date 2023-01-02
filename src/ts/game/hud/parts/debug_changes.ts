@@ -13,7 +13,7 @@ export type DebugChange = {
 export class HUDChangesDebugger extends BaseHUDPart {
     public changes: DebugChange[];
 
-    createElements(parent) { }
+    createElements(parent) {}
 
     initialize() {
         this.changes = [];

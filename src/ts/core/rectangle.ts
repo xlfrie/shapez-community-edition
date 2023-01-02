@@ -3,7 +3,7 @@ import { epsilonCompare, round2Digits } from "./utils";
 import { Vector } from "./vector";
 
 export class Rectangle {
-    constructor(public x: number = 0, public y: number = 0, public w: number = 0, public h: number = 0) { }
+    constructor(public x: number = 0, public y: number = 0, public w: number = 0, public h: number = 0) {}
 
     /** Creates a rectangle from top right bottom and left offsets */
     static fromTRBL(top: number, right: number, bottom: number, left: number) {

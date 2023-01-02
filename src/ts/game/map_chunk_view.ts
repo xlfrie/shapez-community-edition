@@ -229,23 +229,21 @@ export class MapChunkView extends MapChunk {
     }
 
     /** @param param0.overrideColor Optionally override the color to be rendered */
-    static drawSingleWiresOverviewTile(
-        {
-            context,
-            x,
-            y,
-            entity,
-            tileSizePixels,
-            overrideColor = null,
-        }: {
-            context: CanvasRenderingContext2D;
-            x: number;
-            y: number;
-            entity: Entity;
-            tileSizePixels: number;
-            overrideColor?: string;
-        }
-    ) {
+    static drawSingleWiresOverviewTile({
+        context,
+        x,
+        y,
+        entity,
+        tileSizePixels,
+        overrideColor = null,
+    }: {
+        context: CanvasRenderingContext2D;
+        x: number;
+        y: number;
+        entity: Entity;
+        tileSizePixels: number;
+        overrideColor?: string;
+    }) {
         const staticComp = entity.components.StaticMapEntity;
         const data = getBuildingDataFromCode(staticComp.code);
         const metaBuilding = data.metaInstance;

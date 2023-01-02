@@ -44,27 +44,25 @@ export function initDrawUtils() {
     };
 }
 
-export function drawRotatedSprite(
-    {
-        parameters,
-        sprite,
-        x,
-        y,
-        angle,
-        size,
-        offsetX = 0,
-        offsetY = 0,
-    }: {
-        parameters: DrawParameters;
-        sprite: AtlasSprite;
-        x: number;
-        y: number;
-        angle: number;
-        size: number;
-        offsetX?: number;
-        offsetY?: number;
-    }
-) {
+export function drawRotatedSprite({
+    parameters,
+    sprite,
+    x,
+    y,
+    angle,
+    size,
+    offsetX = 0,
+    offsetY = 0,
+}: {
+    parameters: DrawParameters;
+    sprite: AtlasSprite;
+    x: number;
+    y: number;
+    angle: number;
+    size: number;
+    offsetX?: number;
+    offsetY?: number;
+}) {
     if (angle === 0) {
         sprite.drawCachedCentered(parameters, x + offsetX, y + offsetY, size);
         return;

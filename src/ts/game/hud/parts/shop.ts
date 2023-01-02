@@ -16,7 +16,7 @@ export type handle = {
     elemDescription: HTMLDivElement;
     elemRequirements: HTMLDivElement;
     buyButton: HTMLButtonElement;
-}
+};
 export class HUDShop extends BaseHUDPart {
     public background: HTMLDivElement;
     public dialogInner: HTMLDivElement;

@@ -25,20 +25,18 @@ import { TrailerMaker } from "./trailer_maker";
 export class GameHUD {
     public parts: Record<string, BaseHUDPart> & any;
     public signals: {
-        buildingSelectedForPlacement: Signal<[MetaBuilding | null]>,
-        selectedPlacementBuildingChanged: Signal<[MetaBuilding | null]>,
-        shapePinRequested: Signal<[ShapeDefinition]>,
-        shapeUnpinRequested: Signal<[string]>,
-        notification: Signal<[string, enumNotificationType]>,
-        buildingsSelectedForCopy: Signal<[Array<number>]>,
-        pasteBlueprintRequested: Signal<[]>,
-        viewShapeDetailsRequested: Signal<[ShapeDefinition]>,
-        unlockNotificationFinished: Signal<[]>,
+        buildingSelectedForPlacement: Signal<[MetaBuilding | null]>;
+        selectedPlacementBuildingChanged: Signal<[MetaBuilding | null]>;
+        shapePinRequested: Signal<[ShapeDefinition]>;
+        shapeUnpinRequested: Signal<[string]>;
+        notification: Signal<[string, enumNotificationType]>;
+        buildingsSelectedForCopy: Signal<[Array<number>]>;
+        pasteBlueprintRequested: Signal<[]>;
+        viewShapeDetailsRequested: Signal<[ShapeDefinition]>;
+        unlockNotificationFinished: Signal<[]>;
     };
     public trailerMaker: TrailerMaker;
-    ;
-
-    constructor(public root: GameRoot) { }
+    constructor(public root: GameRoot) {}
 
     /** Initializes the hud parts */
     initialize() {

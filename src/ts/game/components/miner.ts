@@ -34,7 +34,7 @@ export class MinerComponent extends Component {
     constructor({ chainable = false }) {
         super();
 
-        this.chainable = chainable
+        this.chainable = chainable;
 
         this.clear();
     }

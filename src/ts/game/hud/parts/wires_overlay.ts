@@ -16,7 +16,7 @@ export class HUDWiresOverlay extends BaseHUDPart {
     public tilePatternCanvas: HTMLCanvasElement;
     public cachedPatternBackground: CanvasPattern;
 
-    createElements(parent) { }
+    createElements(parent) {}
 
     initialize() {
         // Probably not the best location, but the one which makes most sense

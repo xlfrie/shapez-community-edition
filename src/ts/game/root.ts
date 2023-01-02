@@ -165,7 +165,7 @@ export class GameRoot {
 
     public rngs: {
         [idx: string]: {
-            [idx: string]: RandomNumberGenerator
+            [idx: string]: RandomNumberGenerator;
         };
     } = {};
 
@@ -175,7 +175,7 @@ export class GameRoot {
     };
     /** Constructs a new game root */
 
-    constructor(public app: Application) { }
+    constructor(public app: Application) {}
 
     /** Destructs the game root */
     destruct() {

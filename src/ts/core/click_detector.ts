@@ -169,7 +169,6 @@ export class ClickDetector {
     //     throw new Error("Method not implemented.");
     // }
 
-
     handlerTouchStart(event: any) {
         throw new Error("Method not implemented.");
     }

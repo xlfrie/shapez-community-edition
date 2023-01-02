@@ -260,7 +260,7 @@ export class BeltUnderlaysSystem extends GameSystem {
                 // SYNC with systems/belt.js:drawSingleEntity!
                 const animationIndex = Math.floor(
                     ((this.root.time.realtimeNow() * speedMultiplier * BELT_ANIM_COUNT * 126) / 42) *
-                    globalConfig.itemSpacingOnBelts
+                        globalConfig.itemSpacingOnBelts
                 );
                 parameters.context.translate(x, y);
                 parameters.context.rotate(angleRadians);

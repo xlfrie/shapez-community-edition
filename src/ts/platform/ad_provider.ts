@@ -3,7 +3,7 @@ import type { Application } from "../application";
 /* typehints:end */
 
 export class AdProviderInterface {
-    constructor(public app: Application) { }
+    constructor(public app: Application) {}
 
     /** Initializes the storage */
     initialize(): Promise<void> {
@@ -34,5 +34,5 @@ export class AdProviderInterface {
         return Promise.resolve();
     }
 
-    setPlayStatus(playing) { }
+    setPlayStatus(playing) {}
 }

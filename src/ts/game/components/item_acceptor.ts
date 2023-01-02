@@ -23,10 +23,10 @@ export type ItemAcceptorSlotConfig = {
 export class ItemAcceptorComponent extends Component {
     public slots: ItemAcceptorSlot[];
     public itemConsumptionAnimations: {
-        item: BaseItem,
-        slotIndex: number,
-        animProgress: number,
-        direction: enumDirection
+        item: BaseItem;
+        slotIndex: number;
+        animProgress: number;
+        direction: enumDirection;
     }[];
 
     static getId() {

@@ -21,7 +21,7 @@ export class HUDPuzzleNextPuzzle extends BaseHUDPart {
         this.trackClicks(this.button, this.nextPuzzle);
     }
 
-    initialize() { }
+    initialize() {}
 
     nextPuzzle() {
         const gameMode = this.root.gameMode as PuzzlePlayGameMode;

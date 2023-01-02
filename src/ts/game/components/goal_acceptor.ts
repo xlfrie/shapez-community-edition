@@ -5,7 +5,7 @@ import { typeItemSingleton } from "../item_resolver";
 
 export class GoalAcceptorComponent extends Component {
     public currentDeliveredItems: number;
-    public lastDelivery: { item: BaseItem; time: number; };
+    public lastDelivery: { item: BaseItem; time: number };
     public displayPercentage: number;
     static getId() {
         return "GoalAcceptor";
@@ -21,10 +21,7 @@ export class GoalAcceptorComponent extends Component {
 
     public item: BaseItem;
 
-    constructor({ item = null, rate = null }: {
-        item?: BaseItem;
-        rate?: number
-    }) {
+    constructor({ item = null, rate = null }: { item?: BaseItem; rate?: number }) {
         super();
 
         this.item = item;

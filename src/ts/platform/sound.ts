@@ -36,7 +36,7 @@ export const MUSIC = {
     theme: G_IS_STANDALONE ? "theme-full" : "theme-short",
 
     menu: null as string,
-    puzzle: null as string
+    puzzle: null as string,
 };
 
 if (G_IS_STANDALONE) {
@@ -48,7 +48,7 @@ if (G_IS_STANDALONE) {
 }
 
 export class SoundInstanceInterface {
-    constructor(public key: string, public url: string) { }
+    constructor(public key: string, public url: string) {}
 
     load(): Promise<void> {
         abstract;
@@ -59,11 +59,11 @@ export class SoundInstanceInterface {
         abstract;
     }
 
-    deinitialize() { }
+    deinitialize() {}
 }
 
 export class MusicInstanceInterface {
-    constructor(public key: string, public url: string) { }
+    constructor(public key: string, public url: string) {}
 
     stop() {
         abstract;
@@ -87,7 +87,7 @@ export class MusicInstanceInterface {
         return false;
     }
 
-    deinitialize() { }
+    deinitialize() {}
 }
 
 export class SoundInterface {
@@ -106,7 +106,11 @@ export class SoundInterface {
     public musicVolume = 1.0;
     public soundVolume = 1.0;
 
-    constructor(public app: Application, public soundClass: Class<SoundInstanceInterface>, public musicClass: Class<MusicInstanceInterface>) { }
+    constructor(
+        public app: Application,
+        public soundClass: Class<SoundInstanceInterface>,
+        public musicClass: Class<MusicInstanceInterface>
+    ) {}
 
     /** Initializes the sound */
     initialize(): Promise<any> {

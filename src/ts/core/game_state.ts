@@ -25,7 +25,7 @@ export class GameState {
     public clickDetectors: Array<ClickDetector> = [];
 
     //// Every state captures keyboard events by default
-    public inputReciever: InputReceiver
+    public inputReciever: InputReceiver;
 
     //// A channel we can use to perform async ops
     public asyncChannel = new RequestChannel();
@@ -115,41 +115,41 @@ export class GameState {
      * Callback when entering the state, to be overriddemn
      * @param payload Arbitrary data passed from the state which we are transferring from
      */
-    onEnter(payload: any) { }
+    onEnter(payload: any) {}
 
     /** Callback when leaving the state */
-    onLeave() { }
+    onLeave() {}
 
     /** Callback when the app got paused (on android, this means in background) */
-    onAppPause() { }
+    onAppPause() {}
 
     /** Callback when the app got resumed (on android, this means in foreground again) */
-    onAppResume() { }
+    onAppResume() {}
 
     /**
      * Render callback
      * @param dt Delta time in ms since last render
      */
-    onRender(dt: number) { }
+    onRender(dt: number) {}
 
     /**
      * Background tick callback, called while the game is inactiev
      * @param dt Delta time in ms since last tick
      */
-    onBackgroundTick(dt: number) { }
+    onBackgroundTick(dt: number) {}
 
     /**
      * Called when the screen resized
      * @param w window/screen width
      * @param h window/screen height
      */
-    onResized(w: number, h: number) { }
+    onResized(w: number, h: number) {}
 
     /**
      * Internal backbutton handler, called when the hardware back button is pressed or
      * the escape key is pressed
      */
-    onBackButton() { }
+    onBackButton() {}
 
     //// INTERFACE ////
 

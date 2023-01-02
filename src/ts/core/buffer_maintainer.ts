@@ -115,32 +115,30 @@ export class BufferMaintainer {
         }
     }
 
-    getForKey(
-        {
-            key,
-            subKey,
-            w,
-            h,
-            dpi,
-            redrawMethod,
-            additionalParams,
-        }: {
-            key: string;
-            subKey: string;
-            w: number;
-            h: number;
-            dpi: number;
-            redrawMethod: (
-                canvas: HTMLCanvasElement,
-                context: CanvasRenderingContext2D,
-                w: number,
-                h: number,
-                dpi: number,
-                additionalParams?: any
-            ) => void;
-            additionalParams?: object;
-        }
-    ): HTMLCanvasElement {
+    getForKey({
+        key,
+        subKey,
+        w,
+        h,
+        dpi,
+        redrawMethod,
+        additionalParams,
+    }: {
+        key: string;
+        subKey: string;
+        w: number;
+        h: number;
+        dpi: number;
+        redrawMethod: (
+            canvas: HTMLCanvasElement,
+            context: CanvasRenderingContext2D,
+            w: number,
+            h: number,
+            dpi: number,
+            additionalParams?: any
+        ) => void;
+        additionalParams?: object;
+    }): HTMLCanvasElement {
         // First, create parent key
         let parent = this.cache.get(key);
         if (!parent) {

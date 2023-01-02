@@ -9,7 +9,7 @@ export class Factory<T> {
     public entryIds: string[] = [];
     public idToEntry: Record<string, Class<T>> = {};
 
-    constructor(public id: string) { }
+    constructor(public id: string) {}
 
     getId() {
         return this.id;

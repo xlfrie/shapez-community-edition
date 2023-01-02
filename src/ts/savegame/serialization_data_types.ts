@@ -51,7 +51,7 @@ export class BaseDataType {
      * Verifies a given serialized value
      * @returns String error code or null on success
      */
-    verifySerializedValue(value: any): string | void { }
+    verifySerializedValue(value: any): string | void {}
 
     /**
      * Deserializes a serialized value into the target object under the given key
@@ -449,7 +449,7 @@ export class TypePositiveNumber extends BaseDataType {
 }
 
 export class TypeEnum extends BaseDataType {
-    public availableValues: any[]
+    public availableValues: any[];
     constructor(enumeration = {}) {
         super();
         this.availableValues = Object.values(enumeration);
@@ -576,7 +576,10 @@ export class TypeEntityWeakref extends BaseDataType {
 }
 
 export class TypeClass extends BaseDataType {
-    constructor(public registry: Factory<any>, public customResolver: (root: GameRoot, val: object) => object = null) {
+    constructor(
+        public registry: Factory<any>,
+        public customResolver: (root: GameRoot, val: object) => object = null
+    ) {
         super();
     }
 
@@ -1053,7 +1056,6 @@ export class TypePair extends BaseDataType {
 }
 
 export class TypeNullable extends BaseDataType {
-
     constructor(public wrapped: BaseDataType) {
         super();
     }

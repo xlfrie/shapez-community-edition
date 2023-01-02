@@ -32,7 +32,7 @@ import { BaseItem } from "../game/base_item";
 import { MODS_ADDITIONAL_ITEMS } from "../game/item_resolver";
 
 export type constructable = {
-    new(...args: any);
+    new (...args: any);
     prototype: any;
 };
 
@@ -40,12 +40,16 @@ export type bindThis<T, F extends (...args: any) => any> = (this: T, ...args: Pa
 
 export type beforePrams<F extends (...args: any) => any, P> = (...args: [P, Parameters<F>]) => ReturnType<F>;
 
-export type afterPrams<F extends (...args: any) => any, P> = (...args: [...Parameters<F>, P]) => ReturnType<F>;
+export type afterPrams<F extends (...args: any) => any, P> = (
+    ...args: [...Parameters<F>, P]
+) => ReturnType<F>;
 
-export type extendsPrams<F extends (...args: any) => any> = (...args: [...Parameters<F>, ...any]) => ReturnType<F>;
+export type extendsPrams<F extends (...args: any) => any> = (
+    ...args: [...Parameters<F>, ...any]
+) => ReturnType<F>;
 
 export class ModInterface {
-    constructor(public modLoader: ModLoader) { }
+    constructor(public modLoader: ModLoader) {}
 
     registerCss(cssString) {
         // Preprocess css
@@ -135,19 +139,17 @@ export class ModInterface {
         }
     }
 
-    registerSubShapeType(
-        {
-            id,
-            shortCode,
-            weightComputation,
-            draw,
-        }: {
-            id: string;
-            shortCode: string;
-            weightComputation: (distanceToOriginInChunks: number) => number;
-            draw: (options: import("../game/shape_definition").SubShapeDrawOptions) => void;
-        }
-    ) {
+    registerSubShapeType({
+        id,
+        shortCode,
+        weightComputation,
+        draw,
+    }: {
+        id: string;
+        shortCode: string;
+        weightComputation: (distanceToOriginInChunks: number) => number;
+        draw: (options: import("../game/shape_definition").SubShapeDrawOptions) => void;
+    }) {
         if (shortCode.length !== 1) {
             throw new Error("Bad short code: " + shortCode);
         }
@@ -180,19 +182,17 @@ export class ModInterface {
         gComponentRegistry.register(component);
     }
 
-    registerGameSystem(
-        {
-            id,
-            systemClass,
-            before,
-            drawHooks,
-        }: {
-            id: string;
-            systemClass: new (any) => GameSystem;
-            before?: string;
-            drawHooks?: string[];
-        }
-    ) {
+    registerGameSystem({
+        id,
+        systemClass,
+        before,
+        drawHooks,
+    }: {
+        id: string;
+        systemClass: new (any) => GameSystem;
+        before?: string;
+        drawHooks?: string[];
+    }) {
         const key = before || "key";
         const payload = { id, systemClass };
 
@@ -213,15 +213,13 @@ export class ModInterface {
         MOD_CHUNK_DRAW_HOOKS[hookId].push(systemId);
     }
 
-    registerNewBuilding(
-        {
-            metaClass,
-            buildingIconBase64,
-        }: {
-            metaClass: typeof ModMetaBuilding;
-            buildingIconBase64?: string;
-        }
-    ) {
+    registerNewBuilding({
+        metaClass,
+        buildingIconBase64,
+    }: {
+        metaClass: typeof ModMetaBuilding;
+        buildingIconBase64?: string;
+    }) {
         const id = new (metaClass as new (...args) => ModMetaBuilding)().getId();
         if (gMetaBuildingRegistry.hasId(id)) {
             throw new Error("Tried to register building twice: " + id);
@@ -275,29 +273,27 @@ export class ModInterface {
         }
     }
 
-    registerIngameKeybinding(
-        {
-            id,
-            keyCode,
-            translation,
-            modifiers = {},
-            repeated = false,
-            builtin = false,
-            handler = null,
-        }: {
-            id: string;
-            keyCode: number;
-            translation: string;
-            repeated?: boolean;
-            handler?: (root: GameRoot) => void;
-            modifiers?: {
-                shift?: boolean;
-                alt?: boolean;
-                ctrl?: boolean;
-            };
-            builtin?: boolean;
-        }
-    ) {
+    registerIngameKeybinding({
+        id,
+        keyCode,
+        translation,
+        modifiers = {},
+        repeated = false,
+        builtin = false,
+        handler = null,
+    }: {
+        id: string;
+        keyCode: number;
+        translation: string;
+        repeated?: boolean;
+        handler?: (root: GameRoot) => void;
+        modifiers?: {
+            shift?: boolean;
+            alt?: boolean;
+            ctrl?: boolean;
+        };
+        builtin?: boolean;
+    }) {
         if (!KEYMAPPINGS.mods) {
             KEYMAPPINGS.mods = {};
         }
@@ -407,7 +403,12 @@ export class ModInterface {
      * @template M the name of the method we are overriding
      * @template O the method that will override the old one
      */
-    replaceMethod<C extends constructable, M extends keyof P, P extends C["prototype"], O extends extendsPrams<P[M]>>(classHandle: C, methodName: M, override: bindThis<beforePrams<O, P[M]>, InstanceType<C>>) {
+    replaceMethod<
+        C extends constructable,
+        M extends keyof P,
+        P extends C["prototype"],
+        O extends extendsPrams<P[M]>
+    >(classHandle: C, methodName: M, override: bindThis<beforePrams<O, P[M]>, InstanceType<C>>) {
         const oldMethod = classHandle.prototype[methodName];
         classHandle.prototype[methodName] = function () {
             //@ts-ignore This is true I just cant tell it that arguments will be Arguments<O>
@@ -422,7 +423,12 @@ export class ModInterface {
      * @template M the name of the method we are overriding
      * @template O the method that will run before the old one
      */
-    runBeforeMethod<C extends constructable, M extends keyof P, P extends C["prototype"], O extends extendsPrams<P[M]>>(classHandle: C, methodName: M, executeBefore: bindThis<O, InstanceType<C>>) {
+    runBeforeMethod<
+        C extends constructable,
+        M extends keyof P,
+        P extends C["prototype"],
+        O extends extendsPrams<P[M]>
+    >(classHandle: C, methodName: M, executeBefore: bindThis<O, InstanceType<C>>) {
         const oldHandle = classHandle.prototype[methodName];
         classHandle.prototype[methodName] = function () {
             //@ts-ignore Same as above
@@ -438,7 +444,12 @@ export class ModInterface {
      * @template M the name of the method we are overriding
      * @template O the method that will run before the old one
      */
-    runAfterMethod<C extends constructable, M extends keyof P, P extends C["prototype"], O extends extendsPrams<P[M]>>(classHandle: C, methodName: M, executeAfter: bindThis<O, InstanceType<C>>) {
+    runAfterMethod<
+        C extends constructable,
+        M extends keyof P,
+        P extends C["prototype"],
+        O extends extendsPrams<P[M]>
+    >(classHandle: C, methodName: M, executeAfter: bindThis<O, InstanceType<C>>) {
         const oldHandle = classHandle.prototype[methodName];
         classHandle.prototype[methodName] = function () {
             const returnValue = oldHandle.apply(this, arguments);

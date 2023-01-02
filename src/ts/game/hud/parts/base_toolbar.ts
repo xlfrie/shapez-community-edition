@@ -24,8 +24,8 @@ export class HUDBaseToolbar extends BaseHUDPart {
         };
     } = {};
 
-    public primaryBuildings: (typeof MetaBuilding)[];
-    public secondaryBuildings: (typeof MetaBuilding)[];
+    public primaryBuildings: typeof MetaBuilding[];
+    public secondaryBuildings: typeof MetaBuilding[];
     public visibilityCondition: () => boolean;
     public htmlElementId: string;
     public layer: string;
@@ -36,13 +36,19 @@ export class HUDBaseToolbar extends BaseHUDPart {
 
     constructor(
         root: GameRoot,
-        { primaryBuildings, secondaryBuildings = [], visibilityCondition, htmlElementId, layer = "regular" }: {
-            primaryBuildings: typeof MetaBuilding[]
-            secondaryBuildings?: typeof MetaBuilding[],
-            visibilityCondition: () => boolean,
-            htmlElementId: string,
-            layer?: Layer
-        },
+        {
+            primaryBuildings,
+            secondaryBuildings = [],
+            visibilityCondition,
+            htmlElementId,
+            layer = "regular",
+        }: {
+            primaryBuildings: typeof MetaBuilding[];
+            secondaryBuildings?: typeof MetaBuilding[];
+            visibilityCondition: () => boolean;
+            htmlElementId: string;
+            layer?: Layer;
+        }
     ) {
         super(root);
 

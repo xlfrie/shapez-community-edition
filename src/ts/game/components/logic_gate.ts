@@ -18,7 +18,7 @@ export const enumLogicGateType = {
     stacker: "stacker",
     painter: "painter",
 } as const;
-export type enumLogicGateType = keyof typeof enumLogicGateType
+export type enumLogicGateType = keyof typeof enumLogicGateType;
 
 export class LogicGateComponent extends Component {
     static getId() {

@@ -14,13 +14,18 @@ export class Mod {
     public settings: any;
     public saveSettings: () => Promise<void>;
 
-
-    constructor({ app, modLoader, meta, settings, saveSettings }: {
-        app: Application,
-        modLoader: ModLoader,
-        meta: ModMetadata,
-        settings: any,
-        saveSettings: () => Promise<void>
+    constructor({
+        app,
+        modLoader,
+        meta,
+        settings,
+        saveSettings,
+    }: {
+        app: Application;
+        modLoader: ModLoader;
+        meta: ModMetadata;
+        settings: any;
+        saveSettings: () => Promise<void>;
     }) {
         this.app = app;
         this.modLoader = modLoader;

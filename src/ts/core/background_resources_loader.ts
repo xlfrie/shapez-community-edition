@@ -45,13 +45,12 @@ const HARDCODED_FILE_SIZES = {
 };
 
 export class BackgroundResourcesLoader {
-
     public mainMenuPromise = null;
     public ingamePromise = null;
 
     public resourceStateChangedSignal = new Signal<[{ progress: number }]>();
 
-    constructor(public app: Application) { }
+    constructor(public app: Application) {}
 
     getMainMenuPromise() {
         if (this.mainMenuPromise) {
@@ -178,8 +177,8 @@ export class BackgroundResourcesLoader {
                         "<demoOnSteamLinkText>",
                         `<a href="https://get.shapez.io/resource_timeout" target="_blank">${T.dialogs.resourceLoadFailed.demoLinkText}</a>`
                     ) +
-                    "<br>" +
-                    err,
+                        "<br>" +
+                        err,
                     ["retry"]
                 )
                 .retry.add(() => window.location.reload());

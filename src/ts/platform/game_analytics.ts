@@ -1,7 +1,7 @@
 export type Application = import("../application").Application;
 
 export class GameAnalyticsInterface {
-    constructor(public app: Application) { }
+    constructor(public app: Application) {}
 
     /**
      * Initializes the analytics
@@ -13,16 +13,16 @@ export class GameAnalyticsInterface {
     }
 
     /** Handles a new game which was started */
-    handleGameStarted() { }
+    handleGameStarted() {}
 
     /** Handles a resumed game */
-    handleGameResumed() { }
+    handleGameResumed() {}
 
     /** Handles the given level completed */
-    handleLevelCompleted(level: number) { }
+    handleLevelCompleted(level: number) {}
 
     /** Handles the given upgrade completed */
-    handleUpgradeUnlocked(id: string, level: number) { }
+    handleUpgradeUnlocked(id: string, level: number) {}
 
     /**
      * Activates a DLC

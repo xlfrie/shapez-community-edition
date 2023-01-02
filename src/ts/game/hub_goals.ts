@@ -83,7 +83,12 @@ export class HubGoals extends BasicSerializableObject {
         [idx: string]: number;
     } = {};
 
-    public currentGoal: { definition: ShapeDefinition; required: number; reward: enumHubGoalRewards; throughputOnly: boolean; };
+    public currentGoal: {
+        definition: ShapeDefinition;
+        required: number;
+        reward: enumHubGoalRewards;
+        throughputOnly: boolean;
+    };
 
     constructor(public root: GameRoot) {
         super();

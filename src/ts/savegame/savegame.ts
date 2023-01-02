@@ -37,9 +37,16 @@ export class Savegame extends ReadWriteProxy {
     public metaDataRef: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/savegame/savegame_typedefs").SavegameMetadata;
 
     /** @param param0.metaDataRef Handle to the meta data */
-    constructor(app: Application, { internalId, metaDataRef }: {
-        internalId: string, metaDataRef: SavegameMetadata
-    }) {
+    constructor(
+        app: Application,
+        {
+            internalId,
+            metaDataRef,
+        }: {
+            internalId: string;
+            metaDataRef: SavegameMetadata;
+        }
+    ) {
         super(app, "savegame-" + internalId + ".bin");
 
         assert(
@@ -47,10 +54,8 @@ export class Savegame extends ReadWriteProxy {
             "Savegame interface not defined: " + Savegame.getCurrentVersion()
         );
 
-
         this.internalId = internalId;
         this.metaDataRef = metaDataRef;
-
     }
 
     //////// RW Proxy Impl //////////

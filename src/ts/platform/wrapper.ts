@@ -5,7 +5,7 @@ import type { Application } from "../application";
 import { IS_MOBILE } from "../core/config";
 
 export class PlatformWrapperInterface {
-    constructor(public app: Application) { }
+    constructor(public app: Application) {}
 
     getId(): string {
         abstract;

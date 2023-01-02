@@ -11,18 +11,24 @@ export class DrawParameters {
     public zoomLevel: number;
     public root: GameRoot;
 
-    constructor({ context, visibleRect, desiredAtlasScale, zoomLevel, root }: {
-        context: CanvasRenderingContext2D,
-        visibleRect: Rectangle,
-        desiredAtlasScale: number | string,
-        zoomLevel: number,
-        root: GameRoot
+    constructor({
+        context,
+        visibleRect,
+        desiredAtlasScale,
+        zoomLevel,
+        root,
+    }: {
+        context: CanvasRenderingContext2D;
+        visibleRect: Rectangle;
+        desiredAtlasScale: number | string;
+        zoomLevel: number;
+        root: GameRoot;
     }) {
         this.context = context;
         this.visibleRect = visibleRect;
         // @BAgel03
         this.desiredAtlasScale = desiredAtlasScale.toString();
-        this.zoomLevel = zoomLevel
-        this.root = root
+        this.zoomLevel = zoomLevel;
+        this.root = root;
     }
 }

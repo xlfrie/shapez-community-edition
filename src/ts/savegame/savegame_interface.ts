@@ -41,7 +41,7 @@ export class BaseSavegameInterface {
     }
 
     /** Constructs an new interface for the given savegame */
-    constructor(public data: any) { }
+    constructor(public data: any) {}
 
     /** Validates the data */
     validate(): boolean {
