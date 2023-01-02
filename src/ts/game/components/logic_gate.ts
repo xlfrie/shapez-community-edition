@@ -1,7 +1,7 @@
 import { Component } from "../component";
 
 /**
- @enum 
+ @enum
 */
 export const enumLogicGateType = {
     and: "and",
@@ -17,15 +17,19 @@ export const enumLogicGateType = {
     compare: "compare",
     stacker: "stacker",
     painter: "painter",
-};
+} as const;
+export type enumLogicGateType = keyof typeof enumLogicGateType
 
 export class LogicGateComponent extends Component {
     static getId() {
         return "LogicGate";
     }
-    public type = type;
 
-    constructor({ type = enumLogicGateType.and }) {
+    public type: enumLogicGateType;
+
+    constructor({ type = enumLogicGateType.and }: { type?: enumLogicGateType }) {
         super();
+
+        this.type = type;
     }
 }

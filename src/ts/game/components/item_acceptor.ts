@@ -21,7 +21,14 @@ export type ItemAcceptorSlotConfig = {
 };
 
 export class ItemAcceptorComponent extends Component {
-    slots: any;
+    public slots: ItemAcceptorSlot[];
+    public itemConsumptionAnimations: {
+        item: BaseItem,
+        slotIndex: number,
+        animProgress: number,
+        direction: enumDirection
+    }[];
+
     static getId() {
         return "ItemAcceptor";
     }

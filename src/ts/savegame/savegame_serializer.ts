@@ -20,13 +20,13 @@ const logger = createLogger("savegame_serializer");
 export class SavegameSerializer {
     public internal = new SerializerInternal();
 
-    constructor() {}
+    constructor() { }
 
     /**
      * Serializes the game root into a dump
      * @param sanityChecks Whether to check for validity
      */
-    generateDumpFromGameRoot(root: GameRoot, sanityChecks: boolean = true): object {
+    generateDumpFromGameRoot(root: GameRoot, sanityChecks: boolean = true): SerializedGame {
         const data: SerializedGame = {
             camera: root.camera.serialize(),
             time: root.time.serialize(),

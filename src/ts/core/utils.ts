@@ -46,7 +46,7 @@ export function accessNestedPropertyReverse(obj: any, keys: Array<string>) {
  * Chooses a random entry of an array
  * @template T
  */
-export function randomChoice(arr: T[]): T {
+export function randomChoice<T>(arr: T[]): T {
     return arr[Math.floor(Math.random() * arr.length)];
 }
 
@@ -443,9 +443,9 @@ export function formatItemsPerSecond(
         (speed === 1.0
             ? T.ingame.buildingPlacement.infoTexts.oneItemPerSecond
             : T.ingame.buildingPlacement.infoTexts.itemsPerSecond.replace(
-                  "<x>",
-                  round2Digits(speed).toString().replace(".", separator)
-              )) + (double ? "  " + T.ingame.buildingPlacement.infoTexts.itemsPerSecondDouble : "")
+                "<x>",
+                round2Digits(speed).toString().replace(".", separator)
+            )) + (double ? "  " + T.ingame.buildingPlacement.infoTexts.itemsPerSecondDouble : "")
     );
 }
 
@@ -478,7 +478,7 @@ export function rotateFlatMatrix3x3(flatMatrix: Array<number>) {
 }
 
 /** Generates rotated variants of the matrix */
-export function generateMatrixRotations(originalMatrix: Array<number>): Object<number, Array<number>> {
+export function generateMatrixRotations(originalMatrix: Array<number>): Record<number, Array<number>> {
     const result = {
         0: originalMatrix,
     };
@@ -493,6 +493,13 @@ export function generateMatrixRotations(originalMatrix: Array<number>): Object<n
     result[270] = originalMatrix;
 
     return result;
+}
+
+export type DirectionalObject = {
+    top: any,
+    right: any,
+    bottom: any,
+    left: any
 }
 
 /** Rotates a directional object */
@@ -550,7 +557,7 @@ export function startFileChoose(acceptedType: string = ".bin") {
     input.type = "file";
     input.accept = acceptedType;
 
-    return new Promise(resolve => {
+    return new Promise<Blob>(resolve => {
         input.onchange = _ => resolve(input.files[0]);
         input.click();
     });
@@ -625,7 +632,7 @@ export function getLogoSprite() {
 }
 
 /** Rejects a promise after X ms */
-export function timeoutPromise(promise: Promise, timeout = 30000) {
+export function timeoutPromise(promise: Promise<any>, timeout = 30000) {
     return Promise.race([
         new Promise((resolve, reject) => {
             setTimeout(() => reject("timeout of " + timeout + " ms exceeded"), timeout);

@@ -6,13 +6,14 @@ import { ShapeItem } from "./items/shape_item";
 import { BasicSerializableObject } from "../savegame/serialization";
 
 /**
- @enum 
+ @enum
 */
 export const enumAnalyticsDataSource = {
     produced: "produced",
     stored: "stored",
     delivered: "delivered",
-};
+} as const;
+export type enumAnalyticsDataSource = keyof typeof enumAnalyticsDataSource;
 
 export class ProductionAnalytics extends BasicSerializableObject {
     static getId() {

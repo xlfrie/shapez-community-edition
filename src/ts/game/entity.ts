@@ -14,9 +14,6 @@ import { gComponentRegistry } from "../core/global_registries";
 import { getBuildingDataFromCode } from "./building_codes";
 
 export class Entity extends BasicSerializableObject {
-    /** Handle to the global game root */
-    public root = root;
-
     /** The components of the entity */
     public components = new EntityComponentStorage();
 
@@ -43,7 +40,7 @@ export class Entity extends BasicSerializableObject {
     /** Stores the reason why this entity was destroyed * */
     public destroyReason: string;
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         super();
     }
 

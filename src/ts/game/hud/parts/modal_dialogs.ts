@@ -17,7 +17,7 @@ export class HUDModalDialogs extends BaseHUDPart {
     public dialogStack = [];
     public domWatcher: DynamicDomAttach;
 
-    constructor(root: GameRoot | undefined, app: Application) {
+    constructor(root: GameRoot | undefined, app?: Application) {
         // Important: Root is not always available here! Its also used in the main menu
         super(root);
 

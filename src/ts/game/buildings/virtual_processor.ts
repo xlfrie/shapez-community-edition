@@ -11,17 +11,18 @@ import { MetaRotaterBuilding } from "./rotater";
 import { MetaStackerBuilding } from "./stacker";
 
 /**
- @enum 
+ @enum
 */
 export const enumVirtualProcessorVariants = {
     rotater: "rotater",
     unstacker: "unstacker",
     stacker: "stacker",
     painter: "painter",
-};
+} as const;
+export type enumVirtualProcessorVariants = keyof typeof enumVirtualProcessorVariants;
 
 /**
- @enum 
+ @enum
 */
 const enumVariantToGate = {
     [defaultBuildingVariant]: enumLogicGateType.cutter,

@@ -17,6 +17,9 @@ const trim = require("trim");
 const logger = createLogger("puzzle-review");
 
 export class HUDPuzzleEditorReview extends BaseHUDPart {
+    public element: HTMLDivElement;
+    public button: HTMLButtonElement;
+
     constructor(root) {
         super(root);
     }
@@ -33,7 +36,7 @@ export class HUDPuzzleEditorReview extends BaseHUDPart {
         this.trackClicks(this.button, this.startReview);
     }
 
-    initialize() {}
+    initialize() { }
 
     startReview() {
         const validationError = this.validatePuzzle();

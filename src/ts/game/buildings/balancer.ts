@@ -11,14 +11,15 @@ import { formatItemsPerSecond, generateMatrixRotations } from "../../core/utils"
 import { BeltUnderlaysComponent } from "../components/belt_underlays";
 
 /**
- @enum 
+ @enum
 */
 export const enumBalancerVariants = {
     merger: "merger",
     mergerInverse: "merger-inverse",
     splitter: "splitter",
     splitterInverse: "splitter-inverse",
-};
+} as const;
+export type enumBalancerVariants = keyof typeof enumBalancerVariants
 
 const overlayMatrices = {
     [defaultBuildingVariant]: null,

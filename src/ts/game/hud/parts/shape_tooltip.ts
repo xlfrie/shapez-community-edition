@@ -6,7 +6,11 @@ import { THEME } from "../../theme";
 import { BaseHUDPart } from "../base_hud_part";
 
 export class HUDShapeTooltip extends BaseHUDPart {
-    createElements(parent) {}
+    public currentTile: Vector;
+    public currentEntity: Entity;
+    public isPlacingBuilding: boolean;
+
+    createElements(parent) { }
 
     initialize() {
         this.currentTile = new Vector(0, 0);

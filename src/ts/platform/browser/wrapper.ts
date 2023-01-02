@@ -15,7 +15,9 @@ import { StorageImplBrowserIndexedDB } from "./storage_indexed_db";
 const logger = createLogger("platform/browser");
 
 export class PlatformWrapperImplBrowser extends PlatformWrapperInterface {
-    embedProvider: any;
+    public embedProvider: any;
+    public recaptchaTokenCallback: any;
+
     initialize() {
         this.recaptchaTokenCallback = null;
 
@@ -79,7 +81,7 @@ export class PlatformWrapperImplBrowser extends PlatformWrapperInterface {
     }
 
     detectStorageImplementation() {
-        return new Promise(resolve => {
+        return new Promise<void>(resolve => {
             logger.log("Detecting storage");
 
             if (!window.indexedDB) {
@@ -141,18 +143,19 @@ export class PlatformWrapperImplBrowser extends PlatformWrapperInterface {
 
     performRestart() {
         logger.log("Performing restart");
+        //@ts-ignore @bagel03
         window.location.reload(true);
     }
 
     /** Detects if there is an adblocker installed */
     detectAdblock(): Promise<boolean> {
         return Promise.race([
-            new Promise(resolve => {
+            new Promise<boolean>(resolve => {
                 // If the request wasn't blocked within a very short period of time, this means
                 // the adblocker is not active and the request was actually made -> ignore it then
                 setTimeout(() => resolve(false), 30);
             }),
-            new Promise(resolve => {
+            new Promise<boolean>(resolve => {
                 fetch("https://googleads.g.doubleclick.net/pagead/id", {
                     method: "HEAD",
                     mode: "no-cors",

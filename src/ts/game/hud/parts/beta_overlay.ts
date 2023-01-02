@@ -2,6 +2,8 @@ import { BaseHUDPart } from "../base_hud_part";
 import { makeDiv } from "../../../core/utils";
 
 export class HUDBetaOverlay extends BaseHUDPart {
+    public element: HTMLDivElement;
+
     createElements(parent) {
         this.element = makeDiv(
             parent,
@@ -11,5 +13,5 @@ export class HUDBetaOverlay extends BaseHUDPart {
         );
     }
 
-    initialize() {}
+    initialize() { }
 }

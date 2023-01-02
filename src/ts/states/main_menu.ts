@@ -70,7 +70,7 @@ export class MainMenuState extends GameState {
                 ${Array.from(Object.entries(T.ingame.standaloneAdvantages.points))
                 .slice(0, 6)
                 .map(
-                    ([key, trans]) => `
+                    ([key, trans]: [string, any]) => `
                 <div class="point ${key}">
                     <strong>${trans.title}</strong>
                     <p>${trans.desc}</p>
@@ -308,7 +308,7 @@ showExternalLinks
         this.app.gameAnalytics.note("startimport");
 
         // Create a 'fake' file-input to accept savegames
-        startFileChoose(".bin").then(file => {
+        startFileChoose(".bin").then((file: Blob) => {
             if (file) {
                 const closeLoader = this.dialogs.showLoadingDialog();
                 waitNextFrame().then(() => {
@@ -318,7 +318,7 @@ showExternalLinks
                         let realContent;
 
                         try {
-                            realContent = ReadWriteProxy.deserializeObject(contents);
+                            realContent = ReadWriteProxy.deserializeObject(contents as string);
                         } catch (err) {
                             closeLoader();
                             this.dialogs.showWarning(

@@ -14,8 +14,6 @@ const logger = createLogger("entity_manager");
 // This is slower but we need it for the street path generation
 
 export class EntityManager extends BasicSerializableObject {
-    public root: GameRoot = root;
-
     public entities: Array<Entity> = [];
 
     //// We store a separate list with entities to destroy, since we don't destroy
@@ -33,7 +31,7 @@ export class EntityManager extends BasicSerializableObject {
     //// Store the next uid to use
     public nextUid = 10000;
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         super();
     }
 

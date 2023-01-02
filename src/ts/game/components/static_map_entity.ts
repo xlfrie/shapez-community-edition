@@ -68,10 +68,10 @@ export class StaticMapEntityComponent extends Component {
         });
     }
 
-    public origin = origin;
-    public rotation = rotation;
-    public code = code;
-    public originalRotation = originalRotation;
+    public origin: any;
+    public rotation: number;
+    public originalRotation: number;
+    public code: string | number;
 
     /**
      * @param param0.origin Origin (Top Left corner) of the entity
@@ -87,12 +87,23 @@ export class StaticMapEntityComponent extends Component {
         rotation = 0,
         originalRotation = 0,
         code = 0,
+    }: {
+        origin?: Vector,
+        tileSize?: Vector,
+        rotation?: number,
+        originalRotation?: number,
+        code?: number | string
     }) {
         super();
         assert(
             rotation % 90 === 0,
             "Rotation of static map entity must be multiple of 90 (was " + rotation + ")"
         );
+
+        this.origin = origin;
+        this.rotation = rotation;
+        this.code = code;
+        this.originalRotation = originalRotation;
     }
 
     /** Returns the effective rectangle of this entity in tile space */

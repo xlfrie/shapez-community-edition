@@ -157,7 +157,7 @@ export class AchievementCollection {
     public root: GameRoot;
 
     /** @param activate - Resolves when provider activation is complete */
-    constructor(public activate: () => void) {
+    constructor(public activate: (arg?: any) => void) {
         this.add(ACHIEVEMENTS.belt500Tiles, {
             isValid: this.isBelt500TilesValid,
             signal: "entityAdded",

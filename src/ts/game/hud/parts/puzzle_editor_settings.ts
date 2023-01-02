@@ -14,6 +14,10 @@ import { BaseHUDPart } from "../base_hud_part";
 const logger = createLogger("puzzle-editor");
 
 export class HUDPuzzleEditorSettings extends BaseHUDPart {
+    public element: HTMLDivElement;
+    public zone: HTMLDivElement;
+    public visible: boolean;
+
     createElements(parent) {
         this.element = makeDiv(parent, "ingame_HUD_PuzzleEditorSettings");
 

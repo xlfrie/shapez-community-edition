@@ -11,19 +11,19 @@ export type GameMode = import("../game/game_mode").GameMode;
 
 export type MetaBuilding = import("../game/meta_building").MetaBuilding;
 
-export let gMetaBuildingRegistry: SingletonFactoryTemplate<MetaBuilding> = new SingletonFactory();
+export let gMetaBuildingRegistry: SingletonFactory<MetaBuilding> = new SingletonFactory();
 
 export let gBuildingsByCategory: {
     [idx: string]: Array<Class<MetaBuilding>>;
 } = null;
 
-export let gComponentRegistry: FactoryTemplate<Component> = new Factory("component");
+export let gComponentRegistry: Factory<Component> = new Factory("component");
 
-export let gGameModeRegistry: FactoryTemplate<GameMode> = new Factory("gameMode");
+export let gGameModeRegistry: Factory<GameMode> = new Factory("gameMode");
 
-export let gGameSpeedRegistry: FactoryTemplate<BaseGameSpeed> = new Factory("gamespeed");
+export let gGameSpeedRegistry: Factory<BaseGameSpeed> = new Factory("gamespeed");
 
-export let gItemRegistry: FactoryTemplate<BaseItem> = new Factory("item");
+export let gItemRegistry: Factory<BaseItem> = new Factory("item");
 
 // Helpers
 

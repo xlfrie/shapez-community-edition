@@ -31,7 +31,7 @@ export class FormElement {
         abstract;
     }
 
-    focus() { }
+    focus(parent?: HTMLElement) { }
 
     isValid() {
         return true;
@@ -43,15 +43,27 @@ export class FormElement {
 }
 
 export class FormElementInput extends FormElement {
-    public placeholder = placeholder;
-    public defaultValue = defaultValue;
-    public inputType = inputType;
-    public validator = validator;
+    public element: HTMLFormElement = null;
+    public placeholder: string;
+    public defaultValue: string;
+    public inputType: string;
+    public validator: (input: string) => boolean;
 
-    public element = null;
-
-    constructor({ id, label = null, placeholder, defaultValue = "", inputType = "text", validator = null }) {
+    constructor({ id, label = null, placeholder, defaultValue = "", inputType = "text", validator = null }: {
+        id: string,
+        label: string,
+        placeholder: string,
+        defaultValue?: string,
+        inputType?: string,
+        validator: (input: string) => boolean
+    }) {
         super(id, label);
+
+        this.placeholder = placeholder;
+        this.defaultValue = defaultValue;
+        this.inputType = inputType;
+        this.validator = validator;
+
     }
 
     getHtml() {
@@ -119,20 +131,27 @@ export class FormElementInput extends FormElement {
         this.updateErrorState();
     }
 
-    focus() {
+    focus(parent: HTMLElement) {
         this.element.focus();
         this.element.select();
     }
 }
 
 export class FormElementCheckbox extends FormElement {
-    public defaultValue = defaultValue;
-    public value = this.defaultValue;
+    public defaultValue: boolean
+    public value: boolean
 
     public element = null;
 
-    constructor({ id, label, defaultValue = true }) {
+    constructor({ id, label, defaultValue = true }: {
+        id: string,
+        label: string,
+        defaultValue: boolean
+    }) {
         super(id, label);
+
+        this.defaultValue = defaultValue;
+        this.value = defaultValue;
     }
 
     getHtml() {
@@ -169,13 +188,14 @@ export class FormElementCheckbox extends FormElement {
 }
 
 export class FormElementItemChooser extends FormElement {
-    public items = items;
-    public element = null;
+    public items: BaseItem[]
+    public element: HTMLFormElement = null;
 
     public chosenItem: BaseItem = null;
 
     constructor({ id, label, items = [] }) {
         super(id, label);
+        this.items = items;
     }
 
     getHtml() {

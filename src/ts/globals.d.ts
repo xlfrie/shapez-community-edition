@@ -210,3 +210,16 @@ declare module "worker-loader?inline=true&fallback=false!*" {
 
     export default WebpackWorker;
 }
+
+// @Bagel03
+declare module "rusha" {
+    export function createHash(): any;
+}
+
+declare module "crc/crc32" {
+    export default function crc32(str: string): any;
+}
+
+declare module "@nastyox/rando.js" {
+    export function rando(start: number, end: number): number
+}

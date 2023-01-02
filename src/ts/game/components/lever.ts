@@ -16,9 +16,11 @@ export class LeverComponent extends Component {
     copyAdditionalStateTo(otherComponent: LeverComponent) {
         otherComponent.toggled = this.toggled;
     }
-    public toggled = toggled;
 
-    constructor({ toggled = false }) {
+    public toggled: boolean;
+
+    constructor({ toggled = false }: { toggled?: boolean }) {
         super();
+        this.toggled = toggled;
     }
 }

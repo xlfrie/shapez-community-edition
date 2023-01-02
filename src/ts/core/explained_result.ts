@@ -18,7 +18,7 @@ export class ExplainedResult {
         return new ExplainedResult(true);
     }
 
-    static bad(reason, additionalProps?) {
+    static bad(reason?: string, additionalProps?: any) {
         return new ExplainedResult(false, reason, additionalProps);
     }
 

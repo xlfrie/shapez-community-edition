@@ -12,7 +12,7 @@ import { ShapeDefinition } from "../../shape_definition";
 export const enumDisplayMode = {
     icons: "icons",
     detailed: "detailed",
-};
+} as const;
 export type enumDisplayMode = keyof typeof enumDisplayMode;
 
 /** Stores how many seconds one unit is */

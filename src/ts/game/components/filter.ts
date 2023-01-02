@@ -35,6 +35,9 @@ export class FilterComponent extends Component {
         };
     }
 
+    pendingItemsToLeaveThrough: PendingFilterItem[];
+    pendingItemsToReject: PendingFilterItem[];
+
     constructor() {
         super();
 

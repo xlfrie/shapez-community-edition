@@ -14,7 +14,7 @@ const logger = createLogger("savegame_interface");
 
 export class BaseSavegameInterface {
     /** Returns the interfaces version */
-    getVersion() {
+    getVersion(): number {
         throw new Error("Implement get version");
     }
 
@@ -39,11 +39,9 @@ export class BaseSavegameInterface {
         }
         return validators[version];
     }
-    public data = data;
 
     /** Constructs an new interface for the given savegame */
-
-    constructor(data) {}
+    constructor(public data: any) { }
 
     /** Validates the data */
     validate(): boolean {

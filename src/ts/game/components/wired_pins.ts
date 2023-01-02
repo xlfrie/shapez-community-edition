@@ -10,7 +10,8 @@ import { typeItemSingleton } from "../item_resolver";
 export const enumPinSlotType = {
     logicalEjector: "logicalEjector",
     logicalAcceptor: "logicalAcceptor",
-};
+} as const;
+export type enumPinSlotType = keyof typeof enumPinSlotType;
 
 export type WirePinSlotDefinition = {
     pos: Vector;

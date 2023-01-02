@@ -466,7 +466,7 @@ export class Vector {
     }
 
     /** Deserializes a vector from a serialized json object */
-    static fromSerializedObject(obj: object): Vector {
+    static fromSerializedObject(obj: any): Vector {
         if (obj) {
             return new Vector(obj.x || 0, obj.y || 0);
         }

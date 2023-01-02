@@ -3,6 +3,9 @@ import { T } from "../../../translations";
 import { BaseHUDPart } from "../base_hud_part";
 
 export class HUDPuzzleEditorControls extends BaseHUDPart {
+    public element: HTMLDivElement;
+    public titleElement: HTMLDivElement;
+
     createElements(parent) {
         this.element = makeDiv(parent, "ingame_HUD_PuzzleEditorControls");
 
@@ -14,5 +17,5 @@ export class HUDPuzzleEditorControls extends BaseHUDPart {
         this.titleElement.innerText = T.ingame.puzzleEditorControls.title;
     }
 
-    initialize() {}
+    initialize() { }
 }

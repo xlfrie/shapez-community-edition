@@ -4,6 +4,8 @@ import { createLogger } from "../../core/logging";
 const logger = createLogger("ga");
 
 export class GoogleAnalyticsImpl extends AnalyticsInterface {
+    public lastUiClickTracked: number;
+
     initialize() {
         this.lastUiClickTracked = -1000;
 

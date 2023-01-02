@@ -4,8 +4,9 @@ import { Component } from "../component";
 import { typeItemSingleton } from "../item_resolver";
 
 export class GoalAcceptorComponent extends Component {
-    currentDeliveredItems: number;
-    lastDelivery: { item: BaseItem; time: any; };
+    public currentDeliveredItems: number;
+    public lastDelivery: { item: BaseItem; time: number; };
+    public displayPercentage: number;
     static getId() {
         return "GoalAcceptor";
     }

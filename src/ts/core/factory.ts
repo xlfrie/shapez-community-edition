@@ -3,23 +3,21 @@ import { createLogger } from "./logging";
 const logger = createLogger("factory");
 
 // simple factory pattern
-export class Factory {
-    public id = id;
-
+export class Factory<T> {
     //// Store array as well as dictionary, to speed up lookups
-    public entries = [];
-    public entryIds = [];
-    public idToEntry = {};
+    public entries: Class<T>[] = [];
+    public entryIds: string[] = [];
+    public idToEntry: Record<string, Class<T>> = {};
 
-    constructor(id) {}
+    constructor(public id: string) { }
 
     getId() {
         return this.id;
     }
 
-    register(entry) {
+    register(entry: Class<T>) {
         // Extract id
-        const id = entry.getId();
+        const id = (entry as any).getId();
         assert(id, "Factory: Invalid id for class: " + entry);
 
         // Check duplicates
@@ -37,7 +35,7 @@ export class Factory {
     }
 
     /** Finds an instance by a given id */
-    findById(id: string): object {
+    findById(id: string): Class<T> {
         const entry = this.idToEntry[id];
         if (!entry) {
             logger.error("Object with id", id, "is not registered on factory", this.id, "!");
@@ -48,7 +46,7 @@ export class Factory {
     }
 
     /** Returns all entries */
-    getEntries(): Array<object> {
+    getEntries(): Array<Class<T>> {
         return this.entries;
     }
 

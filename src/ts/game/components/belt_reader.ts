@@ -12,8 +12,11 @@ export const enumBeltReaderType = {
 };
 
 export class BeltReaderComponent extends Component {
-    lastItemTimes: any;
-    lastItem: BaseItem;
+    public lastItemTimes: number[];
+    public lastItem: BaseItem;
+    public lastThroughput: number;
+    public lastThroughputComputation: number;
+
     static getId() {
         return "BeltReader";
     }

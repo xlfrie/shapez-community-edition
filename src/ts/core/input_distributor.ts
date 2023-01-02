@@ -10,16 +10,14 @@ import { arrayDeleteValue, fastArrayDeleteValue } from "./utils";
 const logger = createLogger("input_distributor");
 
 export class InputDistributor {
-    public app = app;
-
     public recieverStack: Array<InputReceiver> = [];
 
     public filters: Array<(arg: any) => boolean> = [];
 
     /** All keys which are currently down */
-    public keysDown = new Set();
+    public keysDown = new Set<number>();
 
-    constructor(app) {
+    constructor(public app: Application) {
         this.bindToEvents();
     }
 

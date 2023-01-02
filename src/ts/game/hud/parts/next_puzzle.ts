@@ -8,6 +8,9 @@ import { T } from "../../../translations";
 import { BaseHUDPart } from "../base_hud_part";
 
 export class HUDPuzzleNextPuzzle extends BaseHUDPart {
+    public element: HTMLDivElement;
+    public button: HTMLButtonElement;
+
     createElements(parent) {
         this.element = makeDiv(parent, "ingame_HUD_PuzzleNextPuzzle");
         this.button = document.createElement("button");
@@ -18,7 +21,7 @@ export class HUDPuzzleNextPuzzle extends BaseHUDPart {
         this.trackClicks(this.button, this.nextPuzzle);
     }
 
-    initialize() {}
+    initialize() { }
 
     nextPuzzle() {
         const gameMode = this.root.gameMode as PuzzlePlayGameMode;

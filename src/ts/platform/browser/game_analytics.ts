@@ -24,6 +24,7 @@ const CURRENT_ABT_COUNT = 1;
 
 export class ShapezGameAnalytics extends GameAnalyticsInterface {
     public abtVariant = "0";
+    public syncKey: string;
 
     constructor(app) {
         super(app);
@@ -83,15 +84,15 @@ export class ShapezGameAnalytics extends GameAnalyticsInterface {
         if (this.app.restrictionMgr.isLimitedVersion()) {
             fetch(
                 "https://analytics.shapez.io/campaign/" +
-                    "action_" +
-                    this.environment +
-                    "_" +
-                    action +
-                    "_" +
-                    CURRENT_ABT +
-                    "_" +
-                    this.abtVariant +
-                    "?lpurl=nocontent",
+                "action_" +
+                this.environment +
+                "_" +
+                action +
+                "_" +
+                CURRENT_ABT +
+                "_" +
+                this.abtVariant +
+                "?lpurl=nocontent",
                 {
                     method: "GET",
                     mode: "no-cors",
@@ -99,15 +100,15 @@ export class ShapezGameAnalytics extends GameAnalyticsInterface {
                     referrer: "no-referrer",
                     credentials: "omit",
                 }
-            ).catch(err => {});
+            ).catch(err => { });
         }
     }
 
-    noteMinor(action, payload = "") {}
+    noteMinor(action, payload = "") { }
 
     initialize(): Promise<void> {
         this.syncKey = null;
-
+        //@Bagel03 TODO
         window.setAbt = abt => {
             this.app.storage.writeFileAsync("shapez_" + CURRENT_ABT + ".bin", String(abt));
             window.location.reload();
@@ -120,12 +121,12 @@ export class ShapezGameAnalytics extends GameAnalyticsInterface {
             if (this.app.restrictionMgr.isLimitedVersion() && !G_IS_DEV) {
                 fetch(
                     "https://analytics.shapez.io/campaign/" +
-                        this.environment +
-                        "_" +
-                        CURRENT_ABT +
-                        "_" +
-                        this.abtVariant +
-                        "?lpurl=nocontent",
+                    this.environment +
+                    "_" +
+                    CURRENT_ABT +
+                    "_" +
+                    this.abtVariant +
+                    "?lpurl=nocontent",
                     {
                         method: "GET",
                         mode: "no-cors",
@@ -133,7 +134,7 @@ export class ShapezGameAnalytics extends GameAnalyticsInterface {
                         referrer: "no-referrer",
                         credentials: "omit",
                     }
-                ).catch(err => {});
+                ).catch(err => { });
             }
 
             return this.app.storage.readFileAsync(analyticsLocalFile).then(

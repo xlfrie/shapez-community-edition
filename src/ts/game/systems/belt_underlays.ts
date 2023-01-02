@@ -21,8 +21,9 @@ import { MapChunkView } from "../map_chunk_view";
 import { BELT_ANIM_COUNT } from "./belt";
 
 /** Mapping from underlay type to clip rect */
+//@ts-ignore @ Bagel03
 const enumUnderlayTypeToClipRect: {
-    [idx: enumClippedBeltUnderlayType]: Rectangle;
+    [idx in enumClippedBeltUnderlayType]: Rectangle;
 } = {
     [enumClippedBeltUnderlayType.none]: null,
     [enumClippedBeltUnderlayType.full]: FULL_CLIP_RECT,
@@ -35,7 +36,7 @@ export class BeltUnderlaysSystem extends GameSystem {
 
     //// Automatically recompute areas
     public staleArea = new StaleAreaDetector({
-        root,
+        root: this.root,
         name: "belt-underlay",
         recomputeMethod: this.recomputeStaleArea.bind(this),
     });
@@ -188,7 +189,7 @@ export class BeltUnderlaysSystem extends GameSystem {
             worldDirection
         );
 
-        let flag = enumClippedBeltUnderlayType.none;
+        let flag: enumClippedBeltUnderlayType = enumClippedBeltUnderlayType.none;
 
         if (connectedTop && connectedBottom) {
             flag = enumClippedBeltUnderlayType.full;
@@ -259,7 +260,7 @@ export class BeltUnderlaysSystem extends GameSystem {
                 // SYNC with systems/belt.js:drawSingleEntity!
                 const animationIndex = Math.floor(
                     ((this.root.time.realtimeNow() * speedMultiplier * BELT_ANIM_COUNT * 126) / 42) *
-                        globalConfig.itemSpacingOnBelts
+                    globalConfig.itemSpacingOnBelts
                 );
                 parameters.context.translate(x, y);
                 parameters.context.rotate(angleRadians);

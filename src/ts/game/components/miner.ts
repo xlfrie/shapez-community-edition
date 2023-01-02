@@ -19,9 +19,11 @@ export class MinerComponent extends Component {
         };
     }
     public lastMiningTime = 0;
-    public chainable = chainable;
+    public chainable: boolean;
 
     public cachedMinedItem: BaseItem = null;
+
+    public itemChainBuffer: BaseItem[];
 
     /**
      * Which miner this miner ejects to, in case its a chainable one.
@@ -31,6 +33,8 @@ export class MinerComponent extends Component {
 
     constructor({ chainable = false }) {
         super();
+
+        this.chainable = chainable
 
         this.clear();
     }

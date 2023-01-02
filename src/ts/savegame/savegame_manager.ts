@@ -8,17 +8,17 @@ const logger = createLogger("savegame_manager");
 const Rusha = require("rusha");
 
 /**
- @enum 
+ @enum
 */
 export type SavegamesData = import("./savegame_typedefs").SavegamesData;
 
 /**
- @enum 
+ @enum
 */
 export type SavegameMetadata = import("./savegame_typedefs").SavegameMetadata;
 
 /**
- @enum 
+ @enum
 */
 export const enumLocalSavegameStatus = {
     offline: "offline",
@@ -141,7 +141,7 @@ export class SavegameManager extends ReadWriteProxy {
     }
 
     /** Attempts to import a savegame */
-    importSavegame(data: object) {
+    importSavegame(data: any) {
         const savegame = this.createNewSavegame();
 
         const migrationResult = savegame.migrate(data);
@@ -178,7 +178,7 @@ export class SavegameManager extends ReadWriteProxy {
             promiseChain = promiseChain
                 .then(() => game.deleteAsync())
                 .then(
-                    () => {},
+                    () => { },
                     err => {
                         logger.error(this, "Failed to remove old savegame:", toRemove, ":", err);
                     }

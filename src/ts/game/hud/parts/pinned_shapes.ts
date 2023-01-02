@@ -26,6 +26,7 @@ export class HUDPinnedShapes extends BaseHUDPart {
         infoDetector?: ClickDetector;
         throughputOnly?: boolean;
     }> = [];
+    public element: HTMLDivElement;
 
     constructor(root) {
         super(root);

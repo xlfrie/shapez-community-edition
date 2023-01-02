@@ -1,23 +1,33 @@
 import { Component } from "../game/component";
 import { Entity } from "../game/entity";
 import { globalConfig } from "./config";
+import { GameRoot } from "./draw_parameters";
 import { createLogger } from "./logging";
 import { Rectangle } from "./rectangle";
 
 const logger = createLogger("stale_areas");
 
 export class StaleAreaDetector {
-    public root = root;
-    public name = name;
-    public recomputeMethod = recomputeMethod;
 
     public staleArea: Rectangle = null;
+
+    public root: GameRoot;
+    public name: string;
+    public recomputeMethod: (area: Rectangle) => void;
+
     /**
      * @param param0.name The name for reference
      * @param param0.recomputeMethod Method which recomputes the given area
      */
-
-    constructor({ root, name, recomputeMethod }) {}
+    constructor({ root, name, recomputeMethod }: {
+        root: GameRoot,
+        name: string,
+        recomputeMethod: (area: Rectangle) => void;
+    }) {
+        this.root = root;
+        this.name = name;
+        this.recomputeMethod = recomputeMethod;
+    }
 
     /** Invalidates the given area */
     invalidate(area: Rectangle) {

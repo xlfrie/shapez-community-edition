@@ -40,7 +40,7 @@ function makeNewRng(seed: number | string) {
     }
     mash = null;
 
-    var random = function () {
+    var random: any = function () {
         var t = 2091639 * s0 + c * 2.3283064365386963e-10; // 2^-32
         s0 = s1;
         s1 = s2;
@@ -62,9 +62,11 @@ function makeNewRng(seed: number | string) {
 }
 
 export class RandomNumberGenerator {
-    public internalRng = makeNewRng(seed || Math.random());
+    public internalRng: () => number
+    constructor(seed: number | string) {
+        this.internalRng = makeNewRng(seed || Math.random());
 
-    constructor(seed) {}
+    }
 
     /** Re-seeds the generator */
     reseed(seed: number | string) {
@@ -77,7 +79,7 @@ export class RandomNumberGenerator {
     }
 
     /** Random choice of an array */
-    choice(array: array) {
+    choice<T>(array: T[]) {
         const index = this.nextIntRange(0, array.length);
         return array[index];
     }

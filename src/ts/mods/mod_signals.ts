@@ -13,7 +13,7 @@ export const MOD_SIGNALS = {
     // Called when the application has booted and instances like the app settings etc are available
     appBooted: new Signal(),
 
-    modifyLevelDefinitions: new Signal<[Array[Object]]>(),
+    modifyLevelDefinitions: new Signal<[Array<object>]>(),
     modifyUpgrades: new Signal<[Object]>(),
 
     hudElementInitialized: new Signal<[BaseHUDPart]>(),

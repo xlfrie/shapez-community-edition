@@ -6,6 +6,9 @@ import { BaseHUDPart } from "../base_hud_part";
 import { Loader } from "../../../core/loader";
 
 export class HUDWireInfo extends BaseHUDPart {
+    public spriteEmpty: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
+    public spriteConflict: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
+
     initialize() {
         this.spriteEmpty = Loader.getSprite("sprites/wires/network_empty.png");
         this.spriteConflict = Loader.getSprite("sprites/wires/network_conflict.png");

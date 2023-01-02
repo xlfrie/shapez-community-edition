@@ -29,6 +29,7 @@ export type SerializedGame = {
 };
 
 export type SavegameData = {
+    shadowData?: object;
     version: number;
     dump: SerializedGame;
     stats: SavegameStats;

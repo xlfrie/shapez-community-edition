@@ -33,6 +33,7 @@ export class HUDStatistics extends BaseHUDPart {
     public intersectionObserver: IntersectionObserver;
     public lastFullRerender: number;
     public lastPartialRerender: number;
+    public currentUnit: string;
 
 
     createElements(parent) {
@@ -118,9 +119,6 @@ export class HUDStatistics extends BaseHUDPart {
         this.rerenderPartial();
     }
 
-    currentUnit(currentUnit: any) {
-        throw new Error("Method not implemented.");
-    }
 
     initialize() {
         this.domAttach = new DynamicDomAttach(this.root, this.background, {

@@ -11,18 +11,16 @@ const logger = createLogger("state_manager");
 
 /** This is the main state machine which drives the game states. */
 export class StateManager {
-    public app = app;
-
     public currentState: GameState = null;
 
     public stateClasses: {
         [idx: string]: new () => GameState;
     } = {};
 
-    constructor(app) {}
+    constructor(public app: Application) { }
 
     /** Registers a new state class, should be a GameState derived class */
-    register(stateClass: object) {
+    register(stateClass: Class<GameState>) {
         // Create a dummy to retrieve the key
         const dummy = new stateClass();
         assert(dummy instanceof GameState, "Not a state!");

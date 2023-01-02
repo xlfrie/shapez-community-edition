@@ -24,7 +24,7 @@ export class StorageImplBrowserIndexedDB extends StorageInterface {
 
     initialize() {
         logger.log("Using indexed DB storage");
-        return new Promise((resolve, reject) => {
+        return new Promise<IDBDatabase>((resolve, reject) => {
             const request = window.indexedDB.open("app_storage", 10);
             request.onerror = event => {
                 logger.error("IDB error:", event);
@@ -73,7 +73,7 @@ export class StorageImplBrowserIndexedDB extends StorageInterface {
         this.currentBusyFilename = filename;
         const transaction = this.database.transaction(["files"], "readwrite");
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             transaction.oncomplete = () => {
                 this.currentBusyFilename = null;
                 resolve();
@@ -101,7 +101,7 @@ export class StorageImplBrowserIndexedDB extends StorageInterface {
         this.currentBusyFilename = filename;
         const transaction = this.database.transaction(["files"], "readonly");
 
-        return new Promise((resolve, reject) => {
+        return new Promise<string>((resolve, reject) => {
             const store = transaction.objectStore("files");
             const request = store.get(filename);
 
@@ -134,7 +134,7 @@ export class StorageImplBrowserIndexedDB extends StorageInterface {
         this.currentBusyFilename = filename;
         const transaction = this.database.transaction(["files"], "readwrite");
 
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             transaction.oncomplete = () => {
                 this.currentBusyFilename = null;
                 resolve();

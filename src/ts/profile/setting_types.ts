@@ -89,16 +89,17 @@ export class BaseSetting {
 }
 
 export class EnumSetting extends BaseSetting {
-    public options = options;
-    public valueGetter = valueGetter;
-    public textGetter = textGetter;
-    public descGetter = descGetter || (() => null);
-    public restartRequired = restartRequired;
-    public iconPrefix = iconPrefix;
-    public magicValue = magicValue;
+    public options: string[];
+    public valueGetter: (text: string) => any;
+    public textGetter: (value: any) => string;
+    public descGetter: ((value: any) => string) | (() => any);
+    public restartRequired: boolean;
+    public iconPrefix: string;
+    public magicValue: any;
+
 
     constructor(
-        id,
+        id: string,
         {
             options,
             valueGetter,
@@ -110,9 +111,28 @@ export class EnumSetting extends BaseSetting {
             changeCb = null,
             magicValue = null,
             enabledCb = null,
+        }: {
+            options: any[],
+            valueGetter: (value: any) => any,
+            textGetter: (value: any) => string,
+            descGetter?: (value: any) => string,
+            category: string,
+            restartRequired?: boolean,
+            iconPrefix?: string,
+            changeCb?: (app: Application, value: any) => void,
+            magicValue?: any,
+            enabledCb?: (app: Application) => void
         }
     ) {
         super(id, category, changeCb, enabledCb);
+
+        this.options = options;
+        this.valueGetter = valueGetter;
+        this.textGetter = textGetter;
+        this.descGetter = descGetter || (() => null);
+        this.restartRequired = restartRequired;
+        this.iconPrefix = iconPrefix;
+        this.magicValue = magicValue;
     }
 
     getHtml(app: Application) {
@@ -191,7 +211,7 @@ export class EnumSetting extends BaseSetting {
 }
 
 export class BoolSetting extends BaseSetting {
-    constructor(id, category, changeCb = null, enabledCb = null) {
+    constructor(id: string, category: string, changeCb = null, enabledCb = null) {
         super(id, category, changeCb, enabledCb);
     }
 
@@ -238,20 +258,15 @@ export class BoolSetting extends BaseSetting {
 }
 
 export class RangeSetting extends BaseSetting {
-    public defaultValue = defaultValue;
-    public minValue = minValue;
-    public maxValue = maxValue;
-    public stepSize = stepSize;
-
     constructor(
-        id,
-        category,
-        changeCb = null,
-        defaultValue = 1.0,
-        minValue = 0,
-        maxValue = 1.0,
-        stepSize = 0.0001,
-        enabledCb = null
+        id: string,
+        category: string,
+        changeCb: (app: Application, value: number) => void = null,
+        public defaultValue: number = 1.0,
+        public minValue: number = 0,
+        public maxValue: number = 1.0,
+        public stepSize: number = 0.0001,
+        enabledCb: (app: Application) => void = null
     ) {
         super(id, category, changeCb, enabledCb);
     }

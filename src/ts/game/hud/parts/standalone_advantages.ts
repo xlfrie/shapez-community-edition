@@ -33,7 +33,7 @@ export class HUDStandaloneAdvantages extends BaseHUDPart {
             ["content"],
             `
             <div class="points">
-                ${Object.entries(T.ingame.standaloneAdvantages.points)
+                ${Object.entries<{ title: string, desc: string }>(T.ingame.standaloneAdvantages.points)
                 .map(
                     ([key, trans]) => `
                 <div class="point ${key}">

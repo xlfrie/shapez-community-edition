@@ -20,7 +20,7 @@ const salt = accessNestedPropertyReverse(globalConfig, ["file", "info"]);
 
 // Helper which only writes / reads if verify() works. Also performs migration
 export class ReadWriteProxy {
-    public currentData: object = null;
+    public currentData: any = null;
 
     /** Store a debounced handler to prevent double writes */
     public debouncedWrite = debounce(this.doWriteAsync.bind(this), 50);
@@ -78,7 +78,7 @@ export class ReadWriteProxy {
         return compressionPrefix + compressX64(checksum + jsonString);
     }
 
-    static deserializeObject(text: object) {
+    static deserializeObject(text: string) {
         const decompressed = decompressX64(text.substr(compressionPrefix.length));
         if (!decompressed) {
             // LZ string decompression failure
@@ -230,7 +230,7 @@ export class ReadWriteProxy {
                 })
 
                 // Check version and migrate if required
-                .then(contents => {
+                .then((contents: any) => {
                     if (contents.version > this.getCurrentVersion()) {
                         return Promise.reject("stored-data-is-newer");
                     }

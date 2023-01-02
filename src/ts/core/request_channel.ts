@@ -7,9 +7,9 @@ const logger = createLogger("request_channel");
 export const PROMISE_ABORTED = "promise-aborted";
 
 export class RequestChannel {
-    public pendingPromises: Array<Promise> = [];
+    public pendingPromises: Array<Promise<any>> = [];
 
-    constructor() {}
+    constructor() { }
 
     watch(promise: Promise<any>): Promise<any> {
         // log(this, "Added new promise:", promise, "(pending =", this.pendingPromises.length, ")");

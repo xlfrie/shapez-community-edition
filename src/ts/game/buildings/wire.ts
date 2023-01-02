@@ -23,7 +23,7 @@ export const wireOverlayMatrices = {
 };
 
 /**
- @enum 
+ @enum
 */
 export const wireVariants = {
     second: "second",
@@ -133,6 +133,7 @@ export class MetaWireBuilding extends MetaBuilding {
 
     /** Creates the entity at the given location */
     setupEntityComponents(entity: Entity) {
+        //@ts-ignore @Bagel03
         entity.addComponent(new WireComponent({}));
     }
 
@@ -210,7 +211,7 @@ export class MetaWireBuilding extends MetaBuilding {
         flag |= connections.bottom ? 0x10 : 0;
         flag |= connections.left ? 0x1 : 0;
 
-        let targetType = enumWireType.forward;
+        let targetType: enumWireType = enumWireType.forward;
 
         // First, reset rotation
         rotation = 0;

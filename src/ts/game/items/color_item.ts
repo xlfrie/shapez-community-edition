@@ -1,6 +1,7 @@
 import { globalConfig } from "../../core/config";
 import { DrawParameters } from "../../core/draw_parameters";
 import { Loader } from "../../core/loader";
+import { AtlasSprite } from "../../core/sprites";
 import { types } from "../../savegame/serialization";
 import { BaseItem } from "../base_item";
 import { enumColors } from "../colors";
@@ -35,7 +36,9 @@ export class ColorItem extends BaseItem {
         return this.color === (other as ColorItem).color;
     }
 
-    constructor(public color: string) {
+    public cachedSprite: AtlasSprite;
+
+    constructor(public color: enumColors) {
         super();
     }
 

@@ -10,9 +10,10 @@ export const FAKE_BELT_ACCEPTOR_SLOT: import("./item_acceptor").ItemAcceptorSlot
     direction: enumDirection.bottom,
 };
 
-export const FAKE_BELT_EJECTOR_SLOT_BY_DIRECTION: {
-    [idx: enumDirection]: import("./item_ejector").ItemEjectorSlot;
-} = {
+// @ts-ignore @Bagel03
+export const FAKE_BELT_EJECTOR_SLOT_BY_DIRECTION: Record<
+    enumDirection, import("./item_ejector").ItemEjectorSlot
+> = {
     [enumDirection.top]: {
         pos: new Vector(0, 0),
         direction: enumDirection.top,
@@ -40,15 +41,15 @@ export class BeltComponent extends Component {
         return "Belt";
     }
 
-    public direction = direction;
+    public direction: enumDirection;
 
     /** The path this belt is contained in, not serialized */
     public assignedPath: BeltPath = null;
 
     /** @param param0.direction The direction of the belt */
-
-    constructor({ direction = enumDirection.top }) {
+    constructor({ direction = enumDirection.top }: { direction?: enumDirection }) {
         super();
+        this.direction = direction;
     }
 
     clear() {

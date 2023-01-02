@@ -6,12 +6,13 @@ import { Entity } from "../entity";
 import { typeItemSingleton } from "../item_resolver";
 
 /**
- @enum 
+ @enum
 */
 export const enumUndergroundBeltMode = {
     sender: "sender",
     receiver: "receiver",
-};
+} as const;
+export type enumUndergroundBeltMode = keyof typeof enumUndergroundBeltMode;
 
 export type LinkedUndergroundBelt = {
     entity: Entity;
@@ -19,6 +20,7 @@ export type LinkedUndergroundBelt = {
 };
 
 export class UndergroundBeltComponent extends Component {
+
     static getId() {
         return "UndergroundBelt";
     }
@@ -29,8 +31,10 @@ export class UndergroundBeltComponent extends Component {
         };
     }
 
-    public mode = mode;
-    public tier = tier;
+    public mode: enumUndergroundBeltMode;
+    public tier: number
+    public consumptionAnimations: { item: BaseItem, progress: number }[];
+    public pendingItems: [BaseItem, number][];
 
     /**
      * The linked entity, used to speed up performance. This contains either
@@ -42,6 +46,9 @@ export class UndergroundBeltComponent extends Component {
 
     constructor({ mode = enumUndergroundBeltMode.sender, tier = 0 }) {
         super();
+
+        this.mode = mode;
+        this.tier = tier;
 
         this.clear();
     }

@@ -103,6 +103,7 @@ export class KeybindingsState extends TextualGameState {
                 event.preventDefault();
             }
 
+            // @ts-ignore @Bagel03
             if (event.target && event.target.tagName === "BUTTON" && keyCode === 1) {
                 return;
             }
@@ -121,7 +122,7 @@ export class KeybindingsState extends TextualGameState {
             this.updateKeybindings();
         });
 
-        dialog.inputReciever.backButton.add(() => {});
+        dialog.inputReciever.backButton.add(() => { });
         this.dialogs.internalShowDialog(dialog);
 
         this.app.sound.playUiSound(SOUNDS.dialogOk);

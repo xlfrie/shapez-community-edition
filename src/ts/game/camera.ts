@@ -14,6 +14,7 @@ const logger = createLogger("camera");
 export const USER_INTERACT_MOVE = "move";
 export const USER_INTERACT_ZOOM = "zoom";
 export const USER_INTERACT_TOUCHEND = "touchend";
+export type USER_INTERACT = typeof USER_INTERACT_MOVE | typeof USER_INTERACT_ZOOM | typeof USER_INTERACT_TOUCHEND;
 
 const velocitySmoothing = 0.5;
 const velocityFade = 0.98;
@@ -26,8 +27,7 @@ export const enumMouseButton = {
     left: "left",
     middle: "middle",
     right: "right",
-};
-
+} as const;
 export type enumMouseButton = keyof typeof enumMouseButton;
 
 
@@ -53,7 +53,7 @@ export class Camera extends BasicSerializableObject {
     public keyboardForce = new Vector();
 
     //// Signal which gets emitted once the user changed something
-    public userInteraction = new Signal();
+    public userInteraction = new Signal<[USER_INTERACT]>();
 
     public currentShake: Vector = new Vector(0, 0);
 

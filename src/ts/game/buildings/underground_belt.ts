@@ -12,7 +12,7 @@ import { formatItemsPerSecond, generateMatrixRotations } from "../../core/utils"
 import { T } from "../../translations";
 
 /**
- @enum 
+ @enum
 */
 export const arrayUndergroundRotationVariantToMode = [
     enumUndergroundBeltMode.sender,
@@ -20,9 +20,10 @@ export const arrayUndergroundRotationVariantToMode = [
 ];
 
 /**
- @enum 
+ @enum
 */
-export const enumUndergroundBeltVariants = { tier2: "tier2" };
+export const enumUndergroundBeltVariants = { tier2: "tier2" } as const;
+export type enumUndergroundBeltVariants = keyof typeof enumUndergroundBeltVariants
 
 export const enumUndergroundBeltVariantToTier = {
     [defaultBuildingVariant]: 0,

@@ -17,7 +17,8 @@ export const enumGameModeIds = {
     puzzleEdit: "puzzleEditMode",
     puzzlePlay: "puzzlePlayMode",
     regular: "regularMode",
-};
+} as const;
+export type enumGameModeIds = keyof typeof enumGameModeIds;
 
 /**
  @enum
@@ -25,7 +26,8 @@ export const enumGameModeIds = {
 export const enumGameModeTypes = {
     default: "defaultModeType",
     puzzle: "puzzleModeType",
-};
+} as const;
+export type enumGameModeTypes = keyof typeof enumGameModeTypes;
 
 export class GameMode extends BasicSerializableObject {
     static getId(): string {

@@ -46,17 +46,17 @@ if (G_IS_DEV) {
         if (decompressInt(compressInt(i)) !== i) {
             throw new Error(
                 "Bad compression for: " +
-                    i +
-                    " compressed: " +
-                    compressInt(i) +
-                    " decompressed: " +
-                    decompressInt(compressInt(i))
+                i +
+                " compressed: " +
+                compressInt(i) +
+                " decompressed: " +
+                decompressInt(compressInt(i))
             );
         }
     }
 }
 
-function compressObjectInternal(obj: any, keys: Map, values: Map): any[] | object | number | string {
+function compressObjectInternal(obj: any, keys: Map<any, any>, values: Map<any, any>): any[] | object | number | string {
     if (Array.isArray(obj)) {
         let result = [];
         for (let i = 0; i < obj.length; ++i) {
@@ -86,7 +86,7 @@ function compressObjectInternal(obj: any, keys: Map, values: Map): any[] | objec
     return obj;
 }
 
-function indexMapToArray(hashMap: Map): Array {
+function indexMapToArray(hashMap: Map<any, any>): Array<any> {
     const result = new Array(hashMap.size);
     hashMap.forEach((index, key) => {
         result[index] = key;
@@ -127,7 +127,7 @@ function decompressObjectInternal(obj: object, keys: string[] = [], values: any[
     return obj;
 }
 
-export function decompressObject(obj: object) {
+export function decompressObject(obj: any) {
     if (obj.keys && obj.values && obj.data) {
         const keys = obj.keys;
         const values = obj.values;

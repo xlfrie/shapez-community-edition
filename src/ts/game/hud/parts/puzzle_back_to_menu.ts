@@ -2,6 +2,9 @@ import { makeDiv } from "../../../core/utils";
 import { BaseHUDPart } from "../base_hud_part";
 
 export class HUDPuzzleBackToMenu extends BaseHUDPart {
+    public element: HTMLDivElement;
+    public button: HTMLButtonElement;
+
     createElements(parent) {
         const key = this.root.gameMode.getId();
 
@@ -13,7 +16,7 @@ export class HUDPuzzleBackToMenu extends BaseHUDPart {
         this.trackClicks(this.button, this.back);
     }
 
-    initialize() {}
+    initialize() { }
 
     back() {
         this.root.gameState.goBackToMenu();

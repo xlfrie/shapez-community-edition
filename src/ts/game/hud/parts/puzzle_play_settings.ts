@@ -7,6 +7,9 @@ import { BaseHUDPart } from "../base_hud_part";
 const logger = createLogger("puzzle-play");
 
 export class HUDPuzzlePlaySettings extends BaseHUDPart {
+    public element: HTMLDivElement;
+    public visible: boolean;
+
     createElements(parent) {
         this.element = makeDiv(parent, "ingame_HUD_PuzzlePlaySettings");
 

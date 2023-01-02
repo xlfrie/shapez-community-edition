@@ -60,7 +60,7 @@ export async function authorizeViaSSOToken(app, dialogs) {
                         "x-api-key": "d5c54aaa491f200709afff082c153ef2",
                     },
                 }),
-                new Promise((resolve, reject) => {
+                new Promise<never>((resolve, reject) => {
                     setTimeout(() => reject("timeout exceeded"), 20000);
                 }),
             ]);

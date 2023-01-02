@@ -9,14 +9,12 @@ import trailerPoints from "./trailer_points";
 const tickrate = 1 / 165;
 
 export class TrailerMaker {
-    public root = root;
-
     public markers = [];
     public playbackMarkers = null;
     public currentPlaybackOrigin = new Vector();
     public currentPlaybackZoom = 3;
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         window.addEventListener("keydown", ev => {
             if (ev.key === "j") {
                 console.log("Record");

@@ -9,6 +9,9 @@ import { globalConfig } from "../../../core/config";
 import { T } from "../../../translations";
 
 export class HUDColorBlindHelper extends BaseHUDPart {
+    public belowTileIndicator: HTMLDivElement;
+    public trackedColorBelowTile: TrackedState;
+
     createElements(parent) {
         this.belowTileIndicator = makeDiv(parent, "ingame_HUD_ColorBlindBelowTileHelper", []);
     }

@@ -5,6 +5,8 @@ import type { BasicSerializableObject } from "./serialization";
 
 import { Vector } from "../core/vector";
 import { round4Digits } from "../core/utils";
+import { Factory } from "../core/factory";
+import { SingletonFactory } from "../core/singleton_factory";
 export const globalJsonSchemaDefs = {};
 
 export function schemaToJsonSchema(schema: import("./serialization").Schema) {
@@ -40,7 +42,7 @@ export class BaseDataType {
      * Serializes a given raw value
      * @abstract
      */
-    serialize(value: any) {
+    serialize(value: any): any {
         abstract;
         return {};
     }
@@ -574,7 +576,7 @@ export class TypeEntityWeakref extends BaseDataType {
 }
 
 export class TypeClass extends BaseDataType {
-    constructor(public registry: FactoryTemplate<any>, public customResolver: (root: GameRoot, val: object) => object = null) {
+    constructor(public registry: Factory<any>, public customResolver: (root: GameRoot, val: object) => object = null) {
         super();
     }
 
@@ -650,7 +652,7 @@ export class TypeClass extends BaseDataType {
 }
 
 export class TypeClassData extends BaseDataType {
-    constructor(public registry: FactoryTemplate<any>) {
+    constructor(public registry: Factory<any>) {
         super();
     }
 
@@ -689,7 +691,7 @@ export class TypeClassData extends BaseDataType {
 }
 
 export class TypeClassFromMetaclass extends BaseDataType {
-    constructor(public classHandle: typeof BasicSerializableObject, public registry: SingletonFactoryTemplate<any>) {
+    constructor(public classHandle: typeof BasicSerializableObject, public registry: SingletonFactory<any>) {
         super();
     }
 
@@ -749,7 +751,7 @@ export class TypeClassFromMetaclass extends BaseDataType {
 }
 
 export class TypeMetaClass extends BaseDataType {
-    constructor(public registry: SingletonFactoryTemplate<any>) {
+    constructor(public registry: SingletonFactory<any>) {
         super();
     }
 
@@ -948,7 +950,7 @@ export class TypeKeyValueMap extends BaseDataType {
 }
 
 export class TypeClassId extends BaseDataType {
-    constructor(public registry: FactoryTemplate<any> | SingletonFactoryTemplate<any>) {
+    constructor(public registry: Factory<any> | SingletonFactory<any>) {
         super();
     }
 

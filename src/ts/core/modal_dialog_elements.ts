@@ -30,7 +30,7 @@ const kbCancel = 27;
 const logger = createLogger("dialogs");
 
 
-export type DialogButtonStr<T extends string> = `${T}:${string}`
+export type DialogButtonStr<T extends string> = `${T}:${string}` | `${T}`
 
 /** Basic text based dialog */
 export class Dialog<T extends string> {
@@ -44,7 +44,7 @@ export class Dialog<T extends string> {
     public element: HTMLDivElement;
 
     public closeRequested = new Signal();
-    public buttonSignals: Record<T, Signal>;
+    public buttonSignals: Record<T, Signal<[any?]>>;
 
     public valueChosen = new Signal();
 

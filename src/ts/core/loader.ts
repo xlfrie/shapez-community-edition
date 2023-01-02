@@ -12,13 +12,15 @@ const logger = createLogger("loader");
 const missingSpriteIds = {};
 
 class LoaderImpl {
-    public app = null;
+    public app: Application = null;
 
     public sprites: Map<string, BaseSprite> = new Map();
 
     public rawImages = [];
 
-    constructor() {}
+    public spriteNotFoundSprite: BaseSprite;
+
+    constructor() { }
 
     linkAppAfterBoot(app: Application) {
         this.app = app;

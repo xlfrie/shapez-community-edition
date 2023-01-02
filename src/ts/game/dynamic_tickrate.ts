@@ -7,8 +7,6 @@ const logger = createLogger("dynamic_tickrate");
 const fpsAccumulationTime = 1000;
 
 export class DynamicTickrate {
-    public root = root;
-
     public currentTickStart = null;
     public capturedTicks = [];
     public averageTickDuration = 0;
@@ -17,9 +15,11 @@ export class DynamicTickrate {
     public accumulatedFpsLastUpdate = 0;
 
     public averageFps = 60;
-    deltaSeconds: number;
+    public deltaSeconds: number;
+    public deltaMs: number;
+    public currentTickRate: number;
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         const fixedRate = this.root.gameMode.getFixedTickrate();
         if (fixedRate) {
             logger.log("Setting fixed tickrate of", fixedRate);

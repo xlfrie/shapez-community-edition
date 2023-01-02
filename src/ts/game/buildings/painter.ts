@@ -15,9 +15,10 @@ import { enumHubGoalRewards } from "../tutorial_goals";
 import { WiredPinsComponent, enumPinSlotType } from "../components/wired_pins";
 
 /**
- @enum 
+ @enum
 */
-export const enumPainterVariants = { mirrored: "mirrored", double: "double", quad: "quad" };
+export const enumPainterVariants = { mirrored: "mirrored", double: "double", quad: "quad" } as const;
+export type enumPainterVariants = keyof typeof enumPainterVariants;
 
 export class MetaPainterBuilding extends MetaBuilding {
     constructor() {

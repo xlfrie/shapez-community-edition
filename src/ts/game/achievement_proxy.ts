@@ -14,13 +14,12 @@ const ROTATER = "rotater";
 const DEFAULT = "default";
 
 export class AchievementProxy {
-    public root = root;
     public provider = this.root.app.achievementProvider;
     public disabled = true;
 
     public sliceTime = 0;
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         if (G_IS_DEV && globalConfig.debug.testAchievements) {
             // still enable the proxy
         } else if (!this.provider.hasAchievements()) {

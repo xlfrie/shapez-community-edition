@@ -92,7 +92,7 @@ export class HUDShop extends BaseHUDPart {
                 getRomanNumber(currentTier + 1)
             );
 
-            handle.elemTierLabel.setAttribute("data-tier", currentTier);
+            handle.elemTierLabel.setAttribute("data-tier", currentTier as any);
 
             // Cleanup detectors
             for (let i = 0; i < handle.requireIndexToElement.length; ++i) {

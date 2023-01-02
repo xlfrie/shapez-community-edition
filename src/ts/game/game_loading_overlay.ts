@@ -6,12 +6,10 @@ import { randomChoice } from "../core/utils";
 import { T } from "../translations";
 
 export class GameLoadingOverlay {
-    public app = app;
-    public parent = parent;
-
     public element: HTMLElement = null;
+    public loadingIndicator: HTMLSpanElement;
 
-    constructor(app, parent) {}
+    constructor(public app: Application, public parent: HTMLElement) { }
 
     /** Removes the overlay if its currently visible */
     removeIfAttached() {

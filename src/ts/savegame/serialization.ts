@@ -1,4 +1,6 @@
+import { Factory } from "../core/factory";
 import { createLogger } from "../core/logging";
+import { SingletonFactory } from "../core/singleton_factory";
 import {
     BaseDataType,
     TypeArray,
@@ -45,7 +47,7 @@ export const types = {
         return new TypeNullable(wrapped);
     },
 
-    classId(registry: FactoryTemplate<any> | SingletonFactoryTemplate<any>) {
+    classId(registry: Factory<any> | SingletonFactory<any>) {
         return new TypeClassId(registry);
     },
 
@@ -57,11 +59,11 @@ export const types = {
         return new TypeEnum(values);
     },
 
-    obj(registry: FactoryTemplate<any>, resolver: (GameRoot, any) => object = null) {
+    obj(registry: Factory<any>, resolver: (GameRoot, any) => object = null) {
         return new TypeClass(registry, resolver);
     },
 
-    objData(registry: FactoryTemplate<any>) {
+    objData(registry: Factory<any>) {
         return new TypeClassData(registry);
     },
 
@@ -89,7 +91,7 @@ export const types = {
         return new TypePair(a, b);
     },
 
-    classWithMetaclass(classHandle: typeof BasicSerializableObject, registry: SingletonFactoryTemplate<any>) {
+    classWithMetaclass(classHandle: typeof BasicSerializableObject, registry: SingletonFactory<any>) {
         return new TypeClassFromMetaclass(classHandle, registry);
     },
 };

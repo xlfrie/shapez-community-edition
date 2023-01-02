@@ -15,13 +15,13 @@ class SoundSpritesContainer {
 
     public loadingPromise = null;
 
-    constructor() {}
+    constructor() { }
 
     load() {
         if (this.loadingPromise) {
             return this.loadingPromise;
         }
-        return (this.loadingPromise = new Promise(resolve => {
+        return (this.loadingPromise = new Promise<void>(resolve => {
             this.howl = new Howl({
                 src: cachebust("res/sounds/sfx.mp3"),
                 sprite: sprites.sprite,
@@ -61,9 +61,7 @@ class SoundSpritesContainer {
 }
 
 class WrappedSoundInstance extends SoundInstanceInterface {
-    public spriteContainer = spriteContainer;
-
-    constructor(spriteContainer, key) {
+    constructor(public spriteContainer: SoundSpritesContainer, key) {
         super(key, "sfx.mp3");
     }
 
@@ -89,7 +87,7 @@ class MusicInstance extends MusicInstanceInterface {
         super(key, url);
     }
     load() {
-        return new Promise((resolve, reject) => {
+        return new Promise<void>((resolve, reject) => {
             this.howl = new Howl({
                 src: cachebust("res/sounds/music/" + this.url + ".mp3"),
                 autoplay: false,
@@ -133,7 +131,7 @@ class MusicInstance extends MusicInstanceInterface {
         return this.playing;
     }
 
-    play(volume) {
+    play(volume?: number) {
         if (this.howl) {
             this.playing = true;
             this.howl.volume(volume);
@@ -161,6 +159,8 @@ class MusicInstance extends MusicInstanceInterface {
 }
 
 export class SoundImplBrowser extends SoundInterface {
+    public sfxHandle: SoundSpritesContainer;
+
     constructor(app) {
         Howler.mobileAutoEnable = true;
         Howler.autoUnlock = true;

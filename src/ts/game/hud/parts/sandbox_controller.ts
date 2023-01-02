@@ -5,6 +5,10 @@ import { DynamicDomAttach } from "../dynamic_dom_attach";
 import { enumNotificationType } from "./notifications";
 
 export class HUDSandboxController extends BaseHUDPart {
+    public element: HTMLDivElement;
+    public visible: boolean;
+    public domAttach: DynamicDomAttach;
+
     createElements(parent) {
         this.element = makeDiv(
             parent,

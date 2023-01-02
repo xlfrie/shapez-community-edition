@@ -18,11 +18,11 @@ export class ConstantSignalComponent extends Component {
     copyAdditionalStateTo(otherComponent: ConstantSignalComponent) {
         otherComponent.signal = this.signal;
     }
-    public signal = signal;
+    public signal: BaseItem;
 
     /** @param param0.signal The signal to store */
-
-    constructor({ signal = null }) {
+    constructor({ signal = null }: { signal?: BaseItem }) {
         super();
+        this.signal = signal;
     }
 }

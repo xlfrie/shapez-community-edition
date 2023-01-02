@@ -58,7 +58,8 @@ const ACHIEVEMENT_IDS = {
 
 export class SteamAchievementProvider extends AchievementProviderInterface {
     public initialized = false;
-    public collection = new AchievementCollection(this.activate.bind(this));
+    public collection: AchievementCollection;
+    public root: GameRoot;
 
     constructor(app) {
         super(app);
@@ -68,6 +69,8 @@ export class SteamAchievementProvider extends AchievementProviderInterface {
                 assert(this.collection.map.has(key), "Key not found in collection: " + key);
             }
         }
+
+        this.collection = new AchievementCollection(this.activate.bind(this));
 
         logger.log("Collection created with", this.collection.map.size, "achievements");
     }

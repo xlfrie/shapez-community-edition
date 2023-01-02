@@ -3,24 +3,24 @@ import { createLogger } from "./logging";
 const logger = createLogger("singleton_factory");
 
 // simple factory pattern
-export class SingletonFactory {
-    public id = id;
-
+export class SingletonFactory<T> {
     //// Store array as well as dictionary, to speed up lookups
-    public entries = [];
-    public idToEntry = {};
+    public entries: T[] = [];
+    public idToEntry: Record<string, T> = {};
 
-    constructor(id) {}
+    constructor(public id?: string) { }
 
     getId() {
         return this.id;
     }
 
-    register(classHandle) {
+    register(classHandle: Class<T>) {
         // First, construct instance
         const instance = new classHandle();
 
         // Extract id
+        // @Bagel03 Fix also in factory.ts
+        //@ts-ignore
         const id = instance.getId();
         assert(id, "Factory: Invalid id for class " + classHandle.name + ": " + id);
 
@@ -38,7 +38,7 @@ export class SingletonFactory {
     }
 
     /** Finds an instance by a given id */
-    findById(id: string): object {
+    findById(id: string): T {
         const entry = this.idToEntry[id];
         if (!entry) {
             logger.error("Object with id", id, "is not registered!");
@@ -49,7 +49,7 @@ export class SingletonFactory {
     }
 
     /** Finds an instance by its constructor (The class handle) */
-    findByClass(classHandle: object): object {
+    findByClass(classHandle: Class<T>): T {
         for (let i = 0; i < this.entries.length; ++i) {
             if (this.entries[i] instanceof classHandle) {
                 return this.entries[i];
@@ -60,7 +60,7 @@ export class SingletonFactory {
     }
 
     /** Returns all entries */
-    getEntries(): Array<object> {
+    getEntries(): Array<T> {
         return this.entries;
     }
 

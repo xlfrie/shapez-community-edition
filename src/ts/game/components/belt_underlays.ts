@@ -14,7 +14,9 @@ export const enumClippedBeltUnderlayType = {
     bottomOnly: "bottomOnly",
     topOnly: "topOnly",
     none: "none",
-};
+} as const;
+
+export type enumClippedBeltUnderlayType = keyof typeof enumClippedBeltUnderlayType;
 
 export type BeltUnderlayTile = {
     pos: Vector;
@@ -26,11 +28,13 @@ export class BeltUnderlaysComponent extends Component {
     static getId() {
         return "BeltUnderlays";
     }
-    public underlays = underlays;
+
+    public underlays: BeltUnderlayTile[];
 
     /** @param param0.underlays Where to render belt underlays */
-
-    constructor({ underlays = [] }) {
+    constructor({ underlays = [] }: { underlays?: BeltUnderlayTile[] }) {
         super();
+
+        this.underlays = underlays;
     }
 }

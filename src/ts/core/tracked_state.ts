@@ -1,5 +1,6 @@
 export class TrackedState {
     public lastSeenValue = null;
+    public callback: (val: any) => void;
 
     constructor(callbackMethod = null, callbackScope = null) {
         if (callbackMethod) {

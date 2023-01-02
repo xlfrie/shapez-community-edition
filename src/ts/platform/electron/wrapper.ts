@@ -9,6 +9,9 @@ const logger = createLogger("electron-wrapper");
 
 export class PlatformWrapperImplElectron extends PlatformWrapperImplBrowser {
     dlcs: any;
+    steamOverlayCanvasFix: HTMLCanvasElement;
+    steamOverlayContextFix: CanvasRenderingContext2D;
+
     initialize() {
         this.dlcs = {
             puzzle: false,
@@ -55,6 +58,8 @@ export class PlatformWrapperImplElectron extends PlatformWrapperImplBrowser {
 
     performRestart() {
         logger.log(this, "Performing restart");
+
+        //@ts-ignore @Bagel03
         window.location.reload(true);
     }
 

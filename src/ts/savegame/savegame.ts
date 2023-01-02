@@ -32,19 +32,25 @@ export type SavegameStats = import("./savegame_typedefs").SavegameStats;
 export type SerializedGame = import("./savegame_typedefs").SerializedGame;
 
 export class Savegame extends ReadWriteProxy {
-    public internalId = internalId;
-    public metaDataRef = metaDataRef;
-
     public currentData: SavegameData = this.getDefaultData();
-    /** @param param0.metaDataRef Handle to the meta data */
+    public internalId: string;
+    public metaDataRef: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/savegame/savegame_typedefs").SavegameMetadata;
 
-    constructor(app, { internalId, metaDataRef }) {
+    /** @param param0.metaDataRef Handle to the meta data */
+    constructor(app: Application, { internalId, metaDataRef }: {
+        internalId: string, metaDataRef: SavegameMetadata
+    }) {
         super(app, "savegame-" + internalId + ".bin");
 
         assert(
             savegameInterfaces[Savegame.getCurrentVersion()],
             "Savegame interface not defined: " + Savegame.getCurrentVersion()
         );
+
+
+        this.internalId = internalId;
+        this.metaDataRef = metaDataRef;
+
     }
 
     //////// RW Proxy Impl //////////

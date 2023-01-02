@@ -46,7 +46,7 @@ export class GameCreationPayload {
 
     public gameModeParameters: object | undefined;
 
-    constructor() {}
+    constructor() { }
 }
 
 export class InGameState extends GameState {
@@ -70,6 +70,11 @@ export class InGameState extends GameState {
      * @TODO: This doesn't realy fit here
      */
     public currentSavePromise = null;
+
+    public warmupTimeSeconds: number;
+    // @Bagel03 idk
+    public syncer: any;
+    public gameModeId: string;
 
     constructor() {
         super("InGameState");

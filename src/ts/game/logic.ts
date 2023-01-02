@@ -34,9 +34,7 @@ export type AcceptorsAndEjectorsAffectingTile = {
 };
 
 export class GameLogic {
-    public root = root;
-
-    constructor(root) {}
+    constructor(public root: GameRoot) { }
 
     /**
      * Checks if the given entity can be placed
@@ -161,7 +159,7 @@ export class GameLogic {
     }
 
     /** Performs a bulk operation, not updating caches in the meantime */
-    performBulkOperation(operation: function) {
+    performBulkOperation(operation: (...args: any) => any) {
         logger.warn("Running bulk operation ...");
         assert(!this.root.bulkOperationRunning, "Can not run two bulk operations twice");
         this.root.bulkOperationRunning = true;
@@ -176,7 +174,7 @@ export class GameLogic {
     }
 
     /** Performs a immutable operation, causing no recalculations */
-    performImmutableOperation(operation: function) {
+    performImmutableOperation(operation: (...args: any) => any) {
         logger.warn("Running immutable operation ...");
         assert(!this.root.immutableOperationRunning, "Can not run two immutalbe operations twice");
         this.root.immutableOperationRunning = true;

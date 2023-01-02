@@ -12,7 +12,11 @@ const copy = require("clipboard-copy");
 const wiresBackgroundDpi = 4;
 
 export class HUDWiresOverlay extends BaseHUDPart {
-    createElements(parent) {}
+    public currentAlpha: number;
+    public tilePatternCanvas: HTMLCanvasElement;
+    public cachedPatternBackground: CanvasPattern;
+
+    createElements(parent) { }
 
     initialize() {
         // Probably not the best location, but the one which makes most sense

@@ -9,16 +9,16 @@ import { typeItemSingleton } from "../item_resolver";
 export type ItemEjectorSlot = {
     pos: Vector;
     direction: enumDirection;
-    item: BaseItem;
-    lastItem: BaseItem;
-    progress: ?number;
+    item?: BaseItem;
+    lastItem?: BaseItem;
+    progress?: number;
     cachedDestSlot?: import("./item_acceptor").ItemAcceptorLocatedSlot;
     cachedBeltPath?: BeltPath;
     cachedTargetEntity?: Entity;
 };
 
 export class ItemEjectorComponent extends Component {
-    slots: any;
+
     static getId() {
         return "ItemEjector";
     }
@@ -34,15 +34,20 @@ export class ItemEjectorComponent extends Component {
             ),
         };
     }
-    public renderFloatingItems = renderFloatingItems;
+
+    public slots: ItemEjectorSlot[];
+    public renderFloatingItems: boolean;
 
     /**
      * @param param0.slots The slots to eject on
      * @param param0.renderFloatingItems Whether to render items even if they are not connected
      */
 
-    constructor({ slots = [], renderFloatingItems = true }) {
+    constructor({ slots = [], renderFloatingItems = true }: { slots?: ItemEjectorSlot[], renderFloatingItems?: boolean }) {
         super();
+
+        this.slots = slots;
+        this.renderFloatingItems = renderFloatingItems;
 
         this.setSlots(slots);
     }
@@ -100,7 +105,7 @@ export class ItemEjectorComponent extends Component {
     }
 
     /** Returns the first free slot on this ejector or null if there is none */
-    getFirstFreeSlot(): ?number {
+    getFirstFreeSlot(): number | null {
         for (let i = 0; i < this.slots.length; ++i) {
             if (this.canEjectOnSlot(i)) {
                 return i;

@@ -19,7 +19,8 @@ export class StorageComponent extends Component {
             storedItem: types.nullable(typeItemSingleton),
         };
     }
-    public maximumStorage = maximumStorage;
+
+    public maximumStorage: number;
 
     /** Currently stored item */
     public storedItem: BaseItem = null;
@@ -32,8 +33,10 @@ export class StorageComponent extends Component {
 
     /** @param param0.maximumStorage How much this storage can hold */
 
-    constructor({ maximumStorage = 1e20 }) {
+    constructor({ maximumStorage = 1e20 }: { maximumStorage?: number }) {
         super();
+
+        this.maximumStorage = maximumStorage;
     }
 
     /** Returns whether this storage can accept the item */
