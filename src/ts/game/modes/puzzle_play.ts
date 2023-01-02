@@ -31,6 +31,7 @@ import { MetaBlockBuilding } from "../buildings/block";
 import { MetaBuilding } from "../meta_building";
 import { gMetaBuildingRegistry } from "../../core/global_registries";
 import { HUDPuzzleNextPuzzle } from "../hud/parts/next_puzzle";
+import { PuzzleFullData } from "../../savegame/savegame_typedefs";
 
 const logger = createLogger("puzzle-play");
 const copy = require("clipboard-copy");
@@ -40,14 +41,19 @@ export class PuzzlePlayGameMode extends PuzzleGameMode {
         return enumGameModeIds.puzzlePlay;
     }
 
-    public hiddenBuildings = excludedBuildings;
+    public hiddenBuildings: Array<typeof MetaBuilding>
 
-    public puzzle = puzzle;
+    public puzzle: PuzzleFullData
 
-    public nextPuzzles: Array<number> = nextPuzzles || [];
+    public nextPuzzles: Array<number>;
 
-    constructor(root, { puzzle, nextPuzzles }) {
+    constructor(root: GameRoot, { puzzle, nextPuzzles }: {
+        puzzle: PuzzleFullData,
+        nextPuzzles?: number[]
+    }) {
         super(root);
+
+
 
         let excludedBuildings: Array<typeof MetaBuilding> = [
             MetaConstantProducerBuilding,
@@ -84,6 +90,12 @@ export class PuzzlePlayGameMode extends PuzzleGameMode {
                 .filter(x => !!x);
             excludedBuildings = excludedBuildings.concat(puzzleHidden);
         }
+
+        this.hiddenBuildings = excludedBuildings;
+
+        this.puzzle = puzzle;
+
+        this.nextPuzzles = nextPuzzles || [];
 
         this.additionalHudParts.puzzlePlayMetadata = HUDPuzzlePlayMetadata;
         this.additionalHudParts.puzzlePlaySettings = HUDPuzzlePlaySettings;

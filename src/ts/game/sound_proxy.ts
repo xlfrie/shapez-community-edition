@@ -11,13 +11,11 @@ const maxOngoingUiSounds = 5;
 
 // Proxy to the application sound instance
 export class SoundProxy {
-    public root = root;
-
     //// Store a list of sounds and when we started them
     public playing3DSounds = [];
     public playingUiSounds = [];
 
-    constructor(root) {}
+    constructor(public root: GameRoot) { }
 
     /**
      * Plays a new ui sound

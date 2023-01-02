@@ -108,7 +108,7 @@ export class ShapezGameAnalytics extends GameAnalyticsInterface {
 
     initialize(): Promise<void> {
         this.syncKey = null;
-        //@Bagel03 TODO
+        // @Bagel03 TODO
         window.setAbt = abt => {
             this.app.storage.writeFileAsync("shapez_" + CURRENT_ABT + ".bin", String(abt));
             window.location.reload();

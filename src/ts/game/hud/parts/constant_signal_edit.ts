@@ -11,7 +11,7 @@ import { Entity } from "../../entity";
 import { BOOL_FALSE_SINGLETON, BOOL_TRUE_SINGLETON } from "../../items/boolean_item";
 import { COLOR_ITEM_SINGLETONS } from "../../items/color_item";
 import { BaseHUDPart } from "../base_hud_part";
-import trim from "trim";
+// import trim from "trim";
 import { enumColors } from "../../colors";
 import { ShapeDefinition } from "../../shape_definition";
 
@@ -66,10 +66,11 @@ export class HUDConstantSignalEdit extends BaseHUDPart {
             label: fillInLinkIntoTranslation(T.dialogs.editSignal.descShortKey, THIRDPARTY_URLS.shapeViewer),
             placeholder: "",
             defaultValue: signal ? signal.getAsCopyableKey() : "",
-            validator: val => this.parseSignalCode(entity, val),
+            // @Bagel03 !!
+            validator: val => !!this.parseSignalCode(entity, val),
         });
 
-        const items = [...Object.values(COLOR_ITEM_SINGLETONS)];
+        const items: BaseItem[] = [...Object.values(COLOR_ITEM_SINGLETONS)];
 
         if (entity.components.WiredPins) {
             items.unshift(BOOL_FALSE_SINGLETON, BOOL_TRUE_SINGLETON);
@@ -184,7 +185,8 @@ export class HUDConstantSignalEdit extends BaseHUDPart {
             return null;
         }
 
-        code = trim(code);
+        // @bagel03 no trim dep
+        code = code.trim()
         const codeLower = code.toLowerCase();
 
         if (MODS_ADDITIONAL_CONSTANT_SIGNAL_RESOLVER[codeLower]) {

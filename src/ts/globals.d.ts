@@ -104,6 +104,9 @@ declare interface Window {
     assert(condition: boolean, failureMessage: string);
 
     coreThreadLoadedCb();
+
+    // @Bagel03
+    setAbt(abt: string): void;
 }
 
 declare interface Navigator {
@@ -222,4 +225,15 @@ declare module "crc/crc32" {
 
 declare module "@nastyox/rando.js" {
     export function rando(start: number, end: number): number
+}
+
+// import semverValidRange from "semver/ranges/valid";
+// import semverSatisifies from "semver/functions/satisfies";
+
+declare module "semver/ranges/valid" {
+    export default function semverValidRange(str: string): boolean
+}
+
+declare module "semver/functions/satisfies" {
+    export default function semverSatisifies(a: string, b: string): boolean
 }

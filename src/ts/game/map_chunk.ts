@@ -160,7 +160,7 @@ export class MapChunk {
         distanceToOriginInChunks: number
     ) {
         // First, determine available colors
-        let availableColors = [enumColors.red, enumColors.green];
+        let availableColors: enumColors[] = [enumColors.red, enumColors.green];
         if (distanceToOriginInChunks > 2) {
             availableColors.push(enumColors.blue);
         }
@@ -247,7 +247,7 @@ export class MapChunk {
         for (const key in weights) {
             const weight = weights[key];
             if (accumulated + weight > chosenNumber) {
-                return key;
+                return key as enumSubShape;
             }
             accumulated += weight;
         }

@@ -31,9 +31,8 @@ export class BooleanItem extends BaseItem {
     getAsCopyableKey(): string {
         return this.value ? "1" : "0";
     }
-    public value = value ? 1 : 0;
 
-    constructor(value) {
+    constructor(public value: number) {
         super();
     }
 

@@ -7,10 +7,12 @@ export class FastForwardGameSpeed extends BaseGameSpeed {
     }
 
     getTimeMultiplier() {
+        // @ts-ignore @BAgel03 I need better way of global config
         return globalConfig.fastForwardSpeed;
     }
 
     getMaxLogicStepsInQueue() {
+        // @ts-ignore
         return 3 * globalConfig.fastForwardSpeed;
     }
 }

@@ -6,17 +6,14 @@ import { CHUNK_OVERLAY_RES } from "./map_chunk_view";
 import { GameRoot } from "./root";
 
 export class MapChunkAggregate {
-    public root = root;
-    public x = x;
-    public y = y;
-
     /** Whenever something changes, we increase this number - so we know we need to redraw */
     public renderIteration = 0;
     public dirty = false;
 
     public dirtyList: Array<boolean> = new Array(globalConfig.chunkAggregateSize ** 2).fill(true);
+    public renderKey: string;
 
-    constructor(root, x, y) {
+    constructor(public root: GameRoot, public x: number, public y: number) {
         this.markDirty(0, 0);
     }
 

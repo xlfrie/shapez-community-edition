@@ -318,19 +318,28 @@ export function getStringForKeyCode(code: number): string {
 }
 
 export class Keybinding {
-    public keyMapper = keyMapper;
-    public app = app;
-    public keyCode = keyCode;
-    public builtin = builtin;
-    public repeated = repeated;
 
-    public modifiers = modifiers;
+    public keyCode: number;
+    public builtin: boolean;
+    public repeated: boolean;
+    public modifiers: { shift?: boolean; alt?: boolean; ctrl?: boolean; };
 
     public signal = new Signal();
     public toggled = new Signal();
 
-    constructor(keyMapper, app, { keyCode, builtin = false, repeated = false, modifiers = {} }) {
+    constructor(public keyMapper: KeyActionMapper, public app: Application, { keyCode, builtin = false, repeated = false, modifiers = {} }: {
+        keyCode: number,
+        builtin?: boolean,
+        repeated?: boolean,
+        modifiers?: { shift?: boolean; alt?: boolean; ctrl?: boolean; }
+    }) {
         assert(keyCode && Number.isInteger(keyCode), "Invalid key code: " + keyCode);
+
+        this.keyCode = keyCode;
+        this.builtin = builtin;
+        this.repeated = repeated;
+
+        this.modifiers = modifiers;
     }
 
     /** Returns whether this binding is currently pressed */
@@ -378,16 +387,13 @@ export class Keybinding {
 }
 
 export class KeyActionMapper {
-    public root = root;
-    public inputReceiver = inputReciever;
-
     public keybindings: {
         [idx: string]: Keybinding;
     } = {};
 
-    constructor(root, inputReciever) {
-        inputReciever.keydown.add(this.handleKeydown, this);
-        inputReciever.keyup.add(this.handleKeyup, this);
+    constructor(public root: GameRoot, public inputReceiver: InputReceiver) {
+        inputReceiver.keydown.add(this.handleKeydown, this);
+        inputReceiver.keyup.add(this.handleKeyup, this);
 
         const overrides = root.app.settings.getKeybindingOverrides();
 
@@ -408,8 +414,8 @@ export class KeyActionMapper {
             }
         }
 
-        inputReciever.pageBlur.add(this.onPageBlur, this);
-        inputReciever.destroyed.add(this.cleanup, this);
+        inputReceiver.pageBlur.add(this.onPageBlur, this);
+        inputReceiver.destroyed.add(this.cleanup, this);
     }
 
     /** Returns all keybindings starting with the given id */

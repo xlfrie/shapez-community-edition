@@ -8,15 +8,12 @@ import { GameRoot } from "../root";
 // Also attaches a class name if desired
 
 export class DynamicDomAttach {
-    public root: GameRoot = root;
-
-    public element: HTMLElement = element;
     public parent = this.element.parentElement;
 
-    public attachClass = attachClass;
-    public trackHover = trackHover;
+    public attachClass: string;
+    public trackHover: boolean;
+    public timeToKeepSeconds: number;
 
-    public timeToKeepSeconds = timeToKeepSeconds;
     public lastVisibleTime = 0;
 
     //// We start attached, so detach the node first
@@ -32,6 +29,7 @@ export class DynamicDomAttach {
 
     //// Track the 'hovered' class
     public trackedIsHovered = new TrackedState(this.setIsHoveredClass, this);
+
     /**
      * @param param2.timeToKeepSeconds How long to keep the element visible (in ms) after it should be hidden.
      * Useful for fade-out effects
@@ -40,8 +38,17 @@ export class DynamicDomAttach {
      * for fading out the element if its below the cursor for example.
      */
 
-    constructor(root, element, { timeToKeepSeconds = 0, attachClass = null, trackHover = false } = {}) {
+    constructor(public root: GameRoot, public element: HTMLElement, { timeToKeepSeconds = 0, attachClass = null, trackHover = false }: {
+        timeToKeepSeconds?: number,
+        attachClass?: string,
+        trackHover?: boolean
+    } = {}) {
         assert(this.parent, "Dom attach created without parent");
+
+        this.attachClass = attachClass;
+        this.trackHover = trackHover;
+
+        this.timeToKeepSeconds = timeToKeepSeconds;
         this.internalDetach();
     }
 
@@ -96,9 +103,9 @@ export class DynamicDomAttach {
                 if (mousePos) {
                     this.trackedIsHovered.set(
                         mousePos.x > bounds.left &&
-                            mousePos.x < bounds.right &&
-                            mousePos.y > bounds.top &&
-                            mousePos.y < bounds.bottom
+                        mousePos.x < bounds.right &&
+                        mousePos.y > bounds.top &&
+                        mousePos.y < bounds.bottom
                     );
                 }
             }

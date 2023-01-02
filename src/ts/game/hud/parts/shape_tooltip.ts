@@ -2,13 +2,14 @@ import { DrawParameters } from "../../../core/draw_parameters";
 import { enumDirectionToVector, Vector } from "../../../core/vector";
 import { Entity } from "../../entity";
 import { KEYMAPPINGS } from "../../key_action_mapper";
+import { MetaBuilding } from "../../meta_building";
 import { THEME } from "../../theme";
 import { BaseHUDPart } from "../base_hud_part";
 
 export class HUDShapeTooltip extends BaseHUDPart {
     public currentTile: Vector;
     public currentEntity: Entity;
-    public isPlacingBuilding: boolean;
+    public isPlacingBuilding: boolean | MetaBuilding;
 
     createElements(parent) { }
 

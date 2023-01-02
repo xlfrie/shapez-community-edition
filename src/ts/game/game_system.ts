@@ -8,20 +8,18 @@ import type { DrawParameters } from "../core/draw_parameters";
  * required components. This is the core of the game logic.
  */
 export class GameSystem {
-    public root = root;
-
-    constructor(root) {}
+    constructor(public root: GameRoot) { }
 
     ///// PUBLIC API /////
 
     /** Updates the game system, override to perform logic */
-    update() {}
+    update() { }
 
     /** Override, do not call this directly, use startDraw() */
-    draw(parameters: DrawParameters) {}
+    draw(parameters: DrawParameters) { }
 
     /** Should refresh all caches */
-    refreshCaches() {}
+    refreshCaches() { }
 
     /** @see GameSystem.draw Wrapper arround the draw method */
     startDraw(parameters: DrawParameters) {

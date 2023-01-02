@@ -29,7 +29,7 @@ export class HUDShop extends BaseHUDPart {
     public keyActionMapper: KeyActionMapper;
     public visible: boolean;
 
-    createElements(parent: HTMLElement) {
+    createElements(parent) {
         this.background = makeDiv(parent, "ingame_HUD_Shop", ["ingameDialog"]);
 
         // DIALOG Inner / Wrapper

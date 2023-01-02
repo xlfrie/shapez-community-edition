@@ -5,9 +5,7 @@ import type { GameRoot } from "../root";
 import { BasicSerializableObject } from "../../savegame/serialization";
 
 export class BaseGameSpeed extends BasicSerializableObject {
-    public root = root;
-
-    constructor(root) {
+    constructor(public root: GameRoot) {
         super();
         this.initializeAfterDeserialize(root);
     }

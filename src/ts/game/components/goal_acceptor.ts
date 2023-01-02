@@ -19,11 +19,15 @@ export class GoalAcceptorComponent extends Component {
 
     //// ths item to produce
 
-    public item: BaseItem | undefined = item;
+    public item: BaseItem;
 
-    constructor({ item = null, rate = null }) {
+    constructor({ item = null, rate = null }: {
+        item?: BaseItem;
+        rate?: number
+    }) {
         super();
 
+        this.item = item;
         this.clear();
     }
 

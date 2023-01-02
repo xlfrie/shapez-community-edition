@@ -54,7 +54,7 @@ export class HUDBaseToolbar extends BaseHUDPart {
     }
 
     /** Should create all require elements */
-    createElements(parent: HTMLElement) {
+    createElements(parent) {
         this.element = makeDiv(parent, this.htmlElementId, ["ingame_buildingsToolbar"], "");
     }
 

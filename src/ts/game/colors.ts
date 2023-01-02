@@ -12,7 +12,7 @@ export const enumColors = {
 
     white: "white",
     uncolored: "uncolored",
-};
+} as const;
 export type enumColors = keyof typeof enumColors;
 
 const c = enumColors;

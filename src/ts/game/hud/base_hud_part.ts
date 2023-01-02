@@ -13,7 +13,7 @@ export class BaseHUDPart {
     constructor(public root: GameRoot) { }
 
     /** Should create all require elements */
-    createElements(parent: HTMLElement) { }
+    createElements(parent: DocumentFragment) { }
 
     /**
      * Should initialize the element, called *after* the elements have been created

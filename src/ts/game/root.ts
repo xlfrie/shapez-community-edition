@@ -29,6 +29,7 @@ import type { DynamicTickrate } from "./dynamic_tickrate";
 import type { KeyActionMapper } from "./key_action_mapper";
 import type { Vector } from "../core/vector";
 import type { GameMode } from "./game_mode";
+import { enumHubGoalRewards } from "./tutorial_goals";
 /* typehints:end */
 
 const logger = createLogger("game/root");
@@ -130,7 +131,7 @@ export class GameRoot {
 
         gameFrameStarted: new Signal<[]>(),
 
-        storyGoalCompleted: new Signal<[number, string]>(),
+        storyGoalCompleted: new Signal<[number, enumHubGoalRewards]>(),
         upgradePurchased: new Signal<[string]>(),
 
         // Called right after game is initialized
@@ -188,6 +189,7 @@ export class GameRoot {
     reset() {
         if (this.signals) {
             // Destruct all signals
+            // @ts-ignore @Bagel0 wtf
             for (let i = 0; i < this.signals.length; ++i) {
                 this.signals[i].removeAll();
             }

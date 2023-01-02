@@ -13,8 +13,6 @@ import { createLogger } from "../../core/logging";
 const logger = createLogger("game_time");
 
 export class GameTime extends BasicSerializableObject {
-    public root = root;
-
     //// Current ingame time seconds, not incremented while paused
     public timeSeconds = 0;
 
@@ -29,7 +27,7 @@ export class GameTime extends BasicSerializableObject {
     //// Store how much time we have in bucket
     public logicTimeBudget = 0;
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         super();
     }
 

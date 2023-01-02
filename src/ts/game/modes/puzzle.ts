@@ -8,8 +8,10 @@ import { enumGameModeTypes, GameMode } from "../game_mode";
 import { HUDPuzzleBackToMenu } from "../hud/parts/puzzle_back_to_menu";
 import { HUDPuzzleDLCLogo } from "../hud/parts/puzzle_dlc_logo";
 import { HUDMassSelector } from "../hud/parts/mass_selector";
+import { BaseHUDPart } from "../hud/base_hud_part";
 
 export class PuzzleGameMode extends GameMode {
+
     static getType() {
         return enumGameModeTypes.puzzle;
     }
@@ -25,15 +27,17 @@ export class PuzzleGameMode extends GameMode {
         puzzleBackToMenu: HUDPuzzleBackToMenu,
         puzzleDlcLogo: HUDPuzzleDLCLogo,
         massSelector: HUDMassSelector,
-    };
+    } as Record<string, Class<BaseHUDPart>>;
 
-    public zoneWidth = data.zoneWidth || 8;
-    public zoneHeight = data.zoneHeight || 6;
+    zoneWidth: number;
+    zoneHeight: number;
 
     constructor(root) {
         super(root);
 
         const data = this.getSaveData();
+        this.zoneWidth = data.zoneWidth || 8;
+        this.zoneHeight = data.zoneHeight || 6;
     }
 
     isBuildingExcluded(building: typeof import("../meta_building").MetaBuilding) {
@@ -45,6 +49,7 @@ export class PuzzleGameMode extends GameMode {
         if (!save) {
             return {};
         }
+        // @ts-ignore @Bagel03
         return save.gameMode.data;
     }
 

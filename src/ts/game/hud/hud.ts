@@ -6,6 +6,7 @@ import { KEYMAPPINGS } from "../key_action_mapper";
 import { MetaBuilding } from "../meta_building";
 import { GameRoot } from "../root";
 import { ShapeDefinition } from "../shape_definition";
+import { BaseHUDPart } from "./base_hud_part";
 import { HUDBetaOverlay } from "./parts/beta_overlay";
 import { HUDBlueprintPlacer } from "./parts/blueprint_placer";
 import { HUDBuildingsToolbar } from "./parts/buildings_toolbar";
@@ -22,8 +23,20 @@ import { HUDVignetteOverlay } from "./parts/vignette_overlay";
 import { TrailerMaker } from "./trailer_maker";
 
 export class GameHUD {
-    parts: any;
-    signals: any;
+    public parts: Record<string, BaseHUDPart> & any;
+    public signals: {
+        buildingSelectedForPlacement: Signal<[MetaBuilding | null]>,
+        selectedPlacementBuildingChanged: Signal<[MetaBuilding | null]>,
+        shapePinRequested: Signal<[ShapeDefinition]>,
+        shapeUnpinRequested: Signal<[string]>,
+        notification: Signal<[string, enumNotificationType]>,
+        buildingsSelectedForCopy: Signal<[Array<number>]>,
+        pasteBlueprintRequested: Signal<[]>,
+        viewShapeDetailsRequested: Signal<[ShapeDefinition]>,
+        unlockNotificationFinished: Signal<[]>,
+    };
+    public trailerMaker: TrailerMaker;
+    ;
 
     constructor(public root: GameRoot) { }
 

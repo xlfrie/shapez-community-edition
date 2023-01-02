@@ -83,7 +83,7 @@ export class HubGoals extends BasicSerializableObject {
         [idx: string]: number;
     } = {};
 
-    public currentGoal: { definition: ShapeDefinition; required: number; reward: string; throughputOnly: boolean; };
+    public currentGoal: { definition: ShapeDefinition; required: number; reward: enumHubGoalRewards; throughputOnly: boolean; };
 
     constructor(public root: GameRoot) {
         super();
@@ -312,7 +312,7 @@ export class HubGoals extends BasicSerializableObject {
 
     /** Picks random colors which are close to each other */
     generateRandomColorSet(rng: RandomNumberGenerator, allowUncolored = false) {
-        const colorWheel = [
+        const colorWheel: enumColors[] = [
             enumColors.red,
             enumColors.yellow,
             enumColors.green,
@@ -323,7 +323,7 @@ export class HubGoals extends BasicSerializableObject {
             enumColors.yellow,
         ];
 
-        const universalColors = [enumColors.white];
+        const universalColors: enumColors[] = [enumColors.white];
         if (allowUncolored) {
             universalColors.push(enumColors.uncolored);
         }

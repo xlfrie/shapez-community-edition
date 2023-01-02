@@ -39,64 +39,63 @@ export const MODS_ADDITIONAL_SYSTEMS: {
 } = {};
 
 export class GameSystemManager {
-    public root = root;
 
-    public systems = {
+    declare public systems: {
         /* typehints:start */
 
-        belt: null,
+        belt: BeltSystem,
 
-        itemEjector: null,
+        itemEjector: ItemEjectorSystem,
 
-        mapResources: null,
+        mapResources: MapResourcesSystem,
 
-        miner: null,
+        miner: MinerSystem,
 
-        itemProcessor: null,
+        itemProcessor: ItemProcessorSystem,
 
-        undergroundBelt: null,
+        undergroundBelt: UndergroundBeltSystem,
 
-        hub: null,
+        hub: HubSystem,
 
-        staticMapEntities: null,
+        staticMapEntities: StaticMapEntitySystem,
 
-        itemAcceptor: null,
+        itemAcceptor: ItemAcceptorSystem,
 
-        storage: null,
+        storage: StorageSystem,
 
-        wiredPins: null,
+        wiredPins: WiredPinsSystem,
 
-        beltUnderlays: null,
+        beltUnderlays: BeltUnderlaysSystem,
 
-        wire: null,
+        wire: WireSystem,
 
-        constantSignal: null,
+        constantSignal: ConstantSignalSystem,
 
-        logicGate: null,
+        logicGate: LogicGateSystem,
 
-        lever: null,
+        lever: LeverSystem,
 
-        display: null,
+        display: DisplaySystem,
 
-        itemProcessorOverlays: null,
+        itemProcessorOverlays: ItemProcessorOverlaysSystem,
 
-        beltReader: null,
+        beltReader: BeltReaderSystem,
 
-        filter: null,
+        filter: FilterSystem,
 
-        itemProducer: null,
+        itemProducer: ItemProducerSystem,
 
-        ConstantProducer: null,
+        constantProducer: ConstantProducerSystem,
 
-        GoalAcceptor: null,
+        goalAcceptor: GoalAcceptorSystem,
 
-        zone: null,
+        zone: ZoneSystem,
 
         /* typehints:end */
     };
     public systemUpdateOrder = [];
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         this.internalInitSystems();
     }
 

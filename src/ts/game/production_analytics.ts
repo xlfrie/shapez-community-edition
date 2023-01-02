@@ -19,7 +19,6 @@ export class ProductionAnalytics extends BasicSerializableObject {
     static getId() {
         return "ProductionAnalytics";
     }
-    public root = root;
 
     public history = {
         [enumAnalyticsDataSource.produced]: [],
@@ -29,7 +28,7 @@ export class ProductionAnalytics extends BasicSerializableObject {
 
     public lastAnalyticsSlice = 0;
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         super();
 
         for (let i = 0; i < globalConfig.statisticsGraphSlices; ++i) {

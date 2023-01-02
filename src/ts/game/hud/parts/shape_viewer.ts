@@ -91,7 +91,9 @@ export class HUDShapeViewer extends BaseHUDPart {
         this.currentShapeKey = definition.getHash();
 
         const layers = definition.layers;
-        this.contentDiv.setAttribute("data-layers", layers.length);
+
+        // @BAgel03 .tostring
+        this.contentDiv.setAttribute("data-layers", layers.length.toString());
 
         for (let i = layers.length - 1; i >= 0; --i) {
             const layerElem = makeDiv(this.renderArea, null, ["layer", "layer-" + i]);

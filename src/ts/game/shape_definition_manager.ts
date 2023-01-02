@@ -12,7 +12,6 @@ export class ShapeDefinitionManager extends BasicSerializableObject {
     static getId() {
         return "ShapeDefinitionManager";
     }
-    public root = root;
 
     /** Store a cache from key -> definition */
     public shapeKeyToDefinition: {
@@ -28,7 +27,7 @@ export class ShapeDefinitionManager extends BasicSerializableObject {
         [idx: string]: Array<ShapeDefinition> | ShapeDefinition;
     } = {};
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         super();
     }
 

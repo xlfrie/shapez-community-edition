@@ -70,9 +70,9 @@ export class ColorItem extends BaseItem {
 
 /** Singleton instances */
 export const COLOR_ITEM_SINGLETONS: {
-    [idx: enumColors]: ColorItem;
-} = {};
+    [idx in enumColors]: ColorItem;
+} = {} as any;
 
 for (const color in enumColors) {
-    COLOR_ITEM_SINGLETONS[color] = new ColorItem(color);
+    COLOR_ITEM_SINGLETONS[color] = new ColorItem(color as enumColors);
 }

@@ -48,7 +48,7 @@ export class GameMode extends BasicSerializableObject {
         return new (gGameModeRegistry.findById(id))(root, payload);
     }
 
-    public additionalHudParts: Record<string, typeof BaseHUDPart> = {};
+    public additionalHudParts: Record<string, Class<BaseHUDPart>> = {};
 
     public hiddenBuildings: typeof MetaBuilding[] = [MetaItemProducerBuilding];
 

@@ -10,7 +10,7 @@ import { GameSystemWithFilter } from "../game_system_with_filter";
 import { MapChunkView } from "../map_chunk_view";
 
 const enumTypeToSize: {
-    [idx: ItemType]: number;
+    [idx in ItemType]: number;
 } = {
     boolean: 9,
     shape: 9,

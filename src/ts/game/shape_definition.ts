@@ -104,15 +104,17 @@ export class ShapeDefinition extends BasicSerializableObject {
     }
 
     /** The layers from bottom to top */
-    public layers: Array<ShapeLayer> = layers;
+    public layers: Array<ShapeLayer>;
 
     public cachedHash: string = null;
 
     //// Set on demand
     public bufferGenerator = null;
 
-    constructor({ layers = [] }) {
+    constructor({ layers = [] }: { layers?: ShapeLayer[] }) {
         super();
+
+        this.layers = layers;
     }
 
     /** Generates the definition from the given short key */

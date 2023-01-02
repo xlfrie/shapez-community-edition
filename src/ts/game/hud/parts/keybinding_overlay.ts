@@ -100,7 +100,7 @@ export class HUDKeybindingOverlay extends BaseHUDPart {
     }
 
     /** Initializes the element */
-    createElements(parent: HTMLElement) {
+    createElements(parent) {
         const mapper = this.root.keyMapper;
         const k = KEYMAPPINGS;
 

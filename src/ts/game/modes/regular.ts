@@ -38,6 +38,7 @@ import { MetaItemProducerBuilding } from "../buildings/item_producer";
 import { MOD_SIGNALS } from "../../mods/mod_signals";
 import { finalGameShape, generateLevelsForVariant } from "./levels";
 import { WEB_STEAM_SSO_AUTHENTICATED } from "../../core/steam_sso";
+import { BaseHUDPart } from "../hud/base_hud_part";
 
 export type UpgradeRequirement = {
     shape: string;
@@ -68,9 +69,10 @@ const tierGrowth = 2.5;
 const upgradesCache = {};
 
 /** Generates all upgrades * @returns */
-function generateUpgrades(limitedVersion = false, difficulty = 1): Object<string, UpgradeTiers> {
-    if (upgradesCache[limitedVersion]) {
-        return upgradesCache[limitedVersion];
+function generateUpgrades(limitedVersion = false, difficulty = 1): Record<string, UpgradeTiers> {
+    // @Bagel03 .toString
+    if (upgradesCache[limitedVersion.toString()]) {
+        return upgradesCache[limitedVersion.toString()];
     }
 
     const fixedImprovements = [0.5, 0.5, 1, 1, 2, 1, 1];
@@ -283,8 +285,8 @@ function generateUpgrades(limitedVersion = false, difficulty = 1): Object<string
             });
         }
     }
-
-    upgradesCache[limitedVersion] = upgrades;
+    // @Bagel03 .toString
+    upgradesCache[limitedVersion.toString()] = upgrades;
     return upgrades;
 }
 
@@ -319,6 +321,7 @@ export class RegularGameMode extends GameMode {
         return enumGameModeTypes.default;
     }
 
+    // @Bagel03 IDK
     public additionalHudParts = {
         wiresToolbar: HUDWiresToolbar,
         unlockNotification: HUDUnlockNotification,
@@ -338,7 +341,7 @@ export class RegularGameMode extends GameMode {
         tutorialVideoOffer: HUDTutorialVideoOffer,
         gameMenu: HUDGameMenu,
         constantSignalEdit: HUDConstantSignalEdit,
-    };
+    } as Record<string, Class<BaseHUDPart>>;
 
     public hiddenBuildings: typeof MetaBuilding[] = [
         MetaConstantProducerBuilding,
@@ -373,7 +376,7 @@ export class RegularGameMode extends GameMode {
     }
 
     /** Should return all available upgrades */
-    getUpgrades(): Object<string, UpgradeTiers> {
+    getUpgrades(): Record<string, UpgradeTiers> {
         return generateUpgrades(
             !this.root.app.restrictionMgr.getHasExtendedUpgrades(),
             this.difficultyMultiplicator

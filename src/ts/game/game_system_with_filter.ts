@@ -9,8 +9,7 @@ import { arrayDelete, arrayDeleteValue } from "../core/utils";
 import { globalConfig } from "../core/config";
 
 export class GameSystemWithFilter extends GameSystem {
-    public requiredComponents = requiredComponents;
-    public requiredComponentIds = requiredComponents.map(component => component.getId());
+    public requiredComponentIds = this.requiredComponents.map(component => component.getId());
 
     /** All entities which match the current components */
     public allEntities: Array<Entity> = [];
@@ -18,8 +17,7 @@ export class GameSystemWithFilter extends GameSystem {
      * Constructs a new game system with the given component filter. It will process
      * all entities which have *all* of the passed components
      */
-
-    constructor(root, requiredComponents) {
+    constructor(root, public requiredComponents: typeof Component[]) {
         super(root);
 
         this.root.signals.entityAdded.add(this.internalPushEntityIfMatching, this);

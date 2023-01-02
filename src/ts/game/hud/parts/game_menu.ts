@@ -93,7 +93,7 @@ export class HUDGameMenu extends BaseHUDPart {
 
     update() {
         let playSound = false;
-        let notifications = new Set();
+        let notifications = new Set<[string, enumNotificationType]>();
 
         // Check whether we are saving
         this.trackedIsSaving.set(!!this.root.gameState.currentSavePromise);

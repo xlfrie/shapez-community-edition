@@ -38,7 +38,7 @@ export class HUDBuildingPlacer extends HUDBuildingPlacerLogic {
     public lockIndicatorSprites: {};
     public variantClickDetectors: ClickDetector[];
 
-    createElements(parent: HTMLElement) {
+    createElements(parent) {
         this.element = makeDiv(parent, "ingame_HUD_PlacementHints", [], ``);
 
         this.buildingInfoElements = {} as any;

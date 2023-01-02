@@ -122,7 +122,8 @@ export class HUDPuzzleCompleteNotification extends BaseHUDPart {
         });
     }
 
-    close(toMenu: boolean) {
+
+    close(toMenu?: boolean) {
         (this.root.gameMode as PuzzlePlayGameMode)
             .trackCompleted(this.userDidLikePuzzle, Math.round(this.timeOfCompletion))
             .then(() => {

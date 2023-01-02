@@ -55,7 +55,7 @@ export class HUDWaypoints extends BaseHUDPart {
     public cachedTextWidths: {};
 
     /** Creates the overview of waypoints */
-    createElements(parent: HTMLElement) {
+    createElements(parent) {
         // Create the helper box on the lower right when zooming out
         if (this.root.app.settings.getAllSettings().offerHints) {
             this.hintElement = makeDiv(

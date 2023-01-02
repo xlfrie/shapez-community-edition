@@ -499,7 +499,7 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
         const shapeItem = payload.items.get(0) as ShapeItem;
         assert(shapeItem instanceof ShapeItem, "Input for painter is not a shape");
 
-        const colors: Array<enumColors> = [null, null, null, null];
+        const colors: [enumColors, enumColors, enumColors, enumColors] = [null, null, null, null];
         for (let i = 0; i < 4; ++i) {
             const colorItem = payload.items.get(i + 1) as ColorItem;
             if (colorItem) {
@@ -509,7 +509,7 @@ export class ItemProcessorSystem extends GameSystemWithFilter {
 
         const colorizedDefinition = this.root.shapeDefinitionMgr.shapeActionPaintWith4Colors(
             shapeItem.definition,
-            colors as [string, string, string, string]
+            colors
         );
 
         payload.outItems.push({

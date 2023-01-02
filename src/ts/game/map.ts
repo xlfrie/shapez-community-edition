@@ -17,7 +17,6 @@ export class BaseMap extends BasicSerializableObject {
             seed: types.uint,
         };
     }
-    public root = root;
 
     public seed = 0;
 
@@ -27,7 +26,7 @@ export class BaseMap extends BasicSerializableObject {
     /** Mapping of 'X|Y' to chunk aggregate * */
     public aggregatesById: Map<string, MapChunkAggregate> = new Map();
 
-    constructor(root) {
+    constructor(public root: GameRoot) {
         super();
     }
 
@@ -82,7 +81,7 @@ export class BaseMap extends BasicSerializableObject {
     }
 
     /** Gets a chunk if not existent for the given tile */
-    getChunkAtTileOrNull(tileX: number, tileY: number): ?MapChunkView {
+    getChunkAtTileOrNull(tileX: number, tileY: number): MapChunkView | null {
         const chunkX = Math.floor(tileX / globalConfig.mapChunkSize);
         const chunkY = Math.floor(tileY / globalConfig.mapChunkSize);
         return this.getChunk(chunkX, chunkY, false);

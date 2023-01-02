@@ -22,6 +22,7 @@ export const MOD_CHUNK_DRAW_HOOKS = {
 export class MapChunkView extends MapChunk {
     /** Whenever something changes, we increase this number - so we know we need to redraw */
     public renderIteration = 0;
+    public renderKey: string;
 
     constructor(root, x, y) {
         super(root, x, y);
