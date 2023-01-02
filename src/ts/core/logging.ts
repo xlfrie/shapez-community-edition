@@ -1,5 +1,5 @@
 import { globalConfig } from "../core/config";
-const circularJson = require("circular-json");
+import circularJson from "circular-json";
 
 /*
 Logging functions
@@ -8,7 +8,7 @@ Logging functions
 
 /** Base logger class */
 class Logger {
-    constructor(public context: string) {}
+    constructor(public context: string) { }
 
     debug(...args) {
         globalDebug(this.context, ...args);

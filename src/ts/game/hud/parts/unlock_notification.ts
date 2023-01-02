@@ -101,9 +101,8 @@ export class HUDUnlockNotification extends BaseHUDPart {
         if (gained) {
             gained.forEach(([metaBuildingClass, variant]) => {
                 const metaBuilding = gMetaBuildingRegistry.findByClass(metaBuildingClass);
-                html += `<div class="buildingExplanation" data-icon="building_tutorials/${
-                    metaBuilding.getId() + (variant === defaultBuildingVariant ? "" : "-" + variant)
-                }.png"></div>`;
+                html += `<div class="buildingExplanation" data-icon="building_tutorials/${metaBuilding.getId() + (variant === defaultBuildingVariant ? "" : "-" + variant)
+                    }.png"></div>`;
             });
         }
         html += "</div>";
@@ -118,7 +117,7 @@ export class HUDUnlockNotification extends BaseHUDPart {
         this.element.querySelector("button.close").classList.remove("unlocked");
 
         if (this.root.app.settings.getAllSettings().offerHints) {
-            this.buttonShowTimeout = setTimeout(
+            this.buttonShowTimeout = window.setTimeout(
                 () => this.element.querySelector("button.close").classList.add("unlocked"),
                 G_IS_DEV ? 100 : 1500
             );

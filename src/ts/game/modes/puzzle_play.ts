@@ -34,8 +34,7 @@ import { HUDPuzzleNextPuzzle } from "../hud/parts/next_puzzle";
 import { PuzzleFullData } from "../../savegame/savegame_typedefs";
 
 const logger = createLogger("puzzle-play");
-const copy = require("clipboard-copy");
-
+import copy from "clipboard-copy";
 export class PuzzlePlayGameMode extends PuzzleGameMode {
     static getId() {
         return enumGameModeIds.puzzlePlay;

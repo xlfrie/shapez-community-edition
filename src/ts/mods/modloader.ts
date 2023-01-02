@@ -92,7 +92,8 @@ export class ModLoader {
     exposeExports() {
         if (G_IS_DEV || G_IS_STANDALONE) {
             let exports = {};
-            const modules = require.context("../", true, /\.js$/);
+            // @ts-ignore
+            const modules = import.meta.webpackContext("../", true, /\.js$/);
             Array.from(modules.keys()).forEach(key => {
                 // @ts-ignore
                 const module = modules(key);
@@ -204,12 +205,12 @@ export class ModLoader {
                 if (!semverSatisifies(G_BUILD_VERSION, minimumGameVersion)) {
                     alert(
                         "Mod  '" +
-                            meta.id +
-                            "' is incompatible with this version of the game: \n\n" +
-                            "Mod requires version " +
-                            minimumGameVersion +
-                            " but this game has version " +
-                            G_BUILD_VERSION
+                        meta.id +
+                        "' is incompatible with this version of the game: \n\n" +
+                        "Mod requires version " +
+                        minimumGameVersion +
+                        " but this game has version " +
+                        G_BUILD_VERSION
                     );
                     continue;
                 }

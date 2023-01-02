@@ -1,5 +1,4 @@
 import { T } from "../translations";
-import { rando } from "@nastyox/rando.js";
 import { WEB_STEAM_SSO_AUTHENTICATED } from "./steam_sso";
 
 const bigNumberSuffixTranslationKeys = ["thousands", "millions", "billions", "trillions"];
@@ -30,7 +29,7 @@ export function newEmptyMap() {
 
 /** Returns a random integer in the range [start,end] */
 export function randomInt(start: number, end: number) {
-    return rando(start, end);
+    return Math.floor(Math.random() * (end - start + 1) + start);
 }
 
 /** Access an object in a very annoying way, used for obsfuscation. */
@@ -443,9 +442,9 @@ export function formatItemsPerSecond(
         (speed === 1.0
             ? T.ingame.buildingPlacement.infoTexts.oneItemPerSecond
             : T.ingame.buildingPlacement.infoTexts.itemsPerSecond.replace(
-                  "<x>",
-                  round2Digits(speed).toString().replace(".", separator)
-              )) + (double ? "  " + T.ingame.buildingPlacement.infoTexts.itemsPerSecondDouble : "")
+                "<x>",
+                round2Digits(speed).toString().replace(".", separator)
+            )) + (double ? "  " + T.ingame.buildingPlacement.infoTexts.itemsPerSecondDouble : "")
     );
 }
 

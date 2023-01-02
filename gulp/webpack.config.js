@@ -20,9 +20,9 @@ const globalDefs = {
     G_WEGAME_VERSION: "false",
     G_GOG_VERSION: "false",
     G_IS_RELEASE: "false",
-    G_IS_STANDALONE: "true",
+    G_IS_STANDALONE: "false",
     G_IS_STEAM_DEMO: "false",
-    G_IS_BROWSER: "false",
+    G_IS_BROWSER: "true",
     G_HAVE_ASSERT: "true",
 };
 

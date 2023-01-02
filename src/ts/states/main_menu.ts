@@ -24,8 +24,6 @@ import { PlatformWrapperImplElectron } from "../platform/electron/wrapper";
 import { Savegame } from "../savegame/savegame";
 import { T } from "../translations";
 
-const trim = require("trim");
-
 export type SavegameMetadata = import("../savegame/savegame_typedefs").SavegameMetadata;
 
 export type EnumSetting = import("../profile/setting_types").EnumSetting;
@@ -68,27 +66,26 @@ export class MainMenuState extends GameState {
 
             <div class="points">
                 ${Array.from(Object.entries(T.ingame.standaloneAdvantages.points))
-                    .slice(0, 6)
-                    .map(
-                        ([key, trans]: [string, any]) => `
+                .slice(0, 6)
+                .map(
+                    ([key, trans]: [string, any]) => `
                 <div class="point ${key}">
                     <strong>${trans.title}</strong>
                     <p>${trans.desc}</p>
                 </div>`
-                    )
-                    .join("")}
+                )
+                .join("")}
 
             </div>
 
 
             <a href="#" class="steamLink steam_dlbtn_0" target="_blank">
-            ${
-                globalConfig.currentDiscount > 0
-                    ? `<span class='discount'>${T.global.discount.replace(
-                          "<percentage>",
-                          String(globalConfig.currentDiscount)
-                      )}</span>`
-                    : ""
+            ${globalConfig.currentDiscount > 0
+                ? `<span class='discount'>${T.global.discount.replace(
+                    "<percentage>",
+                    String(globalConfig.currentDiscount)
+                )}</span>`
+                : ""
             }
                 Play shapez on Steam
             </a>
@@ -120,31 +117,27 @@ export class MainMenuState extends GameState {
                 <div class="mainContainer">
                     <div class="buttons"></div>
                     <div class="savegamesMount"></div>
-                    ${
-                        G_IS_STANDALONE || !WEB_STEAM_SSO_AUTHENTICATED
-                            ? `<div class="steamSso">
-                                <span class="description">${
-                                    G_IS_STANDALONE
-                                        ? T.mainMenu.playFullVersionStandalone
-                                        : T.mainMenu.playFullVersionV2
-                                }</span>
-                                <a class="ssoSignIn" target="_blank" href="${
-                                    this.app.clientApi.getEndpoint() + "/v1/noauth/steam-sso"
-                                }">Sign in</a>
+                    ${G_IS_STANDALONE || !WEB_STEAM_SSO_AUTHENTICATED
+                ? `<div class="steamSso">
+                                <span class="description">${G_IS_STANDALONE
+                    ? T.mainMenu.playFullVersionStandalone
+                    : T.mainMenu.playFullVersionV2
+                }</span>
+                                <a class="ssoSignIn" target="_blank" href="${this.app.clientApi.getEndpoint() + "/v1/noauth/steam-sso"
+                }">Sign in</a>
                             </div>`
-                            : ""
-                    }
-                    ${
-                        WEB_STEAM_SSO_AUTHENTICATED
-                            ? `
+                : ""
+            }
+                    ${WEB_STEAM_SSO_AUTHENTICATED
+                ? `
                             <div class="steamSso">
                                 <span class="description">${T.mainMenu.playingFullVersion}</span>
                                 <a class="ssoSignOut" href="?sso_logout_silent">${T.mainMenu.logout}</a>
 
                             </div>
                         `
-                            : ""
-                    }
+                : ""
+            }
 
 
 
@@ -153,48 +146,43 @@ export class MainMenuState extends GameState {
                 <div class="sideContainer">
                     ${showDemoAdvertisement ? `<div class="standaloneBanner">${bannerHtml}</div>` : ""}
 
-                    ${
-                        showShapez2
-                            ? `<div class="mainNews shapez2">
+                    ${showShapez2
+                ? `<div class="mainNews shapez2">
                         <div class="text">We are currently prototyping Shapez 2!</div>
 
                     </div>`
-                            : ""
-                    }
+                : ""
+            }
 
-                ${
-                    showPuzzleDLC
-                        ? `
+                ${showPuzzleDLC
+                ? `
 
-                        ${
-                            ownsPuzzleDLC && !hasMods
-                                ? `
+                        ${ownsPuzzleDLC && !hasMods
+                    ? `
                             <div class="puzzleContainer owned">
                                 <button class="styledButton puzzleDlcPlayButton">${T.mainMenu.play}</button>
                             </div>`
-                                : ""
-                        }
+                    : ""
+                }
 
-                        ${
-                            !ownsPuzzleDLC && !hasMods
-                                ? `
+                        ${!ownsPuzzleDLC && !hasMods
+                    ? `
                             <div class="puzzleContainer notOwned">
                                 <p>${T.mainMenu.puzzleDlcText}</p>
                                 <button class="styledButton puzzleDlcGetButton">${T.mainMenu.puzzleDlcViewNow}</button>
                             </div>`
-                                : ""
-                        }
+                    : ""
+                }
 
 
 
                 `
-                        : ""
-                }
+                : ""
+            }
 
 
-                ${
-                    hasMods
-                        ? `
+                ${hasMods
+                ? `
 
                         <div class="modsOverview">
                             <div class="header">
@@ -203,15 +191,15 @@ export class MainMenuState extends GameState {
                             </div>
                             <div class="modsList">
                             ${MODS.mods
-                                .map(mod => {
-                                    return `
+                    .map(mod => {
+                        return `
                                     <div class="mod">
                                         <div class="name">${mod.metadata.name}</div>
                                         <div class="author">by ${mod.metadata.author}</div>
                                     </div>
                                 `;
-                                })
-                                .join("")}
+                    })
+                    .join("")}
                             </div>
 
                             <div class="dlcHint">
@@ -221,8 +209,8 @@ export class MainMenuState extends GameState {
 
                         </div>
                         `
-                        : ""
-                }
+                : ""
+            }
 
                 </div>
 
@@ -232,62 +220,57 @@ export class MainMenuState extends GameState {
                 <div class="footer ${showExternalLinks ? "" : "noLinks"} ">
 
                     <div class="socialLinks">
-                    ${
-                        showExternalLinks
-                            ? `<a class="patreonLink boxLink" target="_blank">
+                    ${showExternalLinks
+                ? `<a class="patreonLink boxLink" target="_blank">
                                     <span class="thirdpartyLogo patreonLogo"></span>
                                     <span class="label">Patreon</span>
                                 </a>`
-                            : ""
-                    }
-                    ${
-                        showExternalLinks && !G_IS_STANDALONE
-                            ? `<a class="steamLinkSocial boxLink" target="_blank">
+                : ""
+            }
+                    ${showExternalLinks && !G_IS_STANDALONE
+                ? `<a class="steamLinkSocial boxLink" target="_blank">
                                     <span class="thirdpartyLogo steamLogo"></span>
                                     <span class="label">steam</span>
                                 </a>`
-                            : ""
-                    }
-                    ${
-                        showExternalLinks
-                            ? `
+                : ""
+            }
+                    ${showExternalLinks
+                ? `
                         <a class="githubLink boxLink" target="_blank">
                             <span class="thirdpartyLogo githubLogo"></span>
                             <span class="label">GitHub</span>
                         </a>`
-                            : ""
-                    }
+                : ""
+            }
 
 
-                    ${
-                        showExternalLinks
-                            ? `<a class="discordLink boxLink" target="_blank">
+                    ${showExternalLinks
+                ? `<a class="discordLink boxLink" target="_blank">
                                     <span class="thirdpartyLogo  discordLogo"></span>
                                     <span class="label">Discord</span>
                                 </a>`
-                            : ""
-                    }
+                : ""
+            }
 
-                    ${
-                        showExternalLinks
-                            ? `<a class="redditLink boxLink" target="_blank">
+                    ${showExternalLinks
+                ? `<a class="redditLink boxLink" target="_blank">
                                     <span class="thirdpartyLogo redditLogo"></span>
                                     <span class="label">Reddit</span>
                                 </a>`
-                            : ""
-                    }
+                : ""
+            }
 
                     ${
-                        /*
+            /*
 showExternalLinks
 ? `<a class="twitterLink boxLink" target="_blank">
-        <span class="thirdpartyLogo twitterLogo"></span>
-        <span class="label">Twitter</span>
-    </a>`
+<span class="thirdpartyLogo twitterLogo"></span>
+<span class="label">Twitter</span>
+</a>`
 : ""
 */
-                        ""
-                    }
+            ""
+            }
 
 
                     </div>
@@ -454,7 +437,7 @@ showExternalLinks
         this.renderSavegames();
         this.fetchPlayerCount();
 
-        this.refreshInterval = setInterval(() => this.fetchPlayerCount(), 10000);
+        this.refreshInterval = window.setInterval(() => this.fetchPlayerCount(), 10000);
 
         this.app.gameAnalytics.noteMinor("menu.enter");
     }
@@ -704,7 +687,7 @@ showExternalLinks
             label: null,
             placeholder: "",
             defaultValue: game.name || "",
-            validator: val => val.match(regex) && trim(val).length > 0,
+            validator: val => val.match(regex) && val.trim().length > 0,
         });
         const dialog = new DialogWithForm({
             app: this.app,
@@ -717,7 +700,7 @@ showExternalLinks
 
         // When confirmed, save the name
         dialog.buttonSignals.ok.add(() => {
-            game.name = trim(nameInput.getValue());
+            game.name = nameInput.getValue().trim();
             this.app.savegameMgr.writeAsync();
             this.renderSavegames();
         });
@@ -759,9 +742,9 @@ showExternalLinks
                     <div class="name">${mod.name}</div>
                     <div class="version">${T.mods.version} ${mod.version}</div>
                     <button class="website styledButton" onclick="window.open('${mod.website.replace(
-                        /"'/,
-                        ""
-                    )}')">${T.mods.modWebsite}
+                /"'/,
+                ""
+            )}')">${T.mods.modWebsite}
             </button>
 
                 </div>

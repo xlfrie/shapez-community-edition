@@ -1,6 +1,6 @@
 import { createLogger } from "../core/logging";
 
-const Ajv = require("ajv");
+import Ajv from "ajv";
 const ajv = new Ajv({
     allErrors: false,
     uniqueItems: false,
@@ -41,7 +41,7 @@ export class BaseSavegameInterface {
     }
 
     /** Constructs an new interface for the given savegame */
-    constructor(public data: any) {}
+    constructor(public data: any) { }
 
     /** Validates the data */
     validate(): boolean {

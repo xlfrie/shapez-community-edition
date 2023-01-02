@@ -47,10 +47,11 @@ export class AtlasDefinition {
     }
 }
 
-export const atlasFiles: AtlasDefinition[] = require
-    // @ts-ignore
-    .context("../../../res_built/atlas/", false, /.*\.json/i)
-    .keys()
-    .map(f => f.replace(/^\.\//gi, ""))
-    .map(f => require("../../../res_built/atlas/" + f))
-    .map(data => new AtlasDefinition(data));
+export const atlasFiles: AtlasDefinition[] = (await Promise.all(
+    import.meta
+        // @ts-ignore
+        .webpackContext("../../../res_built/atlas/", { recursive: false, regExp: /.*\.json/i })
+        .keys()
+        .map(f => f.replace(/^\.\//gi, ""))
+        .map(f => import("../../../res_built/atlas/" + f))
+)).map(data => new AtlasDefinition(data.default));

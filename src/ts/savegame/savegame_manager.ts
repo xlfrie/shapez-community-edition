@@ -5,7 +5,7 @@ import { globalConfig } from "../core/config";
 import { Savegame } from "./savegame";
 const logger = createLogger("savegame_manager");
 
-const Rusha = require("rusha");
+import Rusha from "rusha";
 
 /**
  @enum
@@ -178,7 +178,7 @@ export class SavegameManager extends ReadWriteProxy {
             promiseChain = promiseChain
                 .then(() => game.deleteAsync())
                 .then(
-                    () => {},
+                    () => { },
                     err => {
                         logger.error(this, "Failed to remove old savegame:", toRemove, ":", err);
                     }

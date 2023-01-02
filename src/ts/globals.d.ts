@@ -125,12 +125,6 @@ declare interface WebpackContext {
     keys(): Array<string>;
 }
 
-declare interface NodeRequire {
-    context(src: string, flag: boolean, regexp: RegExp): WebpackContext;
-}
-
-declare const require: NodeRequire & { (path: string): any };
-
 declare interface Object {
     entries(obj: object): Array<[string, any]>;
 }

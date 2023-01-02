@@ -6,7 +6,7 @@ import { formatBigNumberFull, formatSeconds, makeDiv } from "../../../core/utils
 import { T } from "../../../translations";
 import { BaseHUDPart } from "../base_hud_part";
 
-const copy = require("clipboard-copy");
+import copy from "clipboard-copy";
 
 export class HUDPuzzlePlayMetadata extends BaseHUDPart {
     public titleElement: HTMLDivElement;
@@ -42,11 +42,10 @@ export class HUDPuzzlePlayMetadata extends BaseHUDPart {
             </div>
             <div class="info rating">
                 <label>${T.ingame.puzzleMetadata.completionRate}</label>
-                <span>${
-                    puzzle.meta.downloads > 0
-                        ? ((puzzle.meta.completions / puzzle.meta.downloads) * 100.0).toFixed(1) + "%"
-                        : "-"
-                }</span>
+                <span>${puzzle.meta.downloads > 0
+                ? ((puzzle.meta.completions / puzzle.meta.downloads) * 100.0).toFixed(1) + "%"
+                : "-"
+            }</span>
             </div>
 
             <div class="buttons">
@@ -61,7 +60,7 @@ export class HUDPuzzlePlayMetadata extends BaseHUDPart {
         (this.element.querySelector(".author span") as HTMLElement).innerText = puzzle.meta.author;
     }
 
-    initialize() {}
+    initialize() { }
 
     share() {
         const mode = this.root.gameMode as PuzzlePlayGameMode;
