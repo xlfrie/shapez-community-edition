@@ -106,7 +106,7 @@
 
                     &::after {
                         @include S(left, $spacing);
-                        @include S(bottom, $arrowDims / 2 + $spacing);
+                        @include S(bottom, calc($arrowDims / 2) + $spacing);
                         transform: rotate(-45deg);
                     }
                 }
@@ -119,7 +119,7 @@
 
                     &::after {
                         @include S(left, $spacing);
-                        @include S(top, $arrowDims / 2 + $spacing);
+                        @include S(top, calc($arrowDims / 2) + $spacing);
                         transform: rotate(45deg);
                     }
                 }
@@ -132,7 +132,7 @@
 
                     &::after {
                         @include S(right, $spacing);
-                        @include S(top, $arrowDims / 2 + $spacing);
+                        @include S(top, calc($arrowDims / 2) + $spacing);
                         transform: rotate(135deg);
                     }
                 }
@@ -145,7 +145,7 @@
 
                     &::after {
                         @include S(right, $spacing);
-                        @include S(bottom, $arrowDims / 2 + $spacing);
+                        @include S(bottom, calc($arrowDims / 2) + $spacing);
                         transform: rotate(225deg);
                     }
                 }

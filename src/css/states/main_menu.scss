@@ -126,8 +126,8 @@
         @include S(padding-top, 0px);
 
         img {
-            @include S(width, 710px / 3);
-            @include S(height, 180px / 3);
+            @include S(width, calc(710px / 3));
+            @include S(height, calc(180px / 3));
         }
         position: relative;
         @include S(left, -8px);

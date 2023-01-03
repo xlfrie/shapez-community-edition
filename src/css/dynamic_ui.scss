@@ -1,7 +1,9 @@
+@use "sass:math";
+
 // Removes the unit (px, %, etc) from a value
 @function strip-unit($number) {
     @if type-of($number) == "number" and not unitless($number) {
-        @return $number / ($number * 0 + 1);
+        @return math.div($number, ($number * 0 + 1));
     }
 
     @return $number;
