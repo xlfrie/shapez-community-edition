@@ -12,6 +12,7 @@ export class TextualGameState extends GameState {
     public dialogs: HUDModalDialogs;
     public htmlElement: HTMLElement;
     public containerElement: HTMLElement;
+    public backToStatePayload: any;
     ///// INTERFACE ////
 
     /**
@@ -51,9 +52,6 @@ export class TextualGameState extends GameState {
         } else {
             this.moveToState(this.getDefaultPreviousState());
         }
-    }
-    backToStatePayload(backToStateId: any, backToStatePayload: any) {
-        throw new Error("Method not implemented.");
     }
 
     /** Returns the default state to go back to */

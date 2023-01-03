@@ -93,7 +93,7 @@ export class ModLoader {
         if (G_IS_DEV || G_IS_STANDALONE) {
             let exports = {};
             // @ts-ignore
-            const modules = import.meta.webpackContext("../", true, /\.js$/);
+            const modules = import.meta.webpackContext("../", { recursive: true, regExp: /\.js$/ });
             Array.from(modules.keys()).forEach(key => {
                 // @ts-ignore
                 const module = modules(key);
@@ -186,6 +186,7 @@ export class ModLoader {
                 func();
             } catch (ex) {
                 console.error(ex);
+                console.trace();
                 alert("Failed to parse mod (launch with --dev for more info): \n\n" + ex);
             }
         });

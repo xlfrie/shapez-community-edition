@@ -194,7 +194,7 @@ function serveHTML({ version = "web-dev" }) {
         return gulp.src(path).pipe(browserSync.reload({ stream: true }));
     });
 
-    gulp.watch("../src/js/built-temp/*.json").on("change", function (path) {
+    gulp.watch("../src/ts/built-temp/*.json").on("change", function (path) {
         return gulp.src(path).pipe(browserSync.reload({ stream: true }));
     });
 
