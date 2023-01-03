@@ -43,7 +43,7 @@ export class Dialog<T extends string> {
     public element: HTMLDivElement;
 
     public closeRequested = new Signal();
-    public buttonSignals: Record<T, Signal<[any?]>>;
+    public buttonSignals: Record<T, Signal<[any?]>> = {} as any;
 
     public valueChosen = new Signal();
 
@@ -351,9 +351,8 @@ export class DialogOptionChooser extends Dialog<"optionSelected"> {
             const descHtml = desc ? `<span class="desc">${desc}</span>` : "";
             let iconHtml = iconPrefix ? `<span class="icon icon-${iconPrefix}-${value}"></span>` : "";
             html += `
-                <div class='option ${value === options.active ? "active" : ""} ${
-                iconPrefix ? "hasIcon" : ""
-            }' data-optionvalue='${value}'>
+                <div class='option ${value === options.active ? "active" : ""} ${iconPrefix ? "hasIcon" : ""
+                }' data-optionvalue='${value}'>
                     ${iconHtml}
                     <span class='title'>${text}</span>
                     ${descHtml}
@@ -411,9 +410,6 @@ export class DialogOptionChooser extends Dialog<"optionSelected"> {
             }
         });
         return div;
-    }
-    internalButtonHandler(arg0: string, value: any) {
-        throw new Error("Method not implemented.");
     }
 }
 

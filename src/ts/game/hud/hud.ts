@@ -36,7 +36,7 @@ export class GameHUD {
         unlockNotificationFinished: Signal<[]>;
     };
     public trailerMaker: TrailerMaker;
-    constructor(public root: GameRoot) {}
+    constructor(public root: GameRoot) { }
 
     /** Initializes the hud parts */
     initialize() {
@@ -67,8 +67,8 @@ export class GameHUD {
 
             // Typing hints
             /* typehints:start */
-
-            changesDebugger: null,
+            // This breaks stuff
+            // changesDebugger: null,
             /* typehints:end */
         };
 

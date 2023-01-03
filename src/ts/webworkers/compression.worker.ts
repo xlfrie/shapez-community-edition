@@ -16,6 +16,7 @@ const salt = accessNestedPropertyReverse(globalConfig, ["file", "info"]);
 self.addEventListener("message", event => {
     // @ts-ignore
     const { jobId, job, data } = event.data;
+    console.log(event)
     const result = performJob(job, data);
 
     // @ts-ignore
@@ -36,6 +37,7 @@ function performJob(job, data) {
             return data.compressionPrefix + compressX64(checksum + stringified);
         }
         default:
+
             throw new Error("Webworker: Unknown job: " + job);
     }
 }

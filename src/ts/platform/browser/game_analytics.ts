@@ -84,15 +84,15 @@ export class ShapezGameAnalytics extends GameAnalyticsInterface {
         if (this.app.restrictionMgr.isLimitedVersion()) {
             fetch(
                 "https://analytics.shapez.io/campaign/" +
-                    "action_" +
-                    this.environment +
-                    "_" +
-                    action +
-                    "_" +
-                    CURRENT_ABT +
-                    "_" +
-                    this.abtVariant +
-                    "?lpurl=nocontent",
+                "action_" +
+                this.environment +
+                "_" +
+                action +
+                "_" +
+                CURRENT_ABT +
+                "_" +
+                this.abtVariant +
+                "?lpurl=nocontent",
                 {
                     method: "GET",
                     mode: "no-cors",
@@ -100,11 +100,11 @@ export class ShapezGameAnalytics extends GameAnalyticsInterface {
                     referrer: "no-referrer",
                     credentials: "omit",
                 }
-            ).catch(err => {});
+            ).catch(err => { });
         }
     }
 
-    noteMinor(action, payload = "") {}
+    noteMinor(action, payload = "") { }
 
     initialize(): Promise<void> {
         this.syncKey = null;
@@ -121,12 +121,12 @@ export class ShapezGameAnalytics extends GameAnalyticsInterface {
             if (this.app.restrictionMgr.isLimitedVersion() && !G_IS_DEV) {
                 fetch(
                     "https://analytics.shapez.io/campaign/" +
-                        this.environment +
-                        "_" +
-                        CURRENT_ABT +
-                        "_" +
-                        this.abtVariant +
-                        "?lpurl=nocontent",
+                    this.environment +
+                    "_" +
+                    CURRENT_ABT +
+                    "_" +
+                    this.abtVariant +
+                    "?lpurl=nocontent",
                     {
                         method: "GET",
                         mode: "no-cors",
@@ -134,7 +134,7 @@ export class ShapezGameAnalytics extends GameAnalyticsInterface {
                         referrer: "no-referrer",
                         credentials: "omit",
                     }
-                ).catch(err => {});
+                ).catch(err => { });
             }
 
             return this.app.storage.readFileAsync(analyticsLocalFile).then(

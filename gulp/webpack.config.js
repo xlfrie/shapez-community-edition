@@ -1,5 +1,5 @@
 import CircularDependencyPlugin from "circular-dependency-plugin";
-// import { resolve } from "path/posix";
+// import { resolve } from "path";
 import { resolve } from "path";
 import webpack from "webpack";
 import { getAllResourceImages, getRevision, getVersion } from "./buildutils.js";
@@ -58,22 +58,24 @@ const moduleRules = [
                 options: {
                     configFile: "C:/Dev Temp/ts/shapez-community-edition/src/ts/tsconfig.json",
                     onlyCompileBundledFiles: true,
+                    transpileOnly: true,
+                    experimentalWatchApi: true,
                 },
             },
         ],
     },
-    // {
-    //     test: /\.worker\.ts$/,
-    //     use: [
-    //         {
-    //             loader: "worker-loader",
-    //             options: {
-    //                 filename: "[fullhash].worker.ts",
-    //                 inline: "fallback",
-    //             },
-    //         },
-    //     ],
-    // },
+    {
+        test: /\.worker\.ts$/,
+        use: [
+            {
+                loader: "worker-loader",
+                options: {
+                    filename: "[fullhash].worker.ts",
+                    inline: "fallback",
+                },
+            },
+        ],
+    },
 ];
 
 // /** @type {import("webpack").RuleSetRule[]} */

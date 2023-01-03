@@ -1,7 +1,8 @@
 import gulp from "gulp";
 import BrowserSync from "browser-sync";
 const browserSync = BrowserSync.create({});
-import path from "path/posix";
+// import path from "path";
+import path from "path";
 import deleteEmpty from "delete-empty";
 import { execSync } from "child_process";
 

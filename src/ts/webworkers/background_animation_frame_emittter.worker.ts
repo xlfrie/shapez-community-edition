@@ -14,5 +14,3 @@ function tick() {
 }
 
 setInterval(tick, desiredMsDelay);
-
-export default null as any;

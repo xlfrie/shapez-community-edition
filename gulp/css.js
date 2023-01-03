@@ -1,4 +1,4 @@
-import path from "path/posix";
+import path from "path";
 import { getRevision, cachebust } from "./buildutils.js";
 
 import gulpPostcss from "gulp-postcss";

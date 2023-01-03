@@ -1,4 +1,4 @@
-import { resolve } from "path/posix";
+import { resolve } from "path";
 import TerserPlugin from "terser-webpack-plugin";
 import webpack from "webpack";
 const { DefinePlugin, IgnorePlugin } = webpack;

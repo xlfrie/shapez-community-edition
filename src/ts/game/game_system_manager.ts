@@ -39,7 +39,7 @@ export const MODS_ADDITIONAL_SYSTEMS: {
 } = {};
 
 export class GameSystemManager {
-    public declare systems: {
+    public systems: {
         /* typehints:start */
 
         belt: BeltSystem;
@@ -91,7 +91,7 @@ export class GameSystemManager {
         zone: ZoneSystem;
 
         /* typehints:end */
-    };
+    } = {} as any;
     public systemUpdateOrder = [];
 
     constructor(public root: GameRoot) {

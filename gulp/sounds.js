@@ -1,4 +1,4 @@
-import path from "path/posix";
+import path from "path";
 import audiosprite from "gulp-audiosprite";
 
 import gulpClean from "gulp-clean";

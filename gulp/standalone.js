@@ -1,6 +1,6 @@
 import packager from "electron-packager";
 import pj from "../electron/package.json" assert { type: "json" };
-import path from "path/posix";
+import path from "path";
 import { getRevision, getVersion } from "./buildutils.js";
 import fs from "fs";
 import { execSync } from "child_process";

@@ -152,39 +152,11 @@ export class ClickDetector {
         }
     }
 
-    // @Bagel03 wtf
-    // handlerTouchStart(arg0: string, handlerTouchStart: any, options: { capture: boolean; passive: boolean; }) {
-    //     throw new Error("Method not implemented.");
-    // }
-    // handlerTouchEnd(arg0: string, handlerTouchEnd: any, options: { capture: boolean; passive: boolean; }) {
-    //     throw new Error("Method not implemented.");
-    // }
-    // handlerTouchCancel(arg0: string, handlerTouchCancel: any, options: { capture: boolean; passive: boolean; }) {
-    //     throw new Error("Method not implemented.");
-    // }
-    // handlerTouchMove(arg0: string, handlerTouchMove: any, options: { capture: boolean; passive: boolean; }) {
-    //     throw new Error("Method not implemented.");
-    // }
-    // handlerPreventClick(arg0: string, handlerPreventClick: any, options: { capture: boolean; passive: boolean; }) {
-    //     throw new Error("Method not implemented.");
-    // }
-
-    handlerTouchStart(event: any) {
-        throw new Error("Method not implemented.");
-    }
-
-    handlerTouchEnd(event: any) {
-        throw new Error("Method not implemented.");
-    }
-    handlerTouchCancel(event: any) {
-        throw new Error("Method not implemented.");
-    }
-    handlerTouchMove(event: any) {
-        throw new Error("Method not implemented.");
-    }
-    handlerPreventClick(event: any) {
-        throw new Error("Method not implemented.");
-    }
+    declare handlerTouchStart: (event: any) => any
+    declare handlerTouchEnd: (event: any) => any
+    declare handlerTouchCancel: (event: any) => any
+    declare handlerTouchMove: (event: any) => any
+    declare handlerPreventClick: (event: any) => any
 
     // INTERNAL METHODS
 

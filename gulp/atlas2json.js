@@ -1,4 +1,4 @@
-import { join, resolve } from "path/posix";
+import { join, resolve } from "path";
 import { readFileSync, readdirSync, writeFileSync } from "fs";
 
 const suffixToScale = {
