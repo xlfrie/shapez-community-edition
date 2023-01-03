@@ -1,4 +1,4 @@
-import { BaseSavegameInterface } from "../savegame_interface.js";
+import { BaseSavegameInterface } from "../savegame_interface";
 
 import schema from "./1000.json";
 export class SavegameInterface_V1000 extends BaseSavegameInterface {

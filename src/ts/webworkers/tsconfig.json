@@ -4,5 +4,5 @@
     },
     "exclude": [],
     "extends": "../tsconfig",
-    "include": ["*.worker.js"]
+    "include": ["./*.worker.ts"]
 }

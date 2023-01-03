@@ -37,10 +37,11 @@ if (G_IS_DEV && IS_DEBUG) {
     console.log("\n%c🛑 DEBUG ENVIRONMENT 🛑\n", "color: #f77");
 }
 
-/* typehints:start */
-// @ts-ignore
-throw new Error("typehints built in, this should never be the case!");
-/* typehints:end */
+// @Bagel03 typehints are dumb in ts, if you have circular dep use import typeS
+// /* typehints:start */
+// // @ts-ignore
+// throw new Error("typehints built in, this should never be the case!");
+// /* typehints:end */
 
 /* dev:start */
 console.log("%cDEVCODE BUILT IN", "color: #f77");

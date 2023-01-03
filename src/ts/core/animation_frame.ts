@@ -1,7 +1,7 @@
 import { Signal } from "./signal";
 
 // @ts-ignore
-import BackgroundAnimationFrameEmitterWorker from "../webworkers/background_animation_frame_emittter.worker";
+// import BackgroundAnimationFrameEmitterWorker from "worker-loader!/webworkers/background_animation_frame_emittter.worker";
 
 import { createLogger } from "./logging";
 const logger = createLogger("animation_frame");
@@ -18,7 +18,7 @@ export class AnimationFrame {
 
     public boundMethod = this.handleAnimationFrame.bind(this);
 
-    public backgroundWorker = new BackgroundAnimationFrameEmitterWorker();
+    public backgroundWorker = new Worker(new URL("./../webworkers/background_animation_frame_emittter.worker", import.meta.url));
 
     constructor() {
         this.backgroundWorker.addEventListener("error", err => {

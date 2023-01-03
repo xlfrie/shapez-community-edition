@@ -1,6 +1,7 @@
 import { getRevision, cachebust as cachebustUtil } from "./buildutils.js";
 import fs from "fs";
-import path from "path/posix";
+// import path from "path/posix";
+import path from "path";
 import crypto from "crypto";
 import { BUILD_VARIANTS } from "./build_variants.js";
 

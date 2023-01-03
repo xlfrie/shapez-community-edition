@@ -188,7 +188,7 @@ function serveHTML({ version = "web-dev" }) {
     gulp.watch("../res_built/atlas/*.json", gulp.series("imgres.atlas"));
 
     // Watch the build folder and reload when anything changed
-    const extensions = ["html", "js", "png", "gif", "jpg", "svg", "mp3", "ico", "woff2", "json"];
+    const extensions = ["html", "js", "png", "gif", "jpg", "svg", "mp3", "ico", "woff2", "json", "ts"];
     gulp.watch(extensions.map(ext => path.join(buildFolder, "**", "*." + ext))).on("change", function (path) {
         return gulp.src(path).pipe(browserSync.reload({ stream: true }));
     });

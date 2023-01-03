@@ -35,7 +35,7 @@ export class CrazygamesAdProvider extends AdProviderInterface {
             new Promise((resolve, reject) => {
                 scriptTag.onload = resolve;
                 scriptTag.onerror = reject;
-                scriptTag.src = "https://sdk.crazygames.com/crazygames-sdk-v1.js";
+                scriptTag.src = "https://sdk.crazygames.com/crazygames-sdk-v1";
                 document.head.appendChild(scriptTag);
             })
                 .then(() => {

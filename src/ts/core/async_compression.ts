@@ -1,5 +1,5 @@
 // @ts-ignore
-import CompressionWorker from "../webworkers/compression.worker";
+// import CompressionWorker from "worker-loader!/webworkers/compression.worker";
 
 import { createLogger } from "./logging";
 import { round2Digits } from "./utils";
@@ -34,7 +34,7 @@ export type JobEntry = {
 };
 
 class AsynCompression {
-    public worker = new CompressionWorker();
+    public worker = new Worker(new URL("./../webworkers/compression.worker", import.meta.url))
 
     public currentJobId = 1000;
 

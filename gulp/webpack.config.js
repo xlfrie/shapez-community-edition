@@ -1,5 +1,6 @@
 import CircularDependencyPlugin from "circular-dependency-plugin";
-import { resolve } from "path/posix";
+// import { resolve } from "path/posix";
+import { resolve } from "path";
 import webpack from "webpack";
 import { getAllResourceImages, getRevision, getVersion } from "./buildutils.js";
 
@@ -49,39 +50,89 @@ const moduleRules = [
         ],
     },
     {
-        test: /\.worker\.js$/,
+        test: /\.ts$/,
         use: [
             {
-                loader: "worker-loader",
+                loader: "ts-loader",
+
                 options: {
-                    filename: "[fullhash].worker.js",
-                    inline: "fallback",
+                    configFile: "C:/Dev Temp/ts/shapez-community-edition/src/ts/tsconfig.json",
+                    onlyCompileBundledFiles: true,
                 },
             },
         ],
     },
-    {
-        test: /\.js$/,
-        resolve: {
-            fullySpecified: false,
-        },
-    },
+    // {
+    //     test: /\.worker\.ts$/,
+    //     use: [
+    //         {
+    //             loader: "worker-loader",
+    //             options: {
+    //                 filename: "[fullhash].worker.ts",
+    //                 inline: "fallback",
+    //             },
+    //         },
+    //     ],
+    // },
 ];
+
+// /** @type {import("webpack").RuleSetRule[]} */
+// const moduleRules = [
+//     {
+//         test: /\.json$/,
+//         enforce: "pre",
+//         use: resolve("./loader.compressjson.cjs"),
+//         type: "javascript/auto",
+//     },
+//     {
+//         test: /\.js$/,
+//         enforce: "pre",
+//         exclude: /node_modules/,
+//         use: [
+//             {
+//                 loader: "webpack-strip-block",
+//                 options: {
+//                     start: "typehints:start",
+//                     end: "typehints:end",
+//                 },
+//             },
+//         ],
+//     },
+//     {
+//         test: /\.worker\.js$/,
+//         use: [
+//             {
+//                 loader: "worker-loader",
+//                 options: {
+//                     filename: "[fullhash].worker.js",
+//                     inline: "fallback",
+//                 },
+//             },
+//         ],
+//     },
+//     {
+//         test: /\.js$/,
+//         resolve: {
+//             fullySpecified: false,
+//         },
+//     },
+// ];
 
 /** @type {import("webpack").Configuration} */
 export default {
     mode: "development",
-    entry: resolve("../src/js/main.js"),
+    entry: resolve("../src/ts/main.ts"),
     context: resolve(".."),
     output: {
         path: resolve("../build"),
         filename: "bundle.js",
     },
     resolve: {
-        fallback: { fs: false },
+        // fallback: { fs: false },
         alias: {
-            "global-compression": resolve("../src/js/core/lzstring.js"),
+            "global-compression": resolve("../src/ts/core/lzstring.ts"),
         },
+        extensions: [".ts", ".js"],
     },
     devtool: "cheap-source-map",
     watch: true,
@@ -93,7 +144,7 @@ export default {
             exclude: /node_modules/,
             failOnError: true,
             allowAsyncCycles: false,
-            cwd: resolve("../src/js"),
+            cwd: resolve("../src/ts"),
         }),
     ],
     module: { rules: moduleRules },
