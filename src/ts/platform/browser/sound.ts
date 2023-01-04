@@ -15,7 +15,7 @@ class SoundSpritesContainer {
 
     public loadingPromise = null;
 
-    constructor() { }
+    constructor() {}
 
     load() {
         if (this.loadingPromise) {

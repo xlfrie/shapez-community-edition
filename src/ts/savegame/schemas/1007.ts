@@ -1,7 +1,6 @@
 import { createLogger } from "../../core/logging";
 import { SavegameInterface_V1006 } from "./1006";
 
-
 import schema from "./1007.json";
 const logger = createLogger("savegame_interface/1007");
 

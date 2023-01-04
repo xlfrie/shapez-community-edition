@@ -101,8 +101,9 @@ export class HUDUnlockNotification extends BaseHUDPart {
         if (gained) {
             gained.forEach(([metaBuildingClass, variant]) => {
                 const metaBuilding = gMetaBuildingRegistry.findByClass(metaBuildingClass);
-                html += `<div class="buildingExplanation" data-icon="building_tutorials/${metaBuilding.getId() + (variant === defaultBuildingVariant ? "" : "-" + variant)
-                    }.png"></div>`;
+                html += `<div class="buildingExplanation" data-icon="building_tutorials/${
+                    metaBuilding.getId() + (variant === defaultBuildingVariant ? "" : "-" + variant)
+                }.png"></div>`;
             });
         }
         html += "</div>";

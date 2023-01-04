@@ -21,7 +21,6 @@ import { Entity } from "../../game/entity";
 import { defaultBuildingVariant, MetaBuilding } from "../../game/meta_building";
 import { SavegameInterface_V1005 } from "./1005";
 
-
 import schema from "./1006.json";
 const logger = createLogger("savegame_interface/1006");
 

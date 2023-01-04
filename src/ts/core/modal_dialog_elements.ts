@@ -351,8 +351,9 @@ export class DialogOptionChooser extends Dialog<"optionSelected"> {
             const descHtml = desc ? `<span class="desc">${desc}</span>` : "";
             let iconHtml = iconPrefix ? `<span class="icon icon-${iconPrefix}-${value}"></span>` : "";
             html += `
-                <div class='option ${value === options.active ? "active" : ""} ${iconPrefix ? "hasIcon" : ""
-                }' data-optionvalue='${value}'>
+                <div class='option ${value === options.active ? "active" : ""} ${
+                iconPrefix ? "hasIcon" : ""
+            }' data-optionvalue='${value}'>
                     ${iconHtml}
                     <span class='title'>${text}</span>
                     ${descHtml}

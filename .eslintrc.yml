@@ -23,4 +23,7 @@ rules:
     no-unused-vars: off
     no-prototype-builtins: off
     linebreak-style: off
-    brace-style: 1tbs
+    brace-style: 1
+    prefer-const: off
+    no-var: off
+    prefer-rest-params: off

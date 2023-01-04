@@ -152,11 +152,11 @@ export class ClickDetector {
         }
     }
 
-    declare handlerTouchStart: (event: any) => any
-    declare handlerTouchEnd: (event: any) => any
-    declare handlerTouchCancel: (event: any) => any
-    declare handlerTouchMove: (event: any) => any
-    declare handlerPreventClick: (event: any) => any
+    declare handlerTouchStart: (event: any) => any;
+    declare handlerTouchEnd: (event: any) => any;
+    declare handlerTouchCancel: (event: any) => any;
+    declare handlerTouchMove: (event: any) => any;
+    declare handlerPreventClick: (event: any) => any;
 
     // INTERNAL METHODS
 

@@ -206,12 +206,12 @@ export class ModLoader {
                 if (!semverSatisifies(G_BUILD_VERSION, minimumGameVersion)) {
                     alert(
                         "Mod  '" +
-                        meta.id +
-                        "' is incompatible with this version of the game: \n\n" +
-                        "Mod requires version " +
-                        minimumGameVersion +
-                        " but this game has version " +
-                        G_BUILD_VERSION
+                            meta.id +
+                            "' is incompatible with this version of the game: \n\n" +
+                            "Mod requires version " +
+                            minimumGameVersion +
+                            " but this game has version " +
+                            G_BUILD_VERSION
                     );
                     continue;
                 }

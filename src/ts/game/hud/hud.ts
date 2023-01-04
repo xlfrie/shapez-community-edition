@@ -36,7 +36,7 @@ export class GameHUD {
         unlockNotificationFinished: Signal<[]>;
     };
     public trailerMaker: TrailerMaker;
-    constructor(public root: GameRoot) { }
+    constructor(public root: GameRoot) {}
 
     /** Initializes the hud parts */
     initialize() {
