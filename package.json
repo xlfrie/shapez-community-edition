@@ -9,7 +9,8 @@
     "type": "module",
     "scripts": {
         "gulp": "gulp --cwd gulp",
-        "lint": "eslint src/js",
+        "lint": "eslint src/ts",
+        "checkTypes": "tsc src/ts --noEmit",
         "prettier-all": "prettier --write src/**/*.* && prettier --write gulp/**/*.*",
         "buildTypes": "tsc src/js/application.js --declaration --allowJs --emitDeclarationOnly --skipLibCheck --out types.js"
     },
