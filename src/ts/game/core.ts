@@ -1,6 +1,6 @@
-/* typehints:start */
+import type { InGameState } from "../states/ingame";
 import type { Application } from "../application";
-/* typehints:end */
+
 import { BufferMaintainer } from "../core/buffer_maintainer";
 import {
     disableImageSmoothing,
@@ -77,7 +77,7 @@ export class GameCore {
      * Initializes the root object which stores all game related data. The state
      * is required as a back reference (used sometimes)
      */
-    initializeRoot(parentState: import("../states/ingame").InGameState, savegame: Savegame, gameModeId) {
+    initializeRoot(parentState: InGameState, savegame: Savegame, gameModeId) {
         logger.log("initializing root");
 
         // Construct the root element, this is the data representation of the game

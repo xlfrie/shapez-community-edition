@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { Application } from "../application";
-/* typehints:end */
 
 import { ReadWriteProxy } from "../core/read_write_proxy";
 import { BoolSetting, EnumSetting, RangeSetting, BaseSetting } from "./setting_types";

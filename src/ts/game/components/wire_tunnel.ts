@@ -1,4 +1,5 @@
 import { Component } from "../component";
+import { WireNetwork } from "../systems/wire";
 
 export class WireTunnelComponent extends Component {
     static getId() {
@@ -6,7 +7,7 @@ export class WireTunnelComponent extends Component {
     }
 
     /** Linked network, only if its not multiple directions */
-    public linkedNetworks: Array<import("../systems/wire").WireNetwork> = [];
+    public linkedNetworks: Array<WireNetwork> = [];
 
     constructor() {
         super();

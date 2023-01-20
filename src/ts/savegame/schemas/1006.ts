@@ -1,3 +1,4 @@
+import type { SavegameData } from "../savegame_typedefs.js";
 import { gMetaBuildingRegistry } from "../../core/global_registries";
 import { createLogger } from "../../core/logging";
 import { enumBalancerVariants, MetaBalancerBuilding } from "../../game/buildings/balancer";
@@ -129,7 +130,7 @@ export class SavegameInterface_V1006 extends SavegameInterface_V1005 {
         };
     }
 
-    static migrate1005to1006(data: import("../savegame_typedefs.js").SavegameData) {
+    static migrate1005to1006(data: SavegameData) {
         logger.log("Migrating 1005 to 1006");
         const dump = data.dump;
         if (!dump) {

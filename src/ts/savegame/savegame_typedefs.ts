@@ -1,4 +1,4 @@
-export type Entity = import("../game/entity").Entity;
+import type { Entity } from "../game/entity";
 
 export type SavegameStoredMods = {
     id: string;

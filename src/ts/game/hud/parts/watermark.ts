@@ -1,4 +1,5 @@
 import { globalConfig, openStandaloneLink } from "../../../core/config";
+import type { DrawParameters } from "../../../core/draw_parameters";
 import { makeDiv } from "../../../core/utils";
 import { T } from "../../../translations";
 import { BaseHUDPart } from "../base_hud_part";
@@ -14,23 +15,23 @@ export class HUDWatermark extends BaseHUDPart {
             "ingame_HUD_WatermarkClicker",
             globalConfig.currentDiscount > 0 ? ["withDiscount"] : [],
             linkText +
-                (globalConfig.currentDiscount > 0
-                    ? `<span class='discount'>${T.global.discount.replace(
-                          "<percentage>",
-                          String(globalConfig.currentDiscount)
-                      )}</span>`
-                    : "")
+            (globalConfig.currentDiscount > 0
+                ? `<span class='discount'>${T.global.discount.replace(
+                    "<percentage>",
+                    String(globalConfig.currentDiscount)
+                )}</span>`
+                : "")
         );
         this.trackClicks(this.linkElement, () => {
             openStandaloneLink(this.root.app, "shapez_watermark");
         });
     }
 
-    initialize() {}
+    initialize() { }
 
-    update() {}
+    update() { }
 
-    drawOverlays(parameters: import("../../../core/draw_utils").DrawParameters) {
+    drawOverlays(parameters: DrawParameters) {
         const w = this.root.gameWidth;
 
         parameters.context.fillStyle = "rgba(20, 30, 40, 0.25)";

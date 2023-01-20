@@ -1,8 +1,6 @@
-/* typehints:start */
 import type { GameRoot } from "./root";
 import type { InputReceiver } from "../core/input_receiver";
 import type { Application } from "../application";
-/* typehints:end */
 
 import { Signal, STOP_PROPAGATION } from "../core/signal";
 import { IS_MOBILE } from "../core/config";

@@ -1,3 +1,4 @@
+import type { WireNetwork } from "../systems/wire";
 import { Component } from "../component";
 
 /**
@@ -30,7 +31,7 @@ export class WireComponent extends Component {
     /** The variant of the wire, different variants do not connect */
     public variant: enumWireVariant;
 
-    public linkedNetwork: import("../systems/wire").WireNetwork = null;
+    public linkedNetwork: WireNetwork = null;
 
     constructor({
         type = enumWireType.forward,

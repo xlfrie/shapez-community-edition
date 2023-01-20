@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { GameRoot } from "./root";
-/* typehints:end */
 
 import { Vector } from "../core/vector";
 import { SOUNDS } from "../platform/sound";

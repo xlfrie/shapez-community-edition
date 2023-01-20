@@ -1,7 +1,5 @@
-/* typehints:start */
 import type { GameSystem } from "./game_system";
 import type { GameRoot } from "./root";
-/* typehints:end */
 
 import { createLogger } from "../core/logging";
 import { BeltSystem } from "./systems/belt";
@@ -40,8 +38,6 @@ export const MODS_ADDITIONAL_SYSTEMS: {
 
 export class GameSystemManager {
     public systems: {
-        /* typehints:start */
-
         belt: BeltSystem;
 
         itemEjector: ItemEjectorSystem;
@@ -89,8 +85,6 @@ export class GameSystemManager {
         goalAcceptor: GoalAcceptorSystem;
 
         zone: ZoneSystem;
-
-        /* typehints:end */
     } = {} as any;
     public systemUpdateOrder = [];
 

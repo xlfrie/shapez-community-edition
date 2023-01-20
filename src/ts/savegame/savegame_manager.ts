@@ -10,12 +10,12 @@ import Rusha from "rusha";
 /**
  @enum
 */
-export type SavegamesData = import("./savegame_typedefs").SavegamesData;
+import type { SavegamesData } from "./savegame_typedefs";
 
 /**
  @enum
 */
-export type SavegameMetadata = import("./savegame_typedefs").SavegameMetadata;
+import type { SavegameMetadata } from "./savegame_typedefs";
 
 /**
  @enum

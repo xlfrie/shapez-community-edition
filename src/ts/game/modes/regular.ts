@@ -1,7 +1,5 @@
-/* typehints:start */
 import type { GameRoot } from "../root";
 import type { MetaBuilding } from "../meta_building";
-/* typehints:end */
 
 import { findNiceIntegerValue } from "../../core/utils";
 import { MetaConstantProducerBuilding } from "../buildings/constant_producer";

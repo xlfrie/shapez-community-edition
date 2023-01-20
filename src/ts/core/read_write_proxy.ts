@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { Application } from "../application";
-/* typehints:end */
 
 import { sha1, CRC_PREFIX, computeCrc } from "./sensitive_utils.encrypt";
 import { createLogger } from "./logging";

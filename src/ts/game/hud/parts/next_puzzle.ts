@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { PuzzlePlayGameMode } from "../../modes/puzzle_play";
-/* typehints:end */
 
 import { makeDiv } from "../../../core/utils";
 import { T } from "../../../translations";

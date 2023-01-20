@@ -1,7 +1,6 @@
-/* typehints:start */
+import type { ClickDetectorConstructorArgs } from "../../core/click_detector";
 import type { GameRoot } from "../root";
 import type { DrawParameters } from "../../core/draw_parameters";
-/* typehints:end */
 
 import { ClickDetector } from "../../core/click_detector";
 import { KeyActionMapper } from "../key_action_mapper";
@@ -75,11 +74,7 @@ export class BaseHUDPart {
      * @param handler The handler to call on this object
      * @param args Click detector arguments
      */
-    trackClicks(
-        element: Element,
-        handler: (...args: any[]) => any,
-        args: import("../../core/click_detector").ClickDetectorConstructorArgs = {}
-    ) {
+    trackClicks(element: Element, handler: (...args: any[]) => any, args: ClickDetectorConstructorArgs = {}) {
         const detector = new ClickDetector(element, args);
         detector.click.add(handler, this);
         this.registerClickDetector(detector);

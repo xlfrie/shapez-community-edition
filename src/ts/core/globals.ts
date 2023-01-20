@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { Application } from "../application";
-/* typehints:end */
 
 /**
  * Used for the bug reporter, and the click detector which both have no handles to this.

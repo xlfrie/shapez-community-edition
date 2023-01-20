@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { Application } from "../application";
-/* typehints:end */
 
 export class AnalyticsInterface {
     constructor(public app: Application) {}

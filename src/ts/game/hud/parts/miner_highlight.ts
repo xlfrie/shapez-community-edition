@@ -1,4 +1,5 @@
 import { globalConfig } from "../../../core/config";
+import type { DrawParameters } from "../../../core/draw_parameters";
 import { formatItemsPerSecond, round2Digits } from "../../../core/utils";
 import { Vector } from "../../../core/vector";
 import { T } from "../../../translations";
@@ -7,9 +8,9 @@ import { THEME } from "../../theme";
 import { BaseHUDPart } from "../base_hud_part";
 
 export class HUDMinerHighlight extends BaseHUDPart {
-    initialize() {}
+    initialize() { }
 
-    draw(parameters: import("../../../core/draw_utils").DrawParameters) {
+    draw(parameters: DrawParameters) {
         const mousePos = this.root.app.mousePosition;
         if (!mousePos) {
             // Mouse pos not ready

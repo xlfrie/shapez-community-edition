@@ -1,3 +1,4 @@
+import type { Schema } from "../savegame/serialization";
 import { globalConfig } from "../core/config";
 import { DrawParameters } from "../core/draw_parameters";
 import { BasicSerializableObject } from "../savegame/serialization";
@@ -14,7 +15,7 @@ export class BaseItem extends BasicSerializableObject {
         return "base_item";
     }
 
-    static getSchema(): import("../savegame/serialization").Schema {
+    static getSchema(): Schema {
         return {};
     }
 

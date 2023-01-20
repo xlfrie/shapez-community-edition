@@ -1,7 +1,6 @@
-/* typehints:start */
+import type { Schema } from "../savegame/serialization";
 import type { DrawParameters } from "../core/draw_parameters";
 import type { Component } from "./component";
-/* typehints:end */
 
 import { GameRoot } from "./root";
 import { globalConfig } from "../core/config";
@@ -26,8 +25,6 @@ export class Entity extends BasicSerializableObject {
     /** Internal entity unique id, set by the @see EntityManager */
     public uid = 0;
 
-    /* typehints:start */
-
     /** Stores if this entity is destroyed, set by the @see EntityManager * */
     public destroyed: boolean;
 
@@ -49,7 +46,7 @@ export class Entity extends BasicSerializableObject {
     }
 
     /** @see BasicSerializableObject.getSchema */
-    static getSchema(): import("../savegame/serialization").Schema {
+    static getSchema(): Schema {
         return {
             uid: types.uint,
             components: types.keyValueMap(types.objData(gComponentRegistry), false),

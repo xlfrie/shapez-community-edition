@@ -1,6 +1,6 @@
-export type AtlasSprite = import("./sprites").AtlasSprite;
+import type { AtlasSprite } from "./sprites";
 
-export type DrawParameters = import("./draw_parameters").DrawParameters;
+import type { DrawParameters } from "./draw_parameters";
 
 import { globalConfig } from "./config";
 import { createLogger } from "./logging";

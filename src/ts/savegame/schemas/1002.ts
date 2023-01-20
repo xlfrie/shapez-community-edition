@@ -1,3 +1,4 @@
+import type { SavegameData } from "../savegame_typedefs.js";
 import { createLogger } from "../../core/logging";
 import { T } from "../../translations";
 import { SavegameInterface_V1001 } from "./1001";
@@ -14,7 +15,7 @@ export class SavegameInterface_V1002 extends SavegameInterface_V1001 {
         return schema;
     }
 
-    static migrate1001to1002(data: import("../savegame_typedefs.js").SavegameData) {
+    static migrate1001to1002(data: SavegameData) {
         logger.log("Migrating 1001 to 1002");
         const dump = data.dump;
         if (!dump) {

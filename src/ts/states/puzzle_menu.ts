@@ -7,6 +7,7 @@ import { enumGameModeIds } from "../game/game_mode";
 import { ShapeDefinition } from "../game/shape_definition";
 import { MUSIC } from "../platform/sound";
 import { Savegame } from "../savegame/savegame";
+import type { PuzzleFullData, PuzzleMetadata } from "../savegame/savegame_typedefs";
 import { T } from "../translations";
 
 const navigation = {
@@ -31,7 +32,7 @@ export class PuzzleMenuState extends TextualGameState {
     public loading = false;
     public activeCategory = "";
 
-    public puzzles: Array<import("../savegame/savegame_typedefs").PuzzleMetadata> = [];
+    public puzzles: Array<PuzzleMetadata> = [];
 
     constructor() {
         super("PuzzleMenuState");
@@ -71,11 +72,11 @@ export class PuzzleMenuState extends TextualGameState {
 
                     <div class="categories rootCategories">
                     ${Object.keys(navigation)
-                        .map(
-                            rootCategory =>
-                                `<button data-root-category="${rootCategory}" class="styledButton category root">${T.puzzleMenu.categories[rootCategory]}</button>`
-                        )
-                        .join("")}
+                .map(
+                    rootCategory =>
+                        `<button data-root-category="${rootCategory}" class="styledButton category root">${T.puzzleMenu.categories[rootCategory]}</button>`
+                )
+                .join("")}
                     </div>
 
                     <div class="categories subCategories">
@@ -310,7 +311,7 @@ export class PuzzleMenuState extends TextualGameState {
             .then(() => (this.loading = false));
     }
 
-    renderPuzzles(puzzles: import("../savegame/savegame_typedefs").PuzzleMetadata[]) {
+    renderPuzzles(puzzles: PuzzleMetadata[]) {
         this.puzzles = puzzles;
 
         const container = this.htmlElement.querySelector("#mainContainer");
@@ -422,7 +423,7 @@ export class PuzzleMenuState extends TextualGameState {
         }
     }
 
-    tryDeletePuzzle(puzzle: import("../savegame/savegame_typedefs").PuzzleMetadata) {
+    tryDeletePuzzle(puzzle: PuzzleMetadata) {
         const signals = this.dialogs.showWarning(
             T.dialogs.puzzleDelete.title,
             T.dialogs.puzzleDelete.desc.replace("<title>", puzzle.title),
@@ -446,7 +447,7 @@ export class PuzzleMenuState extends TextualGameState {
         });
     }
 
-    getPuzzlesForCategory(category: any): Promise<import("../savegame/savegame_typedefs").PuzzleMetadata[]> {
+    getPuzzlesForCategory(category: any): Promise<PuzzleMetadata[]> {
         const result = this.app.clientApi.apiListPuzzles(category);
         return result.catch(err => {
             logger.error("Failed to get", category, ":", err);
@@ -479,10 +480,7 @@ export class PuzzleMenuState extends TextualGameState {
         );
     }
 
-    startLoadedPuzzle(
-        puzzle: import("../savegame/savegame_typedefs").PuzzleFullData,
-        nextPuzzles?: Array<number>
-    ) {
+    startLoadedPuzzle(puzzle: PuzzleFullData, nextPuzzles?: Array<number>) {
         const savegame = Savegame.createPuzzleSavegame(this.app);
         this.moveToState("InGameState", {
             gameModeId: enumGameModeIds.puzzlePlay,

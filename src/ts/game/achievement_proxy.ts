@@ -1,7 +1,5 @@
-/* typehints:start */
 import type { Entity } from "./entity";
 import type { GameRoot } from "./root";
-/* typehints:end */
 
 import { globalConfig } from "../core/config";
 import { createLogger } from "../core/logging";

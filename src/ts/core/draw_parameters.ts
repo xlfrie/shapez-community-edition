@@ -1,8 +1,8 @@
 import { globalConfig } from "./config";
 
-export type GameRoot = import("../game/root").GameRoot;
+import type { GameRoot } from "../game/root";
 
-export type Rectangle = import("./rectangle").Rectangle;
+import type { Rectangle } from "./rectangle";
 
 export class DrawParameters {
     public context: CanvasRenderingContext2D;

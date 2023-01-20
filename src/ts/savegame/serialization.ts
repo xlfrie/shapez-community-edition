@@ -1,6 +1,7 @@
 import { Factory } from "../core/factory";
 import { createLogger } from "../core/logging";
 import { SingletonFactory } from "../core/singleton_factory";
+import type { GameRoot } from "../game/root";
 import {
     BaseDataType,
     TypeArray,
@@ -19,12 +20,10 @@ import {
     TypeNullable,
     TypeNumber,
     TypePair,
-    TypePositiveInteger,
-    TypePositiveNumber,
+    TypePositiveInteger, TypePositiveIntegerOrString, TypePositiveNumber,
     TypeString,
     TypeStructuredObject,
-    TypeVector,
-    TypePositiveIntegerOrString,
+    TypeVector
 } from "./serialization_data_types";
 
 const logger = createLogger("serialization");
@@ -111,7 +110,7 @@ export class BasicSerializableObject {
      * in non-dev builds
      */
 
-    constructor(...args) {}
+    constructor(...args) { }
 
     /* dev:end */
 
@@ -156,7 +155,7 @@ export class BasicSerializableObject {
         );
     }
 
-    deserialize(data: any, root: import("./savegame_serializer").GameRoot = null): string | void {
+    deserialize(data: any, root: GameRoot = null): string | void {
         return deserializeSchema(
             this,
 
@@ -228,7 +227,7 @@ export function deserializeSchema(
     schema: Schema,
     data: object,
     baseclassErrorResult: string | void | null = null,
-    root?: import("../game/root").GameRoot
+    root?: GameRoot
 ): string | void {
     if (baseclassErrorResult) {
         return baseclassErrorResult;

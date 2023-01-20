@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { GameRoot } from "./root";
-/* typehints:end */
 
 import { Rectangle } from "../core/rectangle";
 import { gGameModeRegistry } from "../core/global_registries";

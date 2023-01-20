@@ -1,8 +1,6 @@
-/* typehints:start */
 import type { Application } from "../application";
 import type { Vector } from "../core/vector";
 import type { GameRoot } from "../game/root";
-/* typehints:end */
 
 import { newEmptyMap, clamp } from "../core/utils";
 import { createLogger } from "../core/logging";

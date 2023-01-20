@@ -1,20 +1,22 @@
 import { globalConfig } from "../../../core/config";
+import { DrawParameters } from "../../../core/draw_parameters";
+import { Loader } from "../../../core/loader";
 import { MapChunkView } from "../../map_chunk_view";
 import { WireNetwork } from "../../systems/wire";
 import { THEME } from "../../theme";
 import { BaseHUDPart } from "../base_hud_part";
-import { Loader } from "../../../core/loader";
+import type { AtlasSprite } from "c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites";
 
 export class HUDWireInfo extends BaseHUDPart {
-    public spriteEmpty: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
-    public spriteConflict: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
+    public spriteEmpty: AtlasSprite;
+    public spriteConflict: AtlasSprite;
 
     initialize() {
         this.spriteEmpty = Loader.getSprite("sprites/wires/network_empty.png");
         this.spriteConflict = Loader.getSprite("sprites/wires/network_conflict.png");
     }
 
-    drawOverlays(parameters: import("../../../core/draw_utils").DrawParameters) {
+    drawOverlays(parameters: DrawParameters) {
         if (this.root.currentLayer !== "wires") {
             // Not in the wires layer
             return;
@@ -77,10 +79,7 @@ export class HUDWireInfo extends BaseHUDPart {
         }
     }
 
-    drawHighlightedNetwork(
-        parameters: import("../../../core/draw_utils").DrawParameters,
-        network: WireNetwork
-    ) {
+    drawHighlightedNetwork(parameters: DrawParameters, network: WireNetwork) {
         parameters.context.globalAlpha = 0.5;
 
         for (let i = 0; i < network.wires.length; ++i) {

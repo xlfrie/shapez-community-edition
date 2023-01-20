@@ -1,10 +1,10 @@
 import { createLogger } from "../core/logging";
+import { ACHIEVEMENTS } from "../platform/achievement_provider";
 import { BasicSerializableObject } from "../savegame/serialization";
 import { enumColors } from "./colors";
 import { ShapeItem } from "./items/shape_item";
 import { GameRoot } from "./root";
-import { enumSubShape, ShapeDefinition } from "./shape_definition";
-import { ACHIEVEMENTS } from "../platform/achievement_provider";
+import { enumSubShape, ShapeDefinition, ShapeLayer } from "./shape_definition";
 
 const logger = createLogger("shape_definition_manager");
 
@@ -200,7 +200,7 @@ export class ShapeDefinitionManager extends BasicSerializableObject {
         const shapeLayer = subShapes.map(subShape => ({
             subShape,
             color,
-        })) as import("./shape_definition").ShapeLayer;
+        })) as ShapeLayer;
 
         return this.registerOrReturnHandle(new ShapeDefinition({ layers: [shapeLayer] }));
     }

@@ -1,4 +1,3 @@
-/* typehints:start */
 import type { BeltComponent } from "./components/belt";
 import type { BeltUnderlaysComponent } from "./components/belt_underlays";
 import type { HubComponent } from "./components/hub";
@@ -20,15 +19,12 @@ import type { BeltReaderComponent } from "./components/belt_reader";
 import type { FilterComponent } from "./components/filter";
 import type { ItemProducerComponent } from "./components/item_producer";
 import type { GoalAcceptorComponent } from "./components/goal_acceptor";
-/* typehints:end */
 
 /**
  * Typedefs for all entity components. These are not actually present on the entity,
  * thus they are undefined by default
  */
 export class EntityComponentStorage {
-    /* typehints:start */
-
     public StaticMapEntity: StaticMapEntityComponent;
 
     public Belt: BeltComponent;

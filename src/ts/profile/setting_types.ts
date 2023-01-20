@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { Application } from "../application";
-/* typehints:end */
 
 import { createLogger } from "../core/logging";
 import { WEB_STEAM_SSO_AUTHENTICATED } from "../core/steam_sso";

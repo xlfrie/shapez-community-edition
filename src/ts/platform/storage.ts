@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { Application } from "../application";
-/* typehints:end */
 
 export const FILE_NOT_FOUND = "file_not_found";
 

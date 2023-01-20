@@ -1,15 +1,15 @@
 import { SingletonFactory } from "./singleton_factory";
 import { Factory } from "./factory";
 
-export type BaseGameSpeed = import("../game/time/base_game_speed").BaseGameSpeed;
+import type { BaseGameSpeed } from "../game/time/base_game_speed";
 
-export type Component = import("../game/component").Component;
+import type { Component } from "../game/component";
 
-export type BaseItem = import("../game/base_item").BaseItem;
+import type { BaseItem } from "../game/base_item";
 
-export type GameMode = import("../game/game_mode").GameMode;
+import type { GameMode } from "../game/game_mode";
 
-export type MetaBuilding = import("../game/meta_building").MetaBuilding;
+import type { MetaBuilding } from "../game/meta_building";
 
 export let gMetaBuildingRegistry: SingletonFactory<MetaBuilding> = new SingletonFactory();
 

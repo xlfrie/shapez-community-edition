@@ -1,3 +1,4 @@
+import type { DrawParameters } from "../../core/draw_parameters";
 import { Loader } from "../../core/loader";
 import { LeverComponent } from "../components/lever";
 import { GameSystemWithFilter } from "../game_system_with_filter";
@@ -25,7 +26,7 @@ export class LeverSystem extends GameSystemWithFilter {
     }
 
     /** Draws a given chunk */
-    drawChunk(parameters: import("../../core/draw_utils").DrawParameters, chunk: MapChunkView) {
+    drawChunk(parameters: DrawParameters, chunk: MapChunkView) {
         const contents = chunk.containedEntitiesByLayer.regular;
         for (let i = 0; i < contents.length; ++i) {
             const entity = contents[i];

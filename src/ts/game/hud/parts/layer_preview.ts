@@ -1,14 +1,16 @@
 import { freeCanvas, makeOffscreenBuffer } from "../../../core/buffer_utils";
 import { globalConfig } from "../../../core/config";
+import { DrawParameters } from "../../../core/draw_parameters";
 import { Loader } from "../../../core/loader";
 import { Vector } from "../../../core/vector";
 import { MapChunkView } from "../../map_chunk_view";
 import { THEME } from "../../theme";
 import { BaseHUDPart } from "../base_hud_part";
+import type { AtlasSprite } from "c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites";
 
 /** Helper class which allows peaking through to the wires layer */
 export class HUDLayerPreview extends BaseHUDPart {
-    public previewOverlay: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
+    public previewOverlay: AtlasSprite;
     public context: any;
     public previewSize: number;
 
@@ -104,11 +106,7 @@ export class HUDLayerPreview extends BaseHUDPart {
      * Renders the preview at the given position
      * @param scale 1 / zoomLevel
      */
-    renderPreview(
-        parameters: import("../../../core/draw_utils").DrawParameters,
-        worldPos: Vector,
-        scale: number
-    ) {
+    renderPreview(parameters: DrawParameters, worldPos: Vector, scale: number) {
         if (this.root.currentLayer !== "regular") {
             // Only supporting wires right now
             return;

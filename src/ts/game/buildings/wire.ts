@@ -1,4 +1,5 @@
 import { Loader } from "../../core/loader";
+import { AtlasSprite } from "../../core/sprites";
 import { generateMatrixRotations } from "../../core/utils";
 import { enumDirection, Vector } from "../../core/vector";
 import { SOUNDS } from "../../platform/sound";
@@ -151,7 +152,7 @@ export class MetaWireBuilding extends MetaBuilding {
         return wireOverlayMatrices[entity.components.Wire.type][rotation];
     }
 
-    getPreviewSprite(rotationVariant: number, variant: string): import("../../core/draw_utils").AtlasSprite {
+    getPreviewSprite(rotationVariant: number, variant: string): AtlasSprite {
         const wireVariant = enumWireVariantToVariant[variant];
         switch (arrayWireRotationVariantToType[rotationVariant]) {
             case enumWireType.forward: {

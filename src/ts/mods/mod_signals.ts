@@ -1,11 +1,10 @@
-/* typehints:start */
+import type { GameState } from "../core/game_state";
 import type { BaseHUDPart } from "../game/hud/base_hud_part";
 import type { GameRoot } from "../game/root";
-import type { GameState } from "../core/game_state";
 import type { InGameState } from "../states/ingame";
-/* typehints:end */
 
 import { Signal } from "../core/signal";
+import { SerializedGame } from "../savegame/savegame_typedefs";
 
 // Single file to avoid circular deps
 
@@ -29,9 +28,9 @@ export const MOD_SIGNALS = {
     stateEntered: new Signal<[GameState]>(),
 
     gameSerialized: new Signal() as TypedSignal<
-        [GameRoot, import("../savegame/savegame_typedefs").SerializedGame]
+        [GameRoot, SerializedGame]
     >,
     gameDeserialized: new Signal() as TypedSignal<
-        [GameRoot, import("../savegame/savegame_typedefs").SerializedGame]
+        [GameRoot, SerializedGame]
     >,
 };

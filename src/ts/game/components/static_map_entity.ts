@@ -1,3 +1,4 @@
+import type { MetaBuilding } from "../meta_building";
 import { globalConfig } from "../../core/config";
 import { DrawParameters } from "../../core/draw_parameters";
 import { Rectangle } from "../../core/rectangle";
@@ -44,7 +45,7 @@ export class StaticMapEntityComponent extends Component {
     }
 
     /** Returns the meta building */
-    getMetaBuilding(): import("../meta_building").MetaBuilding {
+    getMetaBuilding(): MetaBuilding {
         return getBuildingDataFromCode(this.code).metaInstance;
     }
 

@@ -1,3 +1,4 @@
+import type { SavegameStoredMods } from "../savegame/savegame_typedefs";
 import { cachebust } from "../core/cachebust";
 import { globalConfig, openStandaloneLink, THIRDPARTY_URLS } from "../core/config";
 import { GameState } from "../core/game_state";
@@ -24,9 +25,9 @@ import { PlatformWrapperImplElectron } from "../platform/electron/wrapper";
 import { Savegame } from "../savegame/savegame";
 import { T } from "../translations";
 
-export type SavegameMetadata = import("../savegame/savegame_typedefs").SavegameMetadata;
+import type { SavegameMetadata } from "../savegame/savegame_typedefs";
 
-export type EnumSetting = import("../profile/setting_types").EnumSetting;
+import type { EnumSetting } from "../profile/setting_types";
 
 export class MainMenuState extends GameState {
     public refreshInterval: number = null;
@@ -751,7 +752,7 @@ showExternalLinks
 
         let dialogHtml = T.dialogs.modsDifference.desc;
 
-        function formatMod(mod: import("../savegame/savegame_typedefs").SavegameStoredMods[0]) {
+        function formatMod(mod: SavegameStoredMods[0]) {
             return `
                 <div class="dialogModsMod">
                     <div class="name">${mod.name}</div>

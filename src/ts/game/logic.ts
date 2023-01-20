@@ -5,6 +5,8 @@ import { round2Digits } from "../core/utils";
 import { enumDirection, enumDirectionToVector, enumInvertedDirections, Vector } from "../core/vector";
 import { getBuildingDataFromCode } from "./building_codes";
 import { Component } from "./component";
+import { ItemAcceptorSlot } from "./components/item_acceptor";
+import type { ItemEjectorSlot } from "./components/item_ejector";
 import { enumWireVariant } from "./components/wire";
 import { Entity } from "./entity";
 import { CHUNK_OVERLAY_RES } from "./map_chunk_view";
@@ -16,14 +18,14 @@ const logger = createLogger("ingame/logic");
 
 export type EjectorsAffectingTile = Array<{
     entity: Entity;
-    slot: import("./components/item_ejector").ItemEjectorSlot;
+    slot: ItemEjectorSlot;
     fromTile: Vector;
     toDirection: enumDirection;
 }>;
 
 export type AcceptorsAffectingTile = Array<{
     entity: Entity;
-    slot: import("./components/item_acceptor").ItemAcceptorSlot;
+    slot: ItemAcceptorSlot;
     toTile: Vector;
     fromDirection: enumDirection;
 }>;
@@ -34,7 +36,7 @@ export type AcceptorsAndEjectorsAffectingTile = {
 };
 
 export class GameLogic {
-    constructor(public root: GameRoot) {}
+    constructor(public root: GameRoot) { }
 
     /**
      * Checks if the given entity can be placed
@@ -379,9 +381,9 @@ export class GameLogic {
 
                 const entity = this.root.map.getLayerContentXY(tile.x + dx, tile.y + dy, "regular");
                 if (entity) {
-                    let ejectorSlots: Array<import("./components/item_ejector").ItemEjectorSlot> = [];
+                    let ejectorSlots: Array<ItemEjectorSlot> = [];
 
-                    let acceptorSlots: Array<import("./components/item_acceptor").ItemAcceptorSlot> = [];
+                    let acceptorSlots: Array<ItemAcceptorSlot> = [];
 
                     const staticComp = entity.components.StaticMapEntity;
                     const itemEjector = entity.components.ItemEjector;

@@ -1,6 +1,5 @@
-/* typehints:start */
 import type { Entity } from "../entity";
-/* typehints:end */
+import type { GameRoot } from "../root";
 
 import { enumDirection, Vector } from "../../core/vector";
 import { ConstantSignalComponent } from "../components/constant_signal";
@@ -26,7 +25,7 @@ export class MetaConstantProducerBuilding extends MetaBuilding {
         return "#bfd630";
     }
 
-    getIsRemovable(root: import("../../savegame/savegame_serializer").GameRoot) {
+    getIsRemovable(root: GameRoot) {
         return root.gameMode.getIsEditor();
     }
 

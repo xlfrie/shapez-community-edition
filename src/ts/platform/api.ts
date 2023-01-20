@@ -1,6 +1,6 @@
-/* typehints:start */
 import type { Application } from "../application";
-/* typehints:end */
+import type { PuzzleFullData, PuzzleGameData, PuzzleMetadata } from "../savegame/savegame_typedefs";
+
 import { createLogger } from "../core/logging";
 import { compressX64 } from "../core/lzstring";
 import { timeoutPromise } from "../core/utils";
@@ -12,7 +12,7 @@ export class ClientAPI {
     /** The current users session token */
     public token: string | null = null;
 
-    constructor(public app: Application) {}
+    constructor(public app: Application) { }
 
     getEndpoint() {
         if (G_IS_DEV) {
@@ -119,7 +119,7 @@ export class ClientAPI {
 
     apiListPuzzles(
         category: "new" | "top-rated" | "mine"
-    ): Promise<import("../savegame/savegame_typedefs").PuzzleMetadata[]> {
+    ): Promise<PuzzleMetadata[]> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
         }
@@ -130,7 +130,7 @@ export class ClientAPI {
         searchTerm: string;
         difficulty: string;
         duration: string;
-    }): Promise<import("../savegame/savegame_typedefs").PuzzleMetadata[]> {
+    }): Promise<PuzzleMetadata[]> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
         }
@@ -140,14 +140,14 @@ export class ClientAPI {
         });
     }
 
-    apiDownloadPuzzle(puzzleId: number): Promise<import("../savegame/savegame_typedefs").PuzzleFullData> {
+    apiDownloadPuzzle(puzzleId: number): Promise<PuzzleFullData> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
         }
         return this._request("/v1/puzzles/download/" + puzzleId, {});
     }
 
-    apiDeletePuzzle(puzzleId: number): Promise<import("../savegame/savegame_typedefs").PuzzleFullData> {
+    apiDeletePuzzle(puzzleId: number): Promise<PuzzleFullData> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
         }
@@ -159,7 +159,7 @@ export class ClientAPI {
 
     apiDownloadPuzzleByKey(
         shortKey: string
-    ): Promise<import("../savegame/savegame_typedefs").PuzzleFullData> {
+    ): Promise<PuzzleFullData> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
         }
@@ -194,11 +194,7 @@ export class ClientAPI {
         });
     }
 
-    apiSubmitPuzzle(payload: {
-        title: string;
-        shortKey: string;
-        data: import("../savegame/savegame_typedefs").PuzzleGameData;
-    }): Promise<{
+    apiSubmitPuzzle(payload: { title: string; shortKey: string; data: PuzzleGameData }): Promise<{
         success: true;
     }> {
         if (!this.isLoggedIn()) {

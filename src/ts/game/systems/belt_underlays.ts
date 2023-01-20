@@ -1,3 +1,4 @@
+import type { BeltUnderlayTile } from "../components/belt_underlays";
 import { globalConfig } from "../../core/config";
 import { DrawParameters } from "../../core/draw_parameters";
 import { Loader } from "../../core/loader";
@@ -159,10 +160,7 @@ export class BeltUnderlaysSystem extends GameSystem {
      * Computes the flag for a given tile
      * @returns The type of the underlay
      */
-    computeBeltUnderlayType(
-        entity: Entity,
-        underlayTile: import("../components/belt_underlays").BeltUnderlayTile
-    ): enumClippedBeltUnderlayType {
+    computeBeltUnderlayType(entity: Entity, underlayTile: BeltUnderlayTile): enumClippedBeltUnderlayType {
         if (underlayTile.cachedType) {
             return underlayTile.cachedType;
         }

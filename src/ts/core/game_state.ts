@@ -1,7 +1,6 @@
-/* typehints:start */
+import type { ClickDetectorConstructorArgs } from "./click_detector";
 import type { Application } from "../application";
 import type { StateManager } from "./state_manager";
-/* typehints:end */
 
 import { globalConfig } from "./config";
 import { ClickDetector } from "./click_detector";
@@ -89,11 +88,7 @@ export class GameState {
      * @param handler The handler to call
      * @param args Click detector arguments
      */
-    trackClicks(
-        element: Element,
-        handler: () => void,
-        args: import("./click_detector").ClickDetectorConstructorArgs = {}
-    ) {
+    trackClicks(element: Element, handler: () => void, args: ClickDetectorConstructorArgs = {}) {
         const detector = new ClickDetector(element, args);
         detector.click.add(handler, this);
         if (G_IS_DEV) {

@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { Application } from "../../application";
-/* typehints:end */
 
 import { AdProviderInterface } from "../ad_provider";
 import { createLogger } from "../../core/logging";

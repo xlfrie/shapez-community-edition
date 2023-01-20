@@ -1,11 +1,12 @@
 import { enumDirection, Vector } from "../../core/vector";
-import { types } from "../../savegame/serialization";
 import { BeltPath } from "../belt_path";
 import { Component } from "../component";
+import type { ItemAcceptorSlot } from "./item_acceptor";
+import { ItemEjectorSlot } from "./item_ejector";
 
 export const curvedBeltLength = /* Math.PI / 4 */ 0.78;
 
-export const FAKE_BELT_ACCEPTOR_SLOT: import("./item_acceptor").ItemAcceptorSlot = {
+export const FAKE_BELT_ACCEPTOR_SLOT: ItemAcceptorSlot = {
     pos: new Vector(0, 0),
     direction: enumDirection.bottom,
 };
@@ -13,7 +14,7 @@ export const FAKE_BELT_ACCEPTOR_SLOT: import("./item_acceptor").ItemAcceptorSlot
 // @ts-ignore @Bagel03
 export const FAKE_BELT_EJECTOR_SLOT_BY_DIRECTION: Record<
     enumDirection,
-    import("./item_ejector").ItemEjectorSlot
+    ItemEjectorSlot
 > = {
     [enumDirection.top]: {
         pos: new Vector(0, 0),
@@ -65,12 +66,12 @@ export class BeltComponent extends Component {
     }
 
     /** Returns fake acceptor slot used for matching */
-    getFakeAcceptorSlot(): import("./item_acceptor").ItemAcceptorSlot {
+    getFakeAcceptorSlot(): ItemAcceptorSlot {
         return FAKE_BELT_ACCEPTOR_SLOT;
     }
 
     /** Returns fake acceptor slot used for matching */
-    getFakeEjectorSlot(): import("./item_ejector").ItemEjectorSlot {
+    getFakeEjectorSlot(): ItemEjectorSlot {
         assert(
             FAKE_BELT_EJECTOR_SLOT_BY_DIRECTION[this.direction],
             "Invalid belt direction: ",

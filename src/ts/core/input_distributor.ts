@@ -1,7 +1,5 @@
-/* typehints:start */
 import type { Application } from "../application";
 import type { InputReceiver } from "./input_receiver";
-/* typehints:end */
 
 import { Signal, STOP_PROPAGATION } from "./signal";
 import { createLogger } from "./logging";

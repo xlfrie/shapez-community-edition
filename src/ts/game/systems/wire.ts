@@ -1,4 +1,5 @@
 import { globalConfig } from "../../core/config";
+import { DrawParameters } from "../../core/draw_parameters";
 import { gMetaBuildingRegistry } from "../../core/global_registries";
 import { Loader } from "../../core/loader";
 import { createLogger } from "../../core/logging";
@@ -11,18 +12,18 @@ import {
     enumDirection,
     enumDirectionToVector,
     enumInvertedDirections,
-    Vector,
+    Vector
 } from "../../core/vector";
 import { ACHIEVEMENTS } from "../../platform/achievement_provider";
 import { BaseItem } from "../base_item";
 import { arrayWireRotationVariantToType, MetaWireBuilding } from "../buildings/wire";
 import { getCodeFromBuildingData } from "../building_codes";
 import { enumWireType, enumWireVariant, WireComponent } from "../components/wire";
+import type { WirePinSlot } from "../components/wired_pins";
 import { enumPinSlotType, WiredPinsComponent } from "../components/wired_pins";
 import { WireTunnelComponent } from "../components/wire_tunnel";
 import { Entity } from "../entity";
 import { GameSystem } from "../game_system";
-import { GameSystemWithFilter } from "../game_system_with_filter";
 import { isTruthyItem } from "../items/boolean_item";
 import { MapChunkView } from "../map_chunk_view";
 
@@ -36,19 +37,19 @@ export class WireNetwork {
     /** Who contributes to this network * */
     public providers: Array<{
         entity: Entity;
-        slot: import("../components/wired_pins").WirePinSlot;
+        slot: WirePinSlot;
     }> = [];
 
     /** Who takes values from this network * */
     public receivers: Array<{
         entity: Entity;
-        slot: import("../components/wired_pins").WirePinSlot;
+        slot: WirePinSlot;
     }> = [];
 
     /** All connected slots */
     public allSlots: Array<{
         entity: Entity;
-        slot: import("../components/wired_pins").WirePinSlot;
+        slot: WirePinSlot;
     }> = [];
 
     /** All connected tunnels */
@@ -69,7 +70,7 @@ export class WireNetwork {
     /** Unique network identifier */
     public uid: number = ++networkUidCounter;
 
-    constructor() {}
+    constructor() { }
 
     /** Returns whether this network currently has a value */
     hasValue(): boolean {
@@ -177,7 +178,7 @@ export class WireSystem extends GameSystem {
     }
 
     /** Finds the network for the given slot */
-    findNetworkForEjector(initialEntity: Entity, slot: import("../components/wired_pins").WirePinSlot) {
+    findNetworkForEjector(initialEntity: Entity, slot: WirePinSlot) {
         let currentNetwork = new WireNetwork();
         VERBOSE_WIRES &&
             logger.log(
@@ -220,11 +221,11 @@ export class WireSystem extends GameSystem {
                 assert(
                     !wireComp.linkedNetwork || wireComp.linkedNetwork === currentNetwork,
                     "Mismatching wire network on wire entity " +
-                        (wireComp.linkedNetwork ? wireComp.linkedNetwork.uid : "<empty>") +
-                        " vs " +
-                        currentNetwork.uid +
-                        " @ " +
-                        staticComp.origin.toString()
+                    (wireComp.linkedNetwork ? wireComp.linkedNetwork.uid : "<empty>") +
+                    " vs " +
+                    currentNetwork.uid +
+                    " @ " +
+                    staticComp.origin.toString()
                 );
 
                 if (!wireComp.linkedNetwork) {
@@ -263,9 +264,9 @@ export class WireSystem extends GameSystem {
                 assert(
                     !slot.linkedNetwork || slot.linkedNetwork === currentNetwork,
                     "Mismatching wire network on pin slot entity " +
-                        (slot.linkedNetwork ? slot.linkedNetwork.uid : "<empty>") +
-                        " vs " +
-                        currentNetwork.uid
+                    (slot.linkedNetwork ? slot.linkedNetwork.uid : "<empty>") +
+                    " vs " +
+                    currentNetwork.uid
                 );
                 if (!slot.linkedNetwork) {
                     // This one is new
@@ -543,7 +544,7 @@ export class WireSystem extends GameSystem {
 
     /** Returns the given tileset and opacity */
     getSpriteSetAndOpacityForWire(wireComp: WireComponent): {
-        spriteSet: Record<enumWireType, import("../../core/draw_utils").AtlasSprite>;
+        spriteSet: Record<enumWireType, AtlasSprite>;
         opacity: number;
     } {
         if (!wireComp.linkedNetwork) {
@@ -570,7 +571,7 @@ export class WireSystem extends GameSystem {
     }
 
     /** Draws a given chunk */
-    drawChunk(parameters: import("../../core/draw_utils").DrawParameters, chunk: MapChunkView) {
+    drawChunk(parameters: DrawParameters, chunk: MapChunkView) {
         const contents = chunk.wireContents;
         for (let y = 0; y < globalConfig.mapChunkSize; ++y) {
             for (let x = 0; x < globalConfig.mapChunkSize; ++x) {

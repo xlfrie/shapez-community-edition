@@ -6,6 +6,7 @@ import { enumColors } from "./colors";
 import { enumItemProcessorTypes } from "./components/item_processor";
 import { enumAnalyticsDataSource } from "./production_analytics";
 import { GameRoot } from "./root";
+import type { ShapeLayer } from "./shape_definition";
 import { enumSubShape, ShapeDefinition } from "./shape_definition";
 import { enumHubGoalRewards } from "./tutorial_goals";
 
@@ -342,7 +343,7 @@ export class HubGoals extends BasicSerializableObject {
     computeFreeplayShape(level: number): ShapeDefinition {
         const layerCount = clamp(this.level / 25, 2, 4);
 
-        let layers: Array<import("./shape_definition").ShapeLayer> = [];
+        let layers: Array<ShapeLayer> = [];
 
         const rng = new RandomNumberGenerator(this.root.map.seed + "/" + level);
 
@@ -391,7 +392,7 @@ export class HubGoals extends BasicSerializableObject {
         let anyIsMissingTwo = false;
 
         for (let i = 0; i < layerCount; ++i) {
-            const layer: import("./shape_definition").ShapeLayer = [null, null, null, null];
+            const layer: ShapeLayer = [null, null, null, null];
 
             for (let j = 0; j < pickedSymmetry.length; ++j) {
                 const group = pickedSymmetry[j];

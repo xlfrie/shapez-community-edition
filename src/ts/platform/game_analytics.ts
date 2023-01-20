@@ -1,4 +1,4 @@
-export type Application = import("../application").Application;
+import type { Application } from "../application";
 
 export class GameAnalyticsInterface {
     constructor(public app: Application) {}

@@ -1,8 +1,6 @@
-/* typehints:start */
 import type { MetaBuilding } from "./meta_building";
 import type { AtlasSprite } from "../core/sprites";
 import type { Vector } from "../core/vector";
-/* typehints:end */
 
 import { gMetaBuildingRegistry } from "../core/global_registries";
 

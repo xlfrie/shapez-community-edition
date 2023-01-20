@@ -1,7 +1,6 @@
-/* typehints:start */
+import type { Schema } from "./serialization";
 import type { GameRoot } from "../game/root";
 import type { BasicSerializableObject } from "./serialization";
-/* typehints:end */
 
 import { Vector } from "../core/vector";
 import { round4Digits } from "../core/utils";
@@ -9,7 +8,7 @@ import { Factory } from "../core/factory";
 import { SingletonFactory } from "../core/singleton_factory";
 export const globalJsonSchemaDefs = {};
 
-export function schemaToJsonSchema(schema: import("./serialization").Schema) {
+export function schemaToJsonSchema(schema: Schema) {
     const jsonSchema = {
         type: "object",
         additionalProperties: false,

@@ -1,8 +1,6 @@
-/* typehints:start */
 import type { DrawParameters } from "../../core/draw_parameters";
 import type { MapChunkView } from "../map_chunk_view";
 import type { GameRoot } from "../root";
-/* typehints:end */
 
 import { globalConfig } from "../../core/config";
 import { STOP_PROPAGATION } from "../../core/signal";

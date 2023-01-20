@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { Application } from "../application";
-/* typehints:end */
 
 export class AdProviderInterface {
     constructor(public app: Application) {}

@@ -1,3 +1,4 @@
+import type { LinkedUndergroundBelt } from "../components/underground_belt";
 import { globalConfig } from "../../core/config";
 import { Loader } from "../../core/loader";
 import { createLogger } from "../../core/logging";
@@ -229,7 +230,7 @@ export class UndergroundBeltSystem extends GameSystemWithFilter {
     }
 
     /** Finds the receiver for a given sender */
-    findRecieverForSender(entity: Entity): import("../components/underground_belt").LinkedUndergroundBelt {
+    findRecieverForSender(entity: Entity): LinkedUndergroundBelt {
         const staticComp = entity.components.StaticMapEntity;
         const undergroundComp = entity.components.UndergroundBelt;
         const searchDirection = staticComp.localDirectionToWorld(enumDirection.top);

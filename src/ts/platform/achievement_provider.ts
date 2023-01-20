@@ -1,9 +1,7 @@
-/* typehints:start */
 import type { Application } from "../application";
 import type { Entity } from "../game/entity";
 import type { GameRoot } from "../game/root";
 import type { THEMES } from "../game/theme";
-/* typehints:end */
 
 import { enumAnalyticsDataSource } from "../game/production_analytics";
 import { ShapeDefinition } from "../game/shape_definition";
@@ -78,9 +76,7 @@ const SHAPE_ROCKET = "CbCuCbCu:Sr------:--CrSrCr:CwCwCwCw";
 const WIRE_LAYER: Layer = "wires";
 
 export class AchievementProviderInterface {
-    /* typehints:start */
     collection = null as AchievementCollection | undefined;
-    /* typehints:end */
 
     constructor(public app: Application) {}
 

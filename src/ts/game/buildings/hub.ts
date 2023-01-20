@@ -1,10 +1,10 @@
 import { enumDirection, Vector } from "../../core/vector";
 import { HubComponent } from "../components/hub";
-import { ItemAcceptorComponent } from "../components/item_acceptor";
+import { ItemAcceptorComponent, ItemAcceptorSlotConfig } from "../components/item_acceptor";
 import { enumItemProcessorTypes, ItemProcessorComponent } from "../components/item_processor";
+import { enumPinSlotType, WiredPinsComponent } from "../components/wired_pins";
 import { Entity } from "../entity";
 import { defaultBuildingVariant, MetaBuilding } from "../meta_building";
-import { WiredPinsComponent, enumPinSlotType } from "../components/wired_pins";
 
 export class MetaHubBuilding extends MetaBuilding {
     constructor() {
@@ -67,7 +67,7 @@ export class MetaHubBuilding extends MetaBuilding {
             })
         );
 
-        const slots: Array<import("../components/item_acceptor").ItemAcceptorSlotConfig> = [];
+        const slots: Array<ItemAcceptorSlotConfig> = [];
         for (let i = 0; i < 4; ++i) {
             slots.push(
                 { pos: new Vector(i, 0), direction: enumDirection.top, filter: "shape" },

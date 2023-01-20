@@ -1,7 +1,5 @@
-/* typehints:start */
 import type { Component } from "./component";
 import type { Entity } from "./entity";
-/* typehints:end */
 
 import { GameRoot } from "./root";
 import { GameSystem } from "./game_system";

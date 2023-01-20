@@ -1,7 +1,5 @@
-/* typehints:start */
 import type { Application } from "../../application";
 import type { GameRoot } from "../../game/root";
-/* typehints:end */
 
 import { createLogger } from "../../core/logging";
 import { ACHIEVEMENTS, AchievementCollection, AchievementProviderInterface } from "../achievement_provider";

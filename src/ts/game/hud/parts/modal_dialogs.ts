@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { Application } from "../../../application";
-/* typehints:end */
 
 import { SOUNDS } from "../../../platform/sound";
 import { DynamicDomAttach } from "../dynamic_dom_attach";

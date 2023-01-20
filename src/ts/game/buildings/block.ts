@@ -1,6 +1,5 @@
-/* typehints:start */
 import type { Entity } from "../entity";
-/* typehints:end */
+import type { GameRoot } from "../root";
 
 import { defaultBuildingVariant, MetaBuilding } from "../meta_building";
 
@@ -22,10 +21,10 @@ export class MetaBlockBuilding extends MetaBuilding {
         return "#333";
     }
 
-    getIsRemovable(root: import("../../savegame/savegame_serializer").GameRoot) {
+    getIsRemovable(root: GameRoot) {
         return root.gameMode.getIsEditor();
     }
 
     /** Creates the entity at the given location */
-    setupEntityComponents(entity: Entity) {}
+    setupEntityComponents(entity: Entity) { }
 }

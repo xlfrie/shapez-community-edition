@@ -7,6 +7,7 @@ import { T } from "../../../translations";
 import { MetaBlockBuilding } from "../../buildings/block";
 import { MetaConstantProducerBuilding } from "../../buildings/constant_producer";
 import { MetaGoalAcceptorBuilding } from "../../buildings/goal_acceptor";
+import { Component } from "../../component";
 import { StaticMapEntityComponent } from "../../components/static_map_entity";
 import { PuzzleGameMode } from "../../modes/puzzle";
 import { BaseHUDPart } from "../base_hud_part";
@@ -155,7 +156,7 @@ export class HUDPuzzleEditorSettings extends BaseHUDPart {
 
                     for (const key in building.components) {
                         (
-                            building.components[key] as import("../../../core/global_registries").Component
+                            building.components[key] as Component
                         ).copyAdditionalStateTo(result.components[key]);
                     }
                 }

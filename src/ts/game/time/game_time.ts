@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { GameRoot } from "../root";
-/* typehints:end */
 
 import { types, BasicSerializableObject } from "../../savegame/serialization";
 import { RegularGameSpeed } from "./regular_game_speed";

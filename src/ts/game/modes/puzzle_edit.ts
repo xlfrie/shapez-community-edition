@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { GameRoot } from "../root";
-/* typehints:end */
 
 import { enumGameModeIds } from "../game_mode";
 import { PuzzleGameMode } from "./puzzle";

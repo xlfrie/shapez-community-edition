@@ -1,7 +1,7 @@
 import { Component } from "../game/component";
 import { Entity } from "../game/entity";
+import { GameRoot } from "../game/root";
 import { globalConfig } from "./config";
-import { GameRoot } from "./draw_parameters";
 import { createLogger } from "./logging";
 import { Rectangle } from "./rectangle";
 

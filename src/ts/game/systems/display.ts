@@ -1,7 +1,10 @@
 import { globalConfig } from "../../core/config";
+import type { DrawParameters } from "../../core/draw_parameters";
 import { Loader } from "../../core/loader";
+import type { AtlasSprite } from "../../core/sprites";
 import { BaseItem } from "../base_item";
 import { enumColors } from "../colors";
+import type { Entity } from "../entity";
 import { GameSystem } from "../game_system";
 import { isTrueItem } from "../items/boolean_item";
 import { ColorItem, COLOR_ITEM_SINGLETONS } from "../items/color_item";
@@ -12,15 +15,11 @@ export const MODS_ADDITIONAL_DISPLAY_ITEM_RESOLVER: {
 } = {};
 
 export const MODS_ADDITIONAL_DISPLAY_ITEM_DRAW: {
-    [x: string]: (
-        parameters: import("../../core/draw_parameters").DrawParameters,
-        entity: import("../entity").Entity,
-        item: BaseItem
-    ) => BaseItem;
+    [x: string]: (parameters: DrawParameters, entity: Entity, item: BaseItem) => BaseItem;
 } = {};
 export class DisplaySystem extends GameSystem {
     public displaySprites: {
-        [idx: string]: import("../../core/draw_utils").AtlasSprite;
+        [idx: string]: AtlasSprite;
     } = {};
 
     constructor(root) {
@@ -64,7 +63,7 @@ export class DisplaySystem extends GameSystem {
     }
 
     /** Draws a given chunk */
-    drawChunk(parameters: import("../../core/draw_utils").DrawParameters, chunk: MapChunkView) {
+    drawChunk(parameters: DrawParameters, chunk: MapChunkView) {
         const contents = chunk.containedEntitiesByLayer.regular;
         for (let i = 0; i < contents.length; ++i) {
             const entity = contents[i];

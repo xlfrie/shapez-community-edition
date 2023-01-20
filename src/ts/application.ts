@@ -6,15 +6,20 @@ import { GLOBAL_APP, setGlobalApp } from "./core/globals";
 import { InputDistributor } from "./core/input_distributor";
 import { Loader } from "./core/loader";
 import { createLogger, logSection } from "./core/logging";
+import { RestrictionManager } from "./core/restriction_manager";
 import { StateManager } from "./core/state_manager";
 import { TrackedState } from "./core/tracked_state";
 import { getPlatformName, waitNextFrame } from "./core/utils";
 import { Vector } from "./core/vector";
+import { MODS } from "./mods/modloader";
+import { MOD_SIGNALS } from "./mods/mod_signals";
 import { AdProviderInterface } from "./platform/ad_provider";
 import { NoAdProvider } from "./platform/ad_providers/no_ad_provider";
-import { NoAchievementProvider } from "./platform/browser/no_achievement_provider";
 import { AnalyticsInterface } from "./platform/analytics";
+import { ClientAPI } from "./platform/api";
+import { ShapezGameAnalytics } from "./platform/browser/game_analytics";
 import { GoogleAnalyticsImpl } from "./platform/browser/google_analytics";
+import { NoAchievementProvider } from "./platform/browser/no_achievement_provider";
 import { SoundImplBrowser } from "./platform/browser/sound";
 import { PlatformWrapperImplBrowser } from "./platform/browser/wrapper";
 import { PlatformWrapperImplElectron } from "./platform/electron/wrapper";
@@ -25,26 +30,18 @@ import { AboutState } from "./states/about";
 import { ChangelogState } from "./states/changelog";
 import { InGameState } from "./states/ingame";
 import { KeybindingsState } from "./states/keybindings";
+import { LoginState } from "./states/login";
 import { MainMenuState } from "./states/main_menu";
 import { MobileWarningState } from "./states/mobile_warning";
-import { PreloadState } from "./states/preload";
-import { SettingsState } from "./states/settings";
-import { ShapezGameAnalytics } from "./platform/browser/game_analytics";
-import { RestrictionManager } from "./core/restriction_manager";
-import { PuzzleMenuState } from "./states/puzzle_menu";
-import { ClientAPI } from "./platform/api";
-import { LoginState } from "./states/login";
-import { WegameSplashState } from "./states/wegame_splash";
-import { MODS } from "./mods/modloader";
-import { MOD_SIGNALS } from "./mods/mod_signals";
 import { ModsState } from "./states/mods";
+import { PreloadState } from "./states/preload";
+import { PuzzleMenuState } from "./states/puzzle_menu";
+import { SettingsState } from "./states/settings";
+import { WegameSplashState } from "./states/wegame_splash";
 
-export type AchievementProviderInterface =
-    import("./platform/achievement_provider").AchievementProviderInterface;
+import type { AchievementProviderInterface } from "./platform/achievement_provider";
 
-export type SoundInterface = import("./platform/sound").SoundInterface;
-
-export type StorageInterface = import("./platform/storage").StorageInterface;
+import type { StorageInterface } from "./platform/storage";
 
 const logger = createLogger("application");
 

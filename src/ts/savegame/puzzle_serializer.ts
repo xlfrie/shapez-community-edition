@@ -1,7 +1,7 @@
-/* typehints:start */
+import type { PuzzleGameData } from "./savegame_typedefs";
 import type { GameRoot } from "../game/root";
 import type { PuzzleGameMode } from "../game/modes/puzzle";
-/* typehints:end */
+
 import { StaticMapEntityComponent } from "../game/components/static_map_entity";
 import { ShapeItem } from "../game/items/shape_item";
 import { Vector } from "../core/vector";
@@ -20,10 +20,10 @@ import { MetaBlockBuilding } from "../game/buildings/block";
 const logger = createLogger("puzzle-serializer");
 
 export class PuzzleSerializer {
-    generateDumpFromGameRoot(root: GameRoot): import("./savegame_typedefs").PuzzleGameData {
+    generateDumpFromGameRoot(root: GameRoot): PuzzleGameData {
         console.log("serializing", root);
 
-        let buildings: import("./savegame_typedefs").PuzzleGameData["buildings"] = [];
+        let buildings: PuzzleGameData["buildings"] = [];
         for (const entity of root.entityMgr.getAllWithComponent(StaticMapEntityComponent)) {
             const staticComp = entity.components.StaticMapEntity;
             const signalComp = entity.components.ConstantSignal;
@@ -119,7 +119,7 @@ export class PuzzleSerializer {
         return null;
     }
 
-    deserializePuzzle(root: GameRoot, puzzle: import("./savegame_typedefs").PuzzleGameData) {
+    deserializePuzzle(root: GameRoot, puzzle: PuzzleGameData) {
         if (puzzle.version !== 1) {
             return "invalid-version";
         }

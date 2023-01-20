@@ -1,14 +1,12 @@
-/* typehints:start */
-import type { GameRoot } from "../root";
-/* typehints:end */
 
 import { Rectangle } from "../../core/rectangle";
 import { types } from "../../savegame/serialization";
 import { enumGameModeTypes, GameMode } from "../game_mode";
+import { BaseHUDPart } from "../hud/base_hud_part";
+import { HUDMassSelector } from "../hud/parts/mass_selector";
 import { HUDPuzzleBackToMenu } from "../hud/parts/puzzle_back_to_menu";
 import { HUDPuzzleDLCLogo } from "../hud/parts/puzzle_dlc_logo";
-import { HUDMassSelector } from "../hud/parts/mass_selector";
-import { BaseHUDPart } from "../hud/base_hud_part";
+import { MetaBuilding } from "../meta_building";
 
 export class PuzzleGameMode extends GameMode {
     static getType() {
@@ -39,7 +37,7 @@ export class PuzzleGameMode extends GameMode {
         this.zoneHeight = data.zoneHeight || 6;
     }
 
-    isBuildingExcluded(building: typeof import("../meta_building").MetaBuilding) {
+    isBuildingExcluded(building: typeof MetaBuilding) {
         return this.hiddenBuildings.indexOf(building) >= 0;
     }
 

@@ -1,4 +1,5 @@
 import { globalConfig } from "../../core/config";
+import type { DrawParameters } from "../../core/draw_parameters";
 import { Loader } from "../../core/loader";
 import { round1DigitLocalized, smoothPulse } from "../../core/utils";
 import { enumItemProcessorRequirements, enumItemProcessorTypes } from "../components/item_processor";
@@ -24,7 +25,7 @@ export class ItemProcessorOverlaysSystem extends GameSystem {
         this.drawnUids.clear();
     }
 
-    drawChunk(parameters: import("../../core/draw_utils").DrawParameters, chunk: MapChunkView) {
+    drawChunk(parameters: DrawParameters, chunk: MapChunkView) {
         const contents = chunk.containedEntitiesByLayer.regular;
         for (let i = 0; i < contents.length; ++i) {
             const entity = contents[i];
@@ -67,7 +68,7 @@ export class ItemProcessorOverlaysSystem extends GameSystem {
         }
     }
 
-    drawReaderOverlays(parameters: import("../../core/draw_utils").DrawParameters, entity: Entity) {
+    drawReaderOverlays(parameters: DrawParameters, entity: Entity) {
         const staticComp = entity.components.StaticMapEntity;
         const readerComp = entity.components.BeltReader;
 
@@ -91,7 +92,7 @@ export class ItemProcessorOverlaysSystem extends GameSystem {
     }
 
     drawConnectedSlotRequirement(
-        parameters: import("../../core/draw_utils").DrawParameters,
+        parameters: DrawParameters,
         entity: Entity,
         {
             drawIfFalse = true,

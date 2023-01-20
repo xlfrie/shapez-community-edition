@@ -66,10 +66,9 @@ export class GameHUD {
             dialogs: new HUDModalDialogs(this.root),
 
             // Typing hints
-            /* typehints:start */
+
             // This breaks stuff
             // changesDebugger: null,
-            /* typehints:end */
         };
 
         if (G_IS_DEV) {

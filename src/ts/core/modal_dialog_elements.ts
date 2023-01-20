@@ -1,6 +1,5 @@
-/* typehints:start */
+import type { ClickDetectorConstructorArgs } from "./click_detector";
 import type { Application } from "../application";
-/* typehints:end */
 
 import { Signal, STOP_PROPAGATION } from "./signal";
 import { arrayDeleteValue, waitNextFrame } from "./utils";
@@ -274,11 +273,7 @@ export class Dialog<T extends string> {
     }
 
     /** Helper method to track clicks on an element */
-    trackClicks(
-        elem: Element,
-        handler: () => void,
-        args: import("./click_detector").ClickDetectorConstructorArgs = {}
-    ): ClickDetector {
+    trackClicks(elem: Element, handler: () => void, args: ClickDetectorConstructorArgs = {}): ClickDetector {
         const detector = new ClickDetector(elem, args);
         detector.click.add(handler, this);
         this.clickDetectors.push(detector);

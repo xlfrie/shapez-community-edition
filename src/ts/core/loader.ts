@@ -3,9 +3,9 @@ import { AtlasSprite, BaseSprite, RegularSprite, SpriteAtlasLink } from "./sprit
 import { cachebust } from "./cachebust";
 import { createLogger } from "./logging";
 
-export type Application = import("../application").Application;
+import type { Application } from "../application";
 
-export type AtlasDefinition = import("./atlas_definitions").AtlasDefinition;
+import type { AtlasDefinition } from "./atlas_definitions";
 
 const logger = createLogger("loader");
 

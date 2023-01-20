@@ -1,6 +1,6 @@
-/* typehints:start */
+import type { SavegameStoredMods } from "../savegame/savegame_typedefs";
 import type { Application } from "../application";
-/* typehints:end */
+
 import { globalConfig } from "../core/config";
 import { createLogger } from "../core/logging";
 import { StorageImplBrowserIndexedDB } from "../platform/browser/storage_indexed_db";
@@ -55,7 +55,7 @@ export class ModLoader {
         return this.mods.length > 0;
     }
 
-    getModsListForSavegame(): import("../savegame/savegame_typedefs").SavegameStoredMods {
+    getModsListForSavegame(): SavegameStoredMods {
         return this.mods
             .filter(mod => !mod.metadata.doesNotAffectSavegame)
             .map(mod => ({
@@ -67,8 +67,8 @@ export class ModLoader {
             }));
     }
 
-    computeModDifference(originalMods: import("../savegame/savegame_typedefs").SavegameStoredMods) {
-        let missing: import("../savegame/savegame_typedefs").SavegameStoredMods = [];
+    computeModDifference(originalMods: SavegameStoredMods) {
+        let missing: SavegameStoredMods = [];
 
         const current = this.getModsListForSavegame();
 

@@ -1,14 +1,15 @@
-import { types } from "../savegame/serialization";
 import { gItemRegistry } from "../core/global_registries";
-import { BooleanItem, BOOL_TRUE_SINGLETON, BOOL_FALSE_SINGLETON } from "./items/boolean_item";
-import { ShapeItem } from "./items/shape_item";
+import { types } from "../savegame/serialization";
+import { BooleanItem, BOOL_FALSE_SINGLETON, BOOL_TRUE_SINGLETON } from "./items/boolean_item";
 import { ColorItem, COLOR_ITEM_SINGLETONS } from "./items/color_item";
+import { ShapeItem } from "./items/shape_item";
+import type { GameRoot } from "./root";
 
 export const MODS_ADDITIONAL_ITEMS = {};
 
 /** Resolves items so we share instances */
 export function itemResolverSingleton(
-    root: import("../savegame/savegame_serializer").GameRoot,
+    root: GameRoot,
     data: {
         $: string;
         data: any;

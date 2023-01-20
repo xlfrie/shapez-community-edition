@@ -1,6 +1,4 @@
-/* typehints:start */
 import type { Application } from "../application";
-/* typehints:end */
 
 import { randomChoice } from "../core/utils";
 import { T } from "../translations";

@@ -1,3 +1,4 @@
+import type { ItemAcceptorLocatedSlot } from "./item_acceptor";
 import { enumDirection, enumDirectionToVector, Vector } from "../../core/vector";
 import { types } from "../../savegame/serialization";
 import { BaseItem } from "../base_item";
@@ -12,7 +13,7 @@ export type ItemEjectorSlot = {
     item?: BaseItem;
     lastItem?: BaseItem;
     progress?: number;
-    cachedDestSlot?: import("./item_acceptor").ItemAcceptorLocatedSlot;
+    cachedDestSlot?: ItemAcceptorLocatedSlot;
     cachedBeltPath?: BeltPath;
     cachedTargetEntity?: Entity;
 };

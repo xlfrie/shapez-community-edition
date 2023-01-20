@@ -1,38 +1,37 @@
-/* typehints:start */
-import type { ModLoader } from "./modloader";
-import type { GameSystem } from "../game/game_system";
 import type { Component } from "../game/component";
+import type { GameSystem } from "../game/game_system";
 import type { MetaBuilding } from "../game/meta_building";
-/* typehints:end */
+import type { SubShapeDrawOptions } from "../game/shape_definition";
+import type { ModLoader } from "./modloader";
 
-import { defaultBuildingVariant } from "../game/meta_building";
+import { GameState } from "../core/game_state";
+import { gComponentRegistry, gItemRegistry, gMetaBuildingRegistry } from "../core/global_registries";
+import { Loader } from "../core/loader";
 import { AtlasSprite, SpriteAtlasLink } from "../core/sprites";
+import { Vector } from "../core/vector";
+import { BaseItem } from "../game/base_item";
+import { gBuildingVariants, registerBuildingVariant } from "../game/building_codes";
+import { MODS_ADDITIONAL_SYSTEMS } from "../game/game_system_manager";
+import { BaseHUDPart } from "../game/hud/base_hud_part";
+import { MODS_ADDITIONAL_ITEMS } from "../game/item_resolver";
+import { KEYMAPPINGS } from "../game/key_action_mapper";
+import { MODS_ADDITIONAL_SHAPE_MAP_WEIGHTS } from "../game/map_chunk";
+import { MOD_CHUNK_DRAW_HOOKS } from "../game/map_chunk_view";
+import { defaultBuildingVariant } from "../game/meta_building";
+import { GameRoot } from "../game/root";
 import {
     enumShortcodeToSubShape,
     enumSubShape,
     enumSubShapeToShortcode,
-    MODS_ADDITIONAL_SUB_SHAPE_DRAWERS,
+    MODS_ADDITIONAL_SUB_SHAPE_DRAWERS
 } from "../game/shape_definition";
-import { Loader } from "../core/loader";
+import { THEMES } from "../game/theme";
 import { LANGUAGES } from "../languages";
 import { matchDataRecursive, T } from "../translations";
-import { gBuildingVariants, registerBuildingVariant } from "../game/building_codes";
-import { gComponentRegistry, gItemRegistry, gMetaBuildingRegistry } from "../core/global_registries";
-import { MODS_ADDITIONAL_SHAPE_MAP_WEIGHTS } from "../game/map_chunk";
-import { MODS_ADDITIONAL_SYSTEMS } from "../game/game_system_manager";
-import { MOD_CHUNK_DRAW_HOOKS } from "../game/map_chunk_view";
-import { KEYMAPPINGS } from "../game/key_action_mapper";
-import { HUDModalDialogs } from "../game/hud/parts/modal_dialogs";
-import { THEMES } from "../game/theme";
 import { ModMetaBuilding } from "./mod_meta_building";
-import { BaseHUDPart } from "../game/hud/base_hud_part";
-import { Vector } from "../core/vector";
-import { GameRoot } from "../game/root";
-import { BaseItem } from "../game/base_item";
-import { MODS_ADDITIONAL_ITEMS } from "../game/item_resolver";
 
 export type constructable = {
-    new (...args: any);
+    new(...args: any);
     prototype: any;
 };
 
@@ -49,7 +48,7 @@ export type extendsPrams<F extends (...args: any) => any> = (
 ) => ReturnType<F>;
 
 export class ModInterface {
-    constructor(public modLoader: ModLoader) {}
+    constructor(public modLoader: ModLoader) { }
 
     registerCss(cssString) {
         // Preprocess css
@@ -148,7 +147,7 @@ export class ModInterface {
         id: string;
         shortCode: string;
         weightComputation: (distanceToOriginInChunks: number) => number;
-        draw: (options: import("../game/shape_definition").SubShapeDrawOptions) => void;
+        draw: (options: SubShapeDrawOptions) => void;
     }) {
         if (shortCode.length !== 1) {
             throw new Error("Bad short code: " + shortCode);
@@ -373,7 +372,7 @@ export class ModInterface {
     }
 
     /** Registers a new state class, should be a GameState derived class */
-    registerGameState(stateClass: typeof import("../core/game_state").GameState) {
+    registerGameState(stateClass: typeof GameState) {
         this.modLoader.app.stateMgr.register(stateClass);
     }
 

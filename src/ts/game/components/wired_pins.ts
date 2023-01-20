@@ -1,3 +1,4 @@
+import type { WireNetwork } from "../systems/wire";
 import { enumDirection, Vector } from "../../core/vector";
 import { BaseItem } from "../base_item";
 import { Component } from "../component";
@@ -24,7 +25,7 @@ export type WirePinSlot = {
     type: enumPinSlotType;
     direction: enumDirection;
     value: BaseItem;
-    linkedNetwork: import("../systems/wire").WireNetwork;
+    linkedNetwork: WireNetwork;
 };
 
 export class WiredPinsComponent extends Component {

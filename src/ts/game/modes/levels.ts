@@ -1,6 +1,5 @@
-/* typehints:start */
 import type { Application } from "../../application";
-/* typehints:end */
+
 import { WEB_STEAM_SSO_AUTHENTICATED } from "../../core/steam_sso";
 import { enumHubGoalRewards } from "../tutorial_goals";
 

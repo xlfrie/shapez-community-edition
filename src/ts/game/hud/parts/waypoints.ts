@@ -1,3 +1,4 @@
+import type { AtlasSprite } from "c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites";
 import { makeOffscreenBuffer } from "../../../core/buffer_utils";
 import { globalConfig, THIRDPARTY_URLS } from "../../../core/config";
 import { DrawParameters } from "../../../core/draw_parameters";
@@ -45,10 +46,10 @@ export class HUDWaypoints extends BaseHUDPart {
     public waypointsListElement: HTMLDivElement;
     public waypoints: Waypoint[];
     public waypointSprites: {
-        regular: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
-        wires: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
+        regular: AtlasSprite;
+        wires: AtlasSprite;
     };
-    public directionIndicatorSprite: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/core/sprites").AtlasSprite;
+    public directionIndicatorSprite: AtlasSprite;
     public dummyBuffer: CanvasRenderingContext2D;
     public domAttach: DynamicDomAttach;
     public currentMarkerOpacity: number;

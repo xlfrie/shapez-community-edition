@@ -4,15 +4,14 @@ import { createLogger } from "../core/logging";
 import { MOD_SIGNALS } from "../mods/mod_signals";
 import { SerializerInternal } from "./serializer_internal";
 
-export type Component = import("../game/component").Component;
 
-export type StaticComponent = import("../game/component").StaticComponent;
+import type { StaticComponent } from "../game/component";
 
-export type Entity = import("../game/entity").Entity;
+import type { Entity } from "../game/entity";
 
-export type GameRoot = import("../game/root").GameRoot;
+import type { GameRoot } from "../game/root";
 
-export type SerializedGame = import("../savegame/savegame_typedefs").SerializedGame;
+import type { SerializedGame } from "../savegame/savegame_typedefs";
 
 const logger = createLogger("savegame_serializer");
 
@@ -20,7 +19,7 @@ const logger = createLogger("savegame_serializer");
 export class SavegameSerializer {
     public internal = new SerializerInternal();
 
-    constructor() {}
+    constructor() { }
 
     /**
      * Serializes the game root into a dump

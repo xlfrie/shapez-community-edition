@@ -1,3 +1,4 @@
+import type { SavegameData } from "../savegame_typedefs.js";
 import { createLogger } from "../../core/logging";
 import { SavegameInterface_V1009 } from "./1009";
 
@@ -13,7 +14,7 @@ export class SavegameInterface_V1010 extends SavegameInterface_V1009 {
         return schema;
     }
 
-    static migrate1009to1010(data: import("../savegame_typedefs.js").SavegameData) {
+    static migrate1009to1010(data: SavegameData) {
         logger.log("Migrating 1009 to 1010");
 
         data.mods = [];

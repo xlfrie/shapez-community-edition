@@ -4,7 +4,7 @@ import { RandomNumberGenerator } from "../core/rng";
 import { createLogger } from "../core/logging";
 
 // Type hints
-/* typehints:start */
+
 import type { GameTime } from "./time/game_time";
 import type { EntityManager } from "./entity_manager";
 import type { GameSystemManager } from "./game_system_manager";
@@ -30,7 +30,6 @@ import type { KeyActionMapper } from "./key_action_mapper";
 import type { Vector } from "../core/vector";
 import type { GameMode } from "./game_mode";
 import { enumHubGoalRewards } from "./tutorial_goals";
-/* typehints:end */
 
 const logger = createLogger("game/root");
 

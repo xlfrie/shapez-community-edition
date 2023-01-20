@@ -1,7 +1,6 @@
-/* typehints:start */
+import type { ModInterface } from "c:/Dev Temp/ts/shapez-community-edition/src/ts/mods/mod_interface";
 import type { Application } from "../application";
 import type { ModLoader, ModMetadata } from "./modloader";
-/* typehints:end */
 
 import { MOD_SIGNALS } from "./mod_signals";
 
@@ -10,7 +9,7 @@ export class Mod {
     public modLoader: ModLoader;
     public metadata: ModMetadata;
     public signals: typeof MOD_SIGNALS;
-    public modInterface: import("c:/Dev Temp/ts/shapez-community-edition/src/ts/mods/mod_interface").ModInterface;
+    public modInterface: ModInterface;
     public settings: any;
     public saveSettings: () => Promise<void>;
 
