@@ -27,10 +27,6 @@ export const MOD_SIGNALS = {
 
     stateEntered: new Signal<[GameState]>(),
 
-    gameSerialized: new Signal() as TypedSignal<
-        [GameRoot, SerializedGame]
-    >,
-    gameDeserialized: new Signal() as TypedSignal<
-        [GameRoot, SerializedGame]
-    >,
+    gameSerialized: new Signal() as TypedSignal<[GameRoot, SerializedGame]>,
+    gameDeserialized: new Signal() as TypedSignal<[GameRoot, SerializedGame]>,
 };

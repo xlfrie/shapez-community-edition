@@ -1,4 +1,3 @@
-
 import { Rectangle } from "../../core/rectangle";
 import { types } from "../../savegame/serialization";
 import { enumGameModeTypes, GameMode } from "../game_mode";

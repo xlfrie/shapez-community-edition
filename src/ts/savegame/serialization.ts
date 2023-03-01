@@ -20,10 +20,12 @@ import {
     TypeNullable,
     TypeNumber,
     TypePair,
-    TypePositiveInteger, TypePositiveIntegerOrString, TypePositiveNumber,
+    TypePositiveInteger,
+    TypePositiveIntegerOrString,
+    TypePositiveNumber,
     TypeString,
     TypeStructuredObject,
-    TypeVector
+    TypeVector,
 } from "./serialization_data_types";
 
 const logger = createLogger("serialization");
@@ -110,7 +112,7 @@ export class BasicSerializableObject {
      * in non-dev builds
      */
 
-    constructor(...args) { }
+    constructor(...args) {}
 
     /* dev:end */
 

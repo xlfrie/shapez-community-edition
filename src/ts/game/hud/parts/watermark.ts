@@ -15,21 +15,21 @@ export class HUDWatermark extends BaseHUDPart {
             "ingame_HUD_WatermarkClicker",
             globalConfig.currentDiscount > 0 ? ["withDiscount"] : [],
             linkText +
-            (globalConfig.currentDiscount > 0
-                ? `<span class='discount'>${T.global.discount.replace(
-                    "<percentage>",
-                    String(globalConfig.currentDiscount)
-                )}</span>`
-                : "")
+                (globalConfig.currentDiscount > 0
+                    ? `<span class='discount'>${T.global.discount.replace(
+                          "<percentage>",
+                          String(globalConfig.currentDiscount)
+                      )}</span>`
+                    : "")
         );
         this.trackClicks(this.linkElement, () => {
             openStandaloneLink(this.root.app, "shapez_watermark");
         });
     }
 
-    initialize() { }
+    initialize() {}
 
-    update() { }
+    update() {}
 
     drawOverlays(parameters: DrawParameters) {
         const w = this.root.gameWidth;

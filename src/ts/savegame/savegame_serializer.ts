@@ -4,7 +4,6 @@ import { createLogger } from "../core/logging";
 import { MOD_SIGNALS } from "../mods/mod_signals";
 import { SerializerInternal } from "./serializer_internal";
 
-
 import type { StaticComponent } from "../game/component";
 
 import type { Entity } from "../game/entity";
@@ -19,7 +18,7 @@ const logger = createLogger("savegame_serializer");
 export class SavegameSerializer {
     public internal = new SerializerInternal();
 
-    constructor() { }
+    constructor() {}
 
     /**
      * Serializes the game root into a dump

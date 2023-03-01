@@ -12,7 +12,7 @@ export class ClientAPI {
     /** The current users session token */
     public token: string | null = null;
 
-    constructor(public app: Application) { }
+    constructor(public app: Application) {}
 
     getEndpoint() {
         if (G_IS_DEV) {
@@ -117,9 +117,7 @@ export class ClientAPI {
         );
     }
 
-    apiListPuzzles(
-        category: "new" | "top-rated" | "mine"
-    ): Promise<PuzzleMetadata[]> {
+    apiListPuzzles(category: "new" | "top-rated" | "mine"): Promise<PuzzleMetadata[]> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
         }
@@ -157,9 +155,7 @@ export class ClientAPI {
         });
     }
 
-    apiDownloadPuzzleByKey(
-        shortKey: string
-    ): Promise<PuzzleFullData> {
+    apiDownloadPuzzleByKey(shortKey: string): Promise<PuzzleFullData> {
         if (!this.isLoggedIn()) {
             return Promise.reject("not-logged-in");
         }

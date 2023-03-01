@@ -23,7 +23,7 @@ import {
     enumShortcodeToSubShape,
     enumSubShape,
     enumSubShapeToShortcode,
-    MODS_ADDITIONAL_SUB_SHAPE_DRAWERS
+    MODS_ADDITIONAL_SUB_SHAPE_DRAWERS,
 } from "../game/shape_definition";
 import { THEMES } from "../game/theme";
 import { LANGUAGES } from "../languages";
@@ -31,7 +31,7 @@ import { matchDataRecursive, T } from "../translations";
 import { ModMetaBuilding } from "./mod_meta_building";
 
 export type constructable = {
-    new(...args: any);
+    new (...args: any);
     prototype: any;
 };
 
@@ -48,7 +48,7 @@ export type extendsPrams<F extends (...args: any) => any> = (
 ) => ReturnType<F>;
 
 export class ModInterface {
-    constructor(public modLoader: ModLoader) { }
+    constructor(public modLoader: ModLoader) {}
 
     registerCss(cssString) {
         // Preprocess css
