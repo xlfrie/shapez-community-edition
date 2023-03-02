@@ -1,8 +1,14 @@
-const buildUtils = require("./buildutils");
-const fs = require("fs");
-const path = require("path");
-const crypto = require("crypto");
-const { BUILD_VARIANTS } = require("./build_variants");
+import { getRevision, cachebust as cachebustUtil } from "./buildutils.js";
+import fs from "fs";
+// import path from "path";
+import path from "path";
+import crypto from "crypto";
+import { BUILD_VARIANTS } from "./build_variants.js";
+
+import gulpDom from "gulp-dom";
+import gulpHtmlmin from "gulp-htmlmin";
+import gulpHtmlBeautify from "gulp-html-beautify";
+import gulpRename from "gulp-rename";
 
 function computeIntegrityHash(fullPath, algorithm = "sha256") {
     const file = fs.readFileSync(fullPath);
@@ -16,8 +22,8 @@ function computeIntegrityHash(fullPath, algorithm = "sha256") {
  * html.<variant>.dev
  * html.<variant>.prod
  */
-function gulptasksHTML($, gulp, buildFolder) {
-    const commitHash = buildUtils.getRevision();
+export default function gulptasksHTML(gulp, buildFolder) {
+    const commitHash = getRevision();
     async function buildHtml({
         googleAnalytics = false,
         standalone = false,
@@ -26,7 +32,7 @@ function gulptasksHTML($, gulp, buildFolder) {
     }) {
         function cachebust(url) {
             if (enableCachebust) {
-                return buildUtils.cachebust(url, commitHash);
+                return cachebustUtil(url, commitHash);
             }
             return url;
         }
@@ -36,7 +42,7 @@ function gulptasksHTML($, gulp, buildFolder) {
         return gulp
             .src("../src/html/" + (standalone ? "index.standalone.html" : "index.html"))
             .pipe(
-                $.dom(
+                gulpDom(
                     /** @this {Document} **/ function () {
                         const document = this;
 
@@ -54,24 +60,6 @@ function gulptasksHTML($, gulp, buildFolder) {
                             );
                         }
                         document.head.appendChild(css);
-
-                        // Google analytics
-                        if (googleAnalytics && false) {
-                            const tagManagerScript = document.createElement("script");
-                            tagManagerScript.src =
-                                "https://www.googletagmanager.com/gtag/js?id=UA-165342524-1";
-                            tagManagerScript.setAttribute("async", "");
-                            document.head.appendChild(tagManagerScript);
-
-                            const initScript = document.createElement("script");
-                            initScript.textContent = `
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){dataLayer.push(arguments);}
-                        gtag('js', new Date());
-                        gtag('config', 'UA-165342524-1', { anonymize_ip: true });
-                        `;
-                            document.head.appendChild(initScript);
-                        }
 
                         // Do not need to preload in app or standalone
                         if (!hasLocalFiles) {
@@ -110,8 +98,7 @@ function gulptasksHTML($, gulp, buildFolder) {
                         }
                         `;
                         let loadingCss =
-                            fontCss +
-                            fs.readFileSync(path.join(__dirname, "preloader", "preloader.css")).toString();
+                            fontCss + fs.readFileSync(path.join("preloader", "preloader.css")).toString();
 
                         const style = document.createElement("style");
                         style.setAttribute("type", "text/css");
@@ -119,7 +106,7 @@ function gulptasksHTML($, gulp, buildFolder) {
                         document.head.appendChild(style);
 
                         let bodyContent = fs
-                            .readFileSync(path.join(__dirname, "preloader", "preloader.html"))
+                            .readFileSync(path.join("preloader", "preloader.html"))
                             .toString();
 
                         // Append loader, but not in standalone (directly include bundle there)
@@ -151,7 +138,7 @@ function gulptasksHTML($, gulp, buildFolder) {
                             }
 
                             scriptContent += fs
-                                .readFileSync(path.join(__dirname, "preloader", "preloader.js"))
+                                .readFileSync(path.join("preloader", "preloader.js"))
                                 .toString();
                             loadJs.textContent = scriptContent;
                             document.head.appendChild(loadJs);
@@ -162,7 +149,7 @@ function gulptasksHTML($, gulp, buildFolder) {
                 )
             )
             .pipe(
-                $.htmlmin({
+                gulpHtmlmin({
                     caseSensitive: true,
                     collapseBooleanAttributes: true,
                     collapseInlineTagWhitespace: true,
@@ -174,8 +161,8 @@ function gulptasksHTML($, gulp, buildFolder) {
                     useShortDoctype: true,
                 })
             )
-            .pipe($.htmlBeautify())
-            .pipe($.rename("index.html"))
+            .pipe(gulpHtmlBeautify())
+            .pipe(gulpRename("index.html"))
             .pipe(gulp.dest(buildFolder));
     }
 
@@ -183,7 +170,6 @@ function gulptasksHTML($, gulp, buildFolder) {
         const data = BUILD_VARIANTS[variant];
         gulp.task("html." + variant + ".dev", () => {
             return buildHtml({
-                googleAnalytics: false,
                 standalone: data.standalone,
                 integrity: false,
                 enableCachebust: false,
@@ -191,7 +177,6 @@ function gulptasksHTML($, gulp, buildFolder) {
         });
         gulp.task("html." + variant + ".prod", () => {
             return buildHtml({
-                googleAnalytics: !data.standalone,
                 standalone: data.standalone,
                 integrity: true,
                 enableCachebust: !data.standalone,
@@ -199,7 +184,3 @@ function gulptasksHTML($, gulp, buildFolder) {
         });
     }
 }
-
-module.exports = {
-    gulptasksHTML,
-};

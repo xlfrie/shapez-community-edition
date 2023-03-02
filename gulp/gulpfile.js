@@ -1,18 +1,14 @@
-/* eslint-disable */
+import gulp from "gulp";
+import BrowserSync from "browser-sync";
+const browserSync = BrowserSync.create({});
+// import path from "path";
+import path from "path";
+import deleteEmpty from "delete-empty";
+import { execSync } from "child_process";
 
-require("colors");
-
-const gulp = require("gulp");
-const browserSync = require("browser-sync").create({});
-const path = require("path");
-const deleteEmpty = require("delete-empty");
-const execSync = require("child_process").execSync;
-
-// Load other plugins dynamically
-const $ = require("gulp-load-plugins")({
-    scope: ["devDependencies"],
-    pattern: "*",
-});
+// Load other plugins
+import gulpClean from "gulp-clean";
+import gulpWebserver from "gulp-webserver";
 
 // Check environment variables
 
@@ -36,59 +32,59 @@ for (let i = 0; i < envVars.length; ++i) {
     }
 }
 
-const baseDir = path.join(__dirname, "..");
+const baseDir = path.resolve("..");
 const buildFolder = path.join(baseDir, "build");
 const buildOuptutFolder = path.join(baseDir, "build_output");
 
-const imgres = require("./image-resources");
-imgres.gulptasksImageResources($, gulp, buildFolder);
+import gulptasksImageResources, * as imgres from "./image-resources.js";
+gulptasksImageResources(gulp, buildFolder);
 
-const css = require("./css");
-css.gulptasksCSS($, gulp, buildFolder, browserSync);
+import gulptasksCSS from "./css.js";
+gulptasksCSS(gulp, buildFolder, browserSync);
 
-const sounds = require("./sounds");
-sounds.gulptasksSounds($, gulp, buildFolder);
+import gulptasksSounds from "./sounds.js";
+gulptasksSounds(gulp, buildFolder);
 
-const localConfig = require("./local-config");
-localConfig.gulptasksLocalConfig($, gulp);
+import gulptasksLocalConfig from "./local-config.js";
+gulptasksLocalConfig(gulp);
 
-const js = require("./js");
-js.gulptasksJS($, gulp, buildFolder, browserSync);
+import gulptasksJS from "./js.js";
+gulptasksJS(gulp, buildFolder, browserSync);
 
-const html = require("./html");
-html.gulptasksHTML($, gulp, buildFolder);
+import gulptasksHTML from "./html.js";
+gulptasksHTML(gulp, buildFolder);
 
-const ftp = require("./ftp");
-ftp.gulptasksFTP($, gulp, buildFolder);
+import gulptasksFTP from "./ftp.js";
+gulptasksFTP(gulp, buildFolder);
 
-const docs = require("./docs");
-docs.gulptasksDocs($, gulp, buildFolder);
+import gulptasksDocs from "./docs.js";
+gulptasksDocs(gulp, buildFolder);
 
-const standalone = require("./standalone");
-standalone.gulptasksStandalone($, gulp);
+import gulptasksStandalone from "./standalone.js";
+gulptasksStandalone(gulp);
 
-const translations = require("./translations");
-const { BUILD_VARIANTS } = require("./build_variants");
-translations.gulptasksTranslations($, gulp);
+import gulptasksTranslations from "./translations.js";
+import { BUILD_VARIANTS } from "./build_variants.js";
+gulptasksTranslations(gulp);
 
 /////////////////////  BUILD TASKS  /////////////////////
 
 // Cleans up everything
 gulp.task("utils.cleanBuildFolder", () => {
-    return gulp.src(buildFolder, { read: false, allowEmpty: true }).pipe($.clean({ force: true }));
+    return gulp.src(buildFolder, { read: false, allowEmpty: true }).pipe(gulpClean({ force: true }));
 });
 gulp.task("utils.cleanBuildOutputFolder", () => {
-    return gulp.src(buildOuptutFolder, { read: false, allowEmpty: true }).pipe($.clean({ force: true }));
+    return gulp.src(buildOuptutFolder, { read: false, allowEmpty: true }).pipe(gulpClean({ force: true }));
 });
 gulp.task("utils.cleanBuildTempFolder", () => {
     return gulp
-        .src(path.join(__dirname, "..", "src", "js", "built-temp"), { read: false, allowEmpty: true })
-        .pipe($.clean({ force: true }));
+        .src(path.join("..", "src", "js", "built-temp"), { read: false, allowEmpty: true })
+        .pipe(gulpClean({ force: true }));
 });
 gulp.task("utils.cleanImageBuildFolder", () => {
     return gulp
-        .src(path.join(__dirname, "res_built"), { read: false, allowEmpty: true })
-        .pipe($.clean({ force: true }));
+        .src(path.join("res_built"), { read: false, allowEmpty: true })
+        .pipe(gulpClean({ force: true }));
 });
 
 gulp.task(
@@ -98,7 +94,7 @@ gulp.task(
 
 // Requires no uncomitted files
 gulp.task("utils.requireCleanWorkingTree", cb => {
-    let output = $.trim(execSync("git status -su").toString("ascii")).replace(/\r/gi, "").split("\n");
+    let output = execSync("git status -su").toString("ascii").trim().replace(/\r/gi, "").split("\n");
 
     // Filter files which are OK to be untracked
     output = output
@@ -128,7 +124,7 @@ gulp.task("utils.copyAdditionalBuildFiles", cb => {
 // Starts a webserver on the built directory (useful for testing prod build)
 gulp.task("main.webserver", () => {
     return gulp.src(buildFolder).pipe(
-        $.webserver({
+        gulpWebserver({
             livereload: {
                 enable: true,
             },
@@ -193,7 +189,7 @@ function serveHTML({ version = "web-dev" }) {
     gulp.watch("../res_built/atlas/*.json", gulp.series("imgres.atlas"));
 
     // Watch the build folder and reload when anything changed
-    const extensions = ["html", "js", "png", "gif", "jpg", "svg", "mp3", "ico", "woff2", "json"];
+    const extensions = ["html", "js", "png", "gif", "jpg", "svg", "mp3", "ico", "woff2", "json", "ts"];
     gulp.watch(extensions.map(ext => path.join(buildFolder, "**", "*." + ext))).on("change", function (path) {
         return gulp.src(path).pipe(browserSync.reload({ stream: true }));
     });
@@ -294,23 +290,7 @@ gulp.task(
 );
 gulp.task(
     "bundle.steam.from-windows",
-    gulp.series(
-        "utils.cleanBuildOutputFolder",
-        "bundle.standalone-steam.from-windows",
-        "bundle.standalone-steam-china.from-windows"
-    )
-);
-gulp.task(
-    "bundle.steam-demo.from-darwin",
-    gulp.series("utils.cleanBuildOutputFolder", "bundle.standalone-steam-demo.from-darwin")
-);
-gulp.task(
-    "bundle.steam-demo.from-windows",
-    gulp.series(
-        "utils.cleanBuildOutputFolder",
-        "bundle.standalone-steam-demo.from-windows",
-        "bundle.standalone-steam-china-demo.from-windows"
-    )
+    gulp.series("utils.cleanBuildOutputFolder", "bundle.standalone-steam.from-windows")
 );
 
 // Default task (dev, localhost)
