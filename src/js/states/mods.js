@@ -83,11 +83,15 @@ export class ModsState extends TextualGameState {
                     <div class="mainInfo">
                         <span class="name">${mod.metadata.name}</span>
                         <span class="description">${mod.metadata.description}</span>
-                        <a class="website" href="${mod.metadata.website}" target="_blank">${T.mods.modWebsite}</a>
+                        <a class="website" href="${mod.metadata.website}" target="_blank">${
+                T.mods.modWebsite
+            }</a>
                     </div>
                     <span class="version"><strong>${T.mods.version}</strong>${mod.metadata.version}</span>
                     <span class="author"><strong>${T.mods.author}</strong>${mod.metadata.author}</span>
-                    <div class="value checkbox checked">
+                    <div class="value checkbox ${mod.enabled ? "checked" : ""}" data-mod-id="${
+                mod.metadata.id
+            }">
                         <span class="knob"></span>
                     </div>
 
@@ -120,9 +124,21 @@ export class ModsState extends TextualGameState {
             this.trackClicks(browseMods, this.openBrowseMods);
         }
 
+        /** @type {NodeListOf<HTMLElement>} */
         const checkboxes = this.htmlElement.querySelectorAll(".checkbox");
         Array.from(checkboxes).forEach(checkbox => {
-            this.trackClicks(checkbox, this.showModTogglingComingSoon);
+            this.trackClicks(checkbox, () => {
+                const mod = MODS.mods.find(m => m.metadata.id == checkbox.dataset.modId);
+                if (!mod) console.log("Couldn't find mod");
+                else {
+                    checkbox.classList.toggle("checked");
+                    if (checkbox.classList.contains("checked")) {
+                        mod.onStart();
+                    } else {
+                        mod.onStop();
+                    }
+                }
+            });
         });
     }
 

@@ -332,6 +332,8 @@ class SettingsStorage {
          * @type {Object.<string, number>}
          */
         this.keybindingOverrides = {};
+
+        this.enabledMods = [];
     }
 }
 
@@ -702,6 +704,10 @@ export class ApplicationSettings extends ReadWriteProxy {
 
         if (data.version < 32) {
             data.version = 32;
+        }
+
+        if (data.version < 33) {
+            data.settings.enabledMods = [];
         }
 
         // MODS

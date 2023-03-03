@@ -30,41 +30,52 @@ import { Vector } from "../core/vector";
 import { GameRoot } from "../game/root";
 import { BaseItem } from "../game/base_item";
 import { MODS_ADDITIONAL_ITEMS } from "../game/item_resolver";
+import { ExplainedResult } from "../core/explained_result.js";
+import { Class, returnAny } from "./method_injector.js";
 
-/**
- * @typedef {{new(...args: any[]): any, prototype: any}} constructable
- */
-
-/**
- * @template {(...args: any) => any} F The function
- * @template {object} T  The value of this
- * @typedef {(this: T, ...args: Parameters<F>) => ReturnType<F>} bindThis
- */
-
-/**
- * @template {(...args: any[]) => any} F
- * @template P
- * @typedef {(...args: [P, Parameters<F>]) => ReturnType<F>} beforePrams IMPORTANT: this puts the original parameters into an array
- */
-
-/**
- * @template {(...args: any[]) => any} F
- * @template P
- * @typedef {(...args: [...Parameters<F>, P]) => ReturnType<F>} afterPrams
- */
-
-/**
- * @template {(...args: any[]) => any} F
- * @typedef {(...args: [...Parameters<F>, ...any]) => ReturnType<F>} extendsPrams
- */
+interface Injection {
+    inject(): ExplainedResult;
+    uninject(): ExplainedResult;
+}
 
 export class ModInterface {
-    /**
-     *
-     * @param {ModLoader} modLoader
-     */
-    constructor(modLoader) {
-        this.modLoader = modLoader;
+    public readonly injections: Injection[] = [];
+
+    constructor(public modLoader: ModLoader) {}
+
+    private addInjection(inject: () => ExplainedResult, uninject: () => ExplainedResult) {
+        this.injections.push({
+            inject,
+            uninject,
+        });
+    }
+
+    tryInject(): ExplainedResult {
+        for (let i = 0; i < this.injections.length; i++) {
+            const res = this.injections[i].inject();
+            if (res.isBad()) {
+                // Uninject everything that came before
+                for (let j = i; j > -1; j--) {
+                    this.injections[i].uninject();
+                }
+                return res;
+            }
+        }
+        return ExplainedResult.good();
+    }
+
+    tryUninject(): ExplainedResult {
+        for (let i = 0; i < this.injections.length; i++) {
+            const res = this.injections[i].uninject();
+            if (res.isBad()) {
+                // Reinject everything that came before
+                for (let j = i; j > -1; j--) {
+                    this.injections[i].inject();
+                }
+                return res;
+            }
+        }
+        return ExplainedResult.good();
     }
 
     registerCss(cssString) {
@@ -74,7 +85,19 @@ export class ModInterface {
         });
         const element = document.createElement("style");
         element.textContent = cssString;
-        document.head.appendChild(element);
+
+        this.addInjection(
+            () => {
+                document.head.appendChild(element);
+                return ExplainedResult.good();
+            },
+            () => {
+                if (!element.parentElement) return ExplainedResult.bad("Could not find CSS Element");
+
+                element.remove();
+                return ExplainedResult.good();
+            }
+        );
     }
 
     registerSprite(spriteId, base64string) {
@@ -113,6 +136,23 @@ export class ModInterface {
         sprite.linksByResolution["0.75"] = link;
 
         Loader.sprites.set(spriteId, sprite);
+        this.addInjection(
+            () => {
+                if (Loader.sprites.has(spriteId)) {
+                    return ExplainedResult.bad(`Repeat sprite ID "${spriteId}"`);
+                }
+
+                Loader.sprites.set(spriteId, sprite);
+                return ExplainedResult.good();
+            },
+            () => {
+                if (!Loader.sprites.has(spriteId)) {
+                    return ExplainedResult.bad(`Sprite ${spriteId} never registered`);
+                }
+
+                Loader.sprites.delete(spriteId);
+            }
+        );
     }
 
     /**
@@ -129,7 +169,7 @@ export class ModInterface {
         for (const spriteName in sourceData) {
             const { frame, sourceSize, spriteSourceSize } = sourceData[spriteName];
 
-            let sprite = /** @type {AtlasSprite} */ (Loader.sprites.get(spriteName));
+            let sprite = Loader.sprites.get(spriteName) as AtlasSprite;
 
             if (!sprite) {
                 sprite = new AtlasSprite(spriteName);
@@ -250,7 +290,7 @@ export class ModInterface {
      * @param {string=} param0.buildingIconBase64
      */
     registerNewBuilding({ metaClass, buildingIconBase64 }) {
-        const id = new /** @type {new (...args) => ModMetaBuilding} */ (metaClass)().getId();
+        const id = new /** @type {new (...args) => ModMetaBuilding} */ metaClass().getId();
         if (gMetaBuildingRegistry.hasId(id)) {
             throw new Error("Tried to register building twice: " + id);
         }
@@ -439,59 +479,57 @@ export class ModInterface {
 
     /**
      * Patches a method on a given class
-     * @template {constructable} C  the class
-     * @template {C["prototype"]} P  the prototype of said class
-     * @template {keyof P} M  the name of the method we are overriding
-     * @template {extendsPrams<P[M]>} O the method that will override the old one
-     * @param {C} classHandle
-     * @param {M} methodName
-     * @param {bindThis<beforePrams<O, P[M]>, InstanceType<C>>} override
      */
-    replaceMethod(classHandle, methodName, override) {
-        const oldMethod = classHandle.prototype[methodName];
-        classHandle.prototype[methodName] = function () {
-            //@ts-ignore This is true I just cant tell it that arguments will be Arguments<O>
-            return override.call(this, oldMethod.bind(this), arguments);
-        };
+    replaceMethod<C extends Class<any>, M extends keyof C["prototype"]>(
+        classHandle: C,
+        methodName: M,
+        replacement: returnAny<C["prototype"][M]>,
+        options?: {
+            allowOthersToOverrideReturn?: boolean;
+        }
+    ) {
+        this.addInjection(
+            () => this.modLoader.injector.replaceMethod(classHandle, methodName, replacement, options),
+            () =>
+                this.modLoader.injector.removeReplacement(
+                    classHandle,
+                    methodName as string,
+                    replacement,
+                    options
+                )
+        );
     }
 
     /**
      * Runs before a method on a given class
-     * @template {constructable} C  the class
-     * @template {C["prototype"]} P  the prototype of said class
-     * @template {keyof P} M  the name of the method we are overriding
-     * @template {extendsPrams<P[M]>} O the method that will run before the old one
-     * @param {C} classHandle
-     * @param {M} methodName
-     * @param {bindThis<O, InstanceType<C>>} executeBefore
      */
-    runBeforeMethod(classHandle, methodName, executeBefore) {
-        const oldHandle = classHandle.prototype[methodName];
-        classHandle.prototype[methodName] = function () {
-            //@ts-ignore Same as above
-            executeBefore.apply(this, arguments);
-            return oldHandle.apply(this, arguments);
-        };
+    runBeforeMethod<C extends Class<any>, M extends keyof C["prototype"]>(
+        classHandle: C,
+        methodName: M,
+        runBefore: returnAny<C["prototype"][M]>
+    ) {
+        this.addInjection(
+            () => this.modLoader.injector.runBeforeMethod(classHandle, methodName, runBefore),
+            () => this.modLoader.injector.removeRunBeforeMethod(classHandle, methodName as string, runBefore)
+        );
     }
 
     /**
      * Runs after a method on a given class
-     * @template {constructable} C  the class
-     * @template {C["prototype"]} P  the prototype of said class
-     * @template {keyof P} M  the name of the method we are overriding
-     * @template {extendsPrams<P[M]>} O the method that will run before the old one
-     * @param {C} classHandle
-     * @param {M} methodName
-     * @param {bindThis<O, InstanceType<C>>} executeAfter
+
      */
-    runAfterMethod(classHandle, methodName, executeAfter) {
-        const oldHandle = classHandle.prototype[methodName];
-        classHandle.prototype[methodName] = function () {
-            const returnValue = oldHandle.apply(this, arguments);
-            //@ts-ignore
-            executeAfter.apply(this, arguments);
-            return returnValue;
-        };
+    runAfterMethod<C extends Class<any>, M extends keyof C["prototype"]>(
+        classHandle: C,
+        methodName: M,
+        runAfter: returnAny<C["prototype"][M]>,
+        options?: {
+            overrideReturn?: boolean;
+        }
+    ) {
+        this.addInjection(
+            () => this.modLoader.injector.runAfterMethod(classHandle, methodName, runAfter, options),
+            () => this.modLoader.injector.removeRunAfter(classHandle, methodName as string, runAfter, options)
+        );
     }
 
     /**
@@ -528,9 +566,20 @@ export class ModInterface {
      * @param {new (...args) => BaseHUDPart} element
      */
     registerHudElement(id, element) {
-        this.modLoader.signals.hudInitializer.add(root => {
+        const method = root => {
             root.hud.parts[id] = new element(root);
-        });
+        };
+
+        this.addInjection(
+            () => {
+                this.modLoader.signals.hudInitializer.add(method);
+                return ExplainedResult.good();
+            },
+            () => {
+                this.modLoader.signals.hudInitializer.remove(method);
+                return ExplainedResult.good();
+            }
+        );
     }
 
     /**
@@ -558,15 +607,11 @@ export class ModInterface {
         });
     }
 
-    /**
-     *
-     * @param {string | (new () => MetaBuilding)} buildingIdOrClass
-     * @param {string} variant
-     * @param {object} param2
-     * @param {string=} param2.regularBase64
-     * @param {string=} param2.blueprintBase64
-     */
-    registerBuildingSprites(buildingIdOrClass, variant, { regularBase64, blueprintBase64 }) {
+    registerBuildingSprites(
+        buildingIdOrClass: string | { new (): MetaBuilding },
+        variant: string,
+        { regularBase64, blueprintBase64 }: { regularBase64?: string; blueprintBase64?: string }
+    ) {
         if (typeof buildingIdOrClass === "function") {
             buildingIdOrClass = new buildingIdOrClass().id;
         }

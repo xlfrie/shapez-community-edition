@@ -12,6 +12,7 @@ import { MOD_SIGNALS } from "./mod_signals";
 
 import semverValidRange from "semver/ranges/valid";
 import semverSatisifies from "semver/functions/satisfies";
+import { MethodInjector } from "./method_injector";
 
 const LOG = createLogger("mods");
 
@@ -49,6 +50,8 @@ export class ModLoader {
         this.initialized = false;
 
         this.signals = MOD_SIGNALS;
+
+        this.injector = new MethodInjector();
     }
 
     linkApp(app) {
@@ -107,6 +110,7 @@ export class ModLoader {
     exposeExports() {
         if (G_IS_DEV || G_IS_STANDALONE) {
             let exports = {};
+            // @ts-ignore
             const modules = import.meta.webpackContext("../", { recursive: true, regExp: /\.js$/ });
             Array.from(modules.keys()).forEach(key => {
                 // @ts-ignore
