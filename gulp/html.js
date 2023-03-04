@@ -18,12 +18,7 @@ function computeIntegrityHash(fullPath, algorithm = "sha256") {
  */
 function gulptasksHTML($, gulp, buildFolder) {
     const commitHash = buildUtils.getRevision();
-    async function buildHtml({
-        googleAnalytics = false,
-        standalone = false,
-        integrity = true,
-        enableCachebust = true,
-    }) {
+    async function buildHtml({ standalone = false, integrity = true, enableCachebust = true }) {
         function cachebust(url) {
             if (enableCachebust) {
                 return buildUtils.cachebust(url, commitHash);
@@ -54,24 +49,6 @@ function gulptasksHTML($, gulp, buildFolder) {
                             );
                         }
                         document.head.appendChild(css);
-
-                        // Google analytics
-                        if (googleAnalytics && false) {
-                            const tagManagerScript = document.createElement("script");
-                            tagManagerScript.src =
-                                "https://www.googletagmanager.com/gtag/js?id=UA-165342524-1";
-                            tagManagerScript.setAttribute("async", "");
-                            document.head.appendChild(tagManagerScript);
-
-                            const initScript = document.createElement("script");
-                            initScript.textContent = `
-                        window.dataLayer = window.dataLayer || [];
-                        function gtag(){dataLayer.push(arguments);}
-                        gtag('js', new Date());
-                        gtag('config', 'UA-165342524-1', { anonymize_ip: true });
-                        `;
-                            document.head.appendChild(initScript);
-                        }
 
                         // Do not need to preload in app or standalone
                         if (!hasLocalFiles) {
@@ -183,7 +160,6 @@ function gulptasksHTML($, gulp, buildFolder) {
         const data = BUILD_VARIANTS[variant];
         gulp.task("html." + variant + ".dev", () => {
             return buildHtml({
-                googleAnalytics: false,
                 standalone: data.standalone,
                 integrity: false,
                 enableCachebust: false,
@@ -191,7 +167,6 @@ function gulptasksHTML($, gulp, buildFolder) {
         });
         gulp.task("html." + variant + ".prod", () => {
             return buildHtml({
-                googleAnalytics: !data.standalone,
                 standalone: data.standalone,
                 integrity: true,
                 enableCachebust: !data.standalone,
