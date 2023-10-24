@@ -31,7 +31,7 @@ const moduleRules = [
         type: "javascript/auto",
     },
     {
-        test: /\.js$/,
+        test: /\.jsx?$/,
         enforce: "pre",
         exclude: /node_modules/,
         use: [
@@ -45,7 +45,7 @@ const moduleRules = [
         ],
     },
     {
-        test: /\.[jt]s$/,
+        test: /\.[jt]sx?$/,
         use: [
             {
                 loader: "ts-loader",
@@ -89,12 +89,14 @@ export default {
         fallback: { fs: false },
         alias: {
             "global-compression": resolve("../src/js/core/lzstring.js"),
+            "root": resolve("../src/js/"),
         },
         fullySpecified: false,
-        extensions: [".ts", ".js"],
+        extensions: [".ts", ".js", ".tsx", ".jsx"],
     },
     devtool: "cheap-source-map",
     watch: true,
+    cache: false,
     plugins: [
         new webpack.DefinePlugin(globalDefs),
         new webpack.IgnorePlugin({ resourceRegExp: /\.(png|jpe?g|svg)$/ }),
