@@ -102,15 +102,6 @@ export class HUDStandaloneAdvantages extends BaseHUDPart {
         // On standalone, show popup instant
         // wait for next interval
         this.lastShown = 0;
-
-        this.root.signals.gameRestored.add(() => {
-            if (
-                this.root.hubGoals.level >= this.root.gameMode.getLevelDefinitions().length - 1 &&
-                this.root.app.restrictionMgr.getIsStandaloneMarketingActive()
-            ) {
-                this.show(true);
-            }
-        });
     }
 
     show(final = false) {

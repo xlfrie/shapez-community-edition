@@ -50,8 +50,7 @@ export class MainMenuState extends GameState {
             }
         }
 
-        const showDemoAdvertisement =
-            showExternalLinks && this.app.restrictionMgr.getIsStandaloneMarketingActive();
+        const showDemoAdvertisement = false;
 
         const ownsPuzzleDLC =
             WEB_STEAM_SSO_AUTHENTICATED ||
@@ -312,14 +311,6 @@ export class MainMenuState extends GameState {
      * Asks the user to import a savegame
      */
     requestImportSavegame() {
-        if (
-            this.app.savegameMgr.getSavegamesMetaData().length > 0 &&
-            !this.app.restrictionMgr.getHasUnlimitedSavegames()
-        ) {
-            this.showSavegameSlotLimit();
-            return;
-        }
-
         this.app.gameAnalytics.note("startimport");
 
         // Create a 'fake' file-input to accept savegames
@@ -843,22 +834,6 @@ export class MainMenuState extends GameState {
         });
     }
 
-    /**
-     * Shows a hint that the slot limit has been reached
-     */
-    showSavegameSlotLimit() {
-        const { getStandalone } = this.dialogs.showWarning(
-            T.dialogs.oneSavegameLimit.title,
-            T.dialogs.oneSavegameLimit.desc,
-            ["cancel:bad", "getStandalone:good"]
-        );
-        getStandalone.add(() => {
-            openStandaloneLink(this.app, "shapez_slotlimit");
-        });
-
-        this.app.gameAnalytics.note("slotlimit");
-    }
-
     onSettingsButtonClicked() {
         this.moveToState("SettingsState");
     }
@@ -870,15 +845,6 @@ export class MainMenuState extends GameState {
     }
 
     onPlayButtonClicked() {
-        if (
-            this.app.savegameMgr.getSavegamesMetaData().length > 0 &&
-            !this.app.restrictionMgr.getHasUnlimitedSavegames()
-        ) {
-            this.app.gameAnalytics.noteMinor("menu.slotlimit");
-            this.showSavegameSlotLimit();
-            return;
-        }
-
         this.app.adProvider.showVideoAd().then(() => {
             this.app.gameAnalytics.noteMinor("menu.play");
             const savegame = this.app.savegameMgr.createNewSavegame();
