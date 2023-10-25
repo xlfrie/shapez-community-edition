@@ -31,7 +31,6 @@ import { ShapezGameAnalytics } from "./platform/browser/game_analytics";
 import { PuzzleMenuState } from "./states/puzzle_menu";
 import { ClientAPI } from "./platform/api";
 import { LoginState } from "./states/login";
-import { WegameSplashState } from "./states/wegame_splash";
 import { MODS } from "./mods/modloader";
 import { MOD_SIGNALS } from "./mods/mod_signals";
 import { ModsState } from "./states/mods";
@@ -182,7 +181,6 @@ export class Application {
     registerStates() {
         /** @type {Array<typeof GameState>} */
         const states = [
-            WegameSplashState,
             PreloadState,
             MobileWarningState,
             MainMenuState,
