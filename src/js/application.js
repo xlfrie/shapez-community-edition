@@ -10,8 +10,6 @@ import { StateManager } from "./core/state_manager";
 import { TrackedState } from "./core/tracked_state";
 import { getPlatformName, waitNextFrame } from "./core/utils";
 import { Vector } from "./core/vector";
-import { AdProviderInterface } from "./platform/ad_provider";
-import { NoAdProvider } from "./platform/ad_providers/no_ad_provider";
 import { NoAchievementProvider } from "./platform/browser/no_achievement_provider";
 import { AnalyticsInterface } from "./platform/analytics";
 import { GoogleAnalyticsImpl } from "./platform/browser/google_analytics";
@@ -107,9 +105,6 @@ export class Application {
         /** @type {AchievementProviderInterface} */
         this.achievementProvider = null;
 
-        /** @type {AdProviderInterface} */
-        this.adProvider = null;
-
         /** @type {AnalyticsInterface} */
         this.analytics = null;
 
@@ -129,9 +124,6 @@ export class Application {
 
         /** @type {TypedTrackedState<boolean>} */
         this.trackedIsRenderable = new TrackedState(this.onAppRenderableStateChanged, this);
-
-        /** @type {TypedTrackedState<boolean>} */
-        this.trackedIsPlaying = new TrackedState(this.onAppPlayingStateChanged, this);
 
         // Dimensions
         this.screenWidth = 0;
@@ -178,8 +170,6 @@ export class Application {
             this.platformWrapper = new PlatformWrapperImplBrowser(this);
         }
 
-        // Start with empty ad provider
-        this.adProvider = new NoAdProvider(this);
         this.sound = new SoundImplBrowser(this);
         this.analytics = new GoogleAnalyticsImpl(this);
         this.gameAnalytics = new ShapezGameAnalytics(this);
@@ -325,14 +315,6 @@ export class Application {
         this.sound.onPageRenderableStateChanged(renderable);
     }
 
-    onAppPlayingStateChanged(playing) {
-        try {
-            this.adProvider.setPlayStatus(playing);
-        } catch (ex) {
-            console.warn("Play status changed");
-        }
-    }
-
     /**
      * Internal before-unload handler
      */
@@ -389,7 +371,6 @@ export class Application {
         }
 
         const currentState = this.stateMgr.getCurrentState();
-        this.trackedIsPlaying.set(currentState && currentState.getIsIngame());
         if (currentState) {
             currentState.onRender(dt);
         }

@@ -56,9 +56,6 @@ export default {
     // Enables an inspector which shows information about the entity below the cursor
     // enableEntityInspector: true,
     // -----------------------------------------------------------------------------------
-    // Enables ads in the local build (normally they are deactivated there)
-    // testAds: true,
-    // -----------------------------------------------------------------------------------
     // Allows unlocked achievements to be logged to console in the local build
     // testAchievements: true,
     // -----------------------------------------------------------------------------------

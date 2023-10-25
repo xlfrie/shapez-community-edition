@@ -48,17 +48,9 @@ export class PlatformWrapperImplElectron extends PlatformWrapperImplBrowser {
         window.open(url, "about:blank");
     }
 
-    getSupportsAds() {
-        return false;
-    }
-
     performRestart() {
         logger.log(this, "Performing restart");
         window.location.reload(true);
-    }
-
-    initializeAdProvider() {
-        return Promise.resolve();
     }
 
     initializeAchievementProvider() {

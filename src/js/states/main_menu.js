@@ -723,24 +723,22 @@ export class MainMenuState extends GameState {
      * @param {SavegameMetadata} game
      */
     resumeGame(game) {
-        this.app.adProvider.showVideoAd().then(() => {
-            const savegame = this.app.savegameMgr.getSavegameById(game.internalId);
-            savegame
-                .readAsync()
-                .then(() => this.checkForModDifferences(savegame))
-                .then(() => {
-                    this.moveToState("InGameState", {
-                        savegame,
-                    });
-                })
-
-                .catch(err => {
-                    this.dialogs.showWarning(
-                        T.dialogs.gameLoadFailure.title,
-                        T.dialogs.gameLoadFailure.text + "<br><br>" + err
-                    );
+        const savegame = this.app.savegameMgr.getSavegameById(game.internalId);
+        savegame
+            .readAsync()
+            .then(() => this.checkForModDifferences(savegame))
+            .then(() => {
+                this.moveToState("InGameState", {
+                    savegame,
                 });
-        });
+            })
+
+            .catch(err => {
+                this.dialogs.showWarning(
+                    T.dialogs.gameLoadFailure.title,
+                    T.dialogs.gameLoadFailure.text + "<br><br>" + err
+                );
+            });
     }
 
     /**
@@ -845,13 +843,11 @@ export class MainMenuState extends GameState {
     }
 
     onPlayButtonClicked() {
-        this.app.adProvider.showVideoAd().then(() => {
-            this.app.gameAnalytics.noteMinor("menu.play");
-            const savegame = this.app.savegameMgr.createNewSavegame();
+        this.app.gameAnalytics.noteMinor("menu.play");
+        const savegame = this.app.savegameMgr.createNewSavegame();
 
-            this.moveToState("InGameState", {
-                savegame,
-            });
+        this.moveToState("InGameState", {
+            savegame,
         });
     }
 
@@ -893,7 +889,6 @@ export class MainMenuState extends GameState {
         this.app.gameAnalytics.noteMinor("menu.continue");
         savegame
             .readAsync()
-            .then(() => this.app.adProvider.showVideoAd())
             .then(() => this.checkForModDifferences(savegame))
             .then(() => {
                 this.moveToState("InGameState", {

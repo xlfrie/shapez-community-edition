@@ -230,14 +230,6 @@ export class GameState {
     }
 
     /**
-     * Should return true if the player is currently ingame
-     * @returns {boolean}
-     */
-    getIsIngame() {
-        return false;
-    }
-
-    /**
      * Should return whether to clear the whole body content before entering the state.
      * @returns {boolean}
      */
