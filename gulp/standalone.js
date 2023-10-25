@@ -19,9 +19,7 @@ try {
 export default function gulptasksStandalone(gulp) {
     for (const variant in BUILD_VARIANTS) {
         const variantData = BUILD_VARIANTS[variant];
-        if (!variantData.standalone) {
-            continue;
-        }
+
         const tempDestDir = path.join("..", "build_output", variant);
         const taskPrefix = "standalone." + variant;
         const electronBaseDir = path.join("..", variantData.electronBaseDir || "electron");

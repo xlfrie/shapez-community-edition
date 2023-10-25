@@ -236,17 +236,12 @@ gulp.task(
 
 // Builds everything for every variant
 for (const variant in BUILD_VARIANTS) {
-    const data = BUILD_VARIANTS[variant];
     const buildName = "build." + variant;
 
     // build
     gulp.task(
         buildName + ".code",
-        gulp.series(
-            data.standalone ? "sounds.fullbuildHQ" : "sounds.fullbuild",
-            "translations.fullBuild",
-            "js." + variant + ".prod"
-        )
+        gulp.series("sounds.fullbuildHQ", "translations.fullBuild", "js." + variant + ".prod")
     );
 
     gulp.task(buildName + ".resourcesAndCode", gulp.parallel("step.baseResources", buildName + ".code"));
@@ -259,16 +254,14 @@ for (const variant in BUILD_VARIANTS) {
     gulp.task(buildName, gulp.series("utils.cleanup", buildName + ".all", "step.postbuild"));
 
     // bundle
-    if (data.standalone) {
-        gulp.task(
-            "bundle." + variant + ".from-windows",
-            gulp.series(buildName, "standalone." + variant + ".build-from-windows")
-        );
-        gulp.task(
-            "bundle." + variant + ".from-darwin",
-            gulp.series(buildName, "standalone." + variant + ".build-from-darwin")
-        );
-    }
+    gulp.task(
+        "bundle." + variant + ".from-windows",
+        gulp.series(buildName, "standalone." + variant + ".build-from-windows")
+    );
+    gulp.task(
+        "bundle." + variant + ".from-darwin",
+        gulp.series(buildName, "standalone." + variant + ".build-from-darwin")
+    );
 
     // serve
     gulp.task(
