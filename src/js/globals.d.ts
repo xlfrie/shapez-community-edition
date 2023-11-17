@@ -1,8 +1,11 @@
 // Globals defined by webpack
 
 declare const G_IS_DEV: boolean;
-declare function assert(condition: boolean | object | string, ...errorMessage: string[]): void;
-declare function assertAlways(condition: boolean | object | string, ...errorMessage: string[]): void;
+declare function assert(condition: boolean | object | string, ...errorMessage: string[]): asserts condition;
+declare function assertAlways(
+    condition: boolean | object | string,
+    ...errorMessage: string[]
+): asserts condition;
 
 declare const abstract: void;
 
@@ -142,34 +145,6 @@ declare interface String {
     padEnd(size: number, fill: string): string;
 }
 
-declare interface FactoryTemplate<T> {
-    entries: Array<Class<T>>;
-    entryIds: Array<string>;
-    idToEntry: any;
-
-    getId(): string;
-    getAllIds(): Array<string>;
-    register(entry: Class<T>): void;
-    hasId(id: string): boolean;
-    findById(id: string): Class<T>;
-    getEntries(): Array<Class<T>>;
-    getNumEntries(): number;
-}
-
-declare interface SingletonFactoryTemplate<T> {
-    entries: Array<T>;
-    idToEntry: any;
-
-    getId(): string;
-    getAllIds(): Array<string>;
-    register(classHandle: Class<T>): void;
-    hasId(id: string): boolean;
-    findById(id: string): T;
-    findByClass(classHandle: Class<T>): T;
-    getEntries(): Array<T>;
-    getNumEntries(): number;
-}
-
 declare interface SignalTemplate0 {
     add(receiver: () => string | void, scope: null | any);
     dispatch(): string | void;
@@ -184,18 +159,6 @@ declare class TypedTrackedState<T> {
 
     setSilent(value: any): void;
     get(): T;
-}
-
-declare const STOP_PROPAGATION = "stop_propagation";
-
-declare interface TypedSignal<T extends Array<any>> {
-    add(receiver: (...args: T) => /* STOP_PROPAGATION */ string | void, scope?: object);
-    addToTop(receiver: (...args: T) => /* STOP_PROPAGATION */ string | void, scope?: object);
-    remove(receiver: (...args: T) => /* STOP_PROPAGATION */ string | void);
-
-    dispatch(...args: T): /* STOP_PROPAGATION */ string | void;
-
-    removeAll();
 }
 
 declare type Layer = "regular" | "wires";
