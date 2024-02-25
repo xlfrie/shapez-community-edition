@@ -43,14 +43,6 @@ export class PlatformWrapperInterface {
     }
 
     /**
-     * Should initialize the apps ad provider in case supported
-     *  @returns {Promise<void>}
-     */
-    initializeAdProvider() {
-        return Promise.resolve();
-    }
-
-    /**
      * Should return the minimum supported zoom level
      * @returns {number}
      */
@@ -68,13 +60,6 @@ export class PlatformWrapperInterface {
 
     getScreenScale() {
         return Math.min(window.innerWidth, window.innerHeight) / 1024.0;
-    }
-
-    /**
-     * Should return if this platform supports ads at all
-     */
-    getSupportsAds() {
-        return false;
     }
 
     /**

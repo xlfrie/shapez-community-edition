@@ -17,10 +17,8 @@
 @import "animations";
 @import "game_state";
 @import "textual_game_state";
-@import "adinplay";
 @import "changelog_skins";
 
-@import "states/wegame_splash";
 @import "states/preload";
 @import "states/main_menu";
 @import "states/ingame";
@@ -129,7 +127,9 @@ $zindex: 100;
 }
 
 body.uiHidden {
-    > div:not(.ingameDialog):not(#ingame_HUD_SettingsMenu):not(#ingame_HUD_ModalDialogs):not(#ingame_HUD_UnlockNotification):not(#ingame_HUD_PuzzleCompleteNotification) {
+    > div:not(.ingameDialog):not(#ingame_HUD_SettingsMenu):not(#ingame_HUD_ModalDialogs):not(
+            #ingame_HUD_UnlockNotification
+        ):not(#ingame_HUD_PuzzleCompleteNotification) {
         display: none !important;
     }
 }

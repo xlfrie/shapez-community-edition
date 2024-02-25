@@ -71,13 +71,6 @@ declare interface Window {
     AndroidNotch: any;
     plugins: any;
 
-    // Adinplay
-    aiptag: any;
-    adPlayer: any;
-    aipPlayer: any;
-    MobileAccessibility: MobileAccessibility;
-    LocalFileSystem: any;
-
     // Debugging
     activeClickDetectors: Array<any>;
 

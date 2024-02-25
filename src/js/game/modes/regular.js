@@ -352,11 +352,6 @@ export class RegularGameMode extends GameMode {
             this.additionalHudParts.keybindingOverlay = HUDKeybindingOverlay;
         }
 
-        if (this.root.app.restrictionMgr.getIsStandaloneMarketingActive()) {
-            this.additionalHudParts.watermark = HUDWatermark;
-            this.additionalHudParts.standaloneAdvantages = HUDStandaloneAdvantages;
-        }
-
         if (this.root.app.settings.getAllSettings().offerHints) {
             this.additionalHudParts.tutorialHints = HUDPartTutorialHints;
             this.additionalHudParts.interactiveTutorial = HUDInteractiveTutorial;
@@ -383,10 +378,7 @@ export class RegularGameMode extends GameMode {
      * @returns {Object<string, UpgradeTiers>}
      */
     getUpgrades() {
-        return generateUpgrades(
-            !this.root.app.restrictionMgr.getHasExtendedUpgrades(),
-            this.difficultyMultiplicator
-        );
+        return generateUpgrades(false, this.difficultyMultiplicator);
     }
 
     /**
@@ -403,7 +395,7 @@ export class RegularGameMode extends GameMode {
      * @returns {boolean}
      */
     getIsFreeplayAvailable() {
-        return this.root.app.restrictionMgr.getHasExtendedLevelsAndFreeplay();
+        return true;
     }
 
     /** @returns {boolean} */

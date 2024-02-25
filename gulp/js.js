@@ -19,8 +19,6 @@ export default function gulptasksJS(gulp, buildFolder, browserSync) {
     //// DEV
 
     for (const variant in BUILD_VARIANTS) {
-        const data = BUILD_VARIANTS[variant];
-
         gulp.task("js." + variant + ".dev.watch", () => {
             gulp.src("../src/js/main.js")
                 .pipe(webpackStream(webpackConfig))
@@ -28,51 +26,18 @@ export default function gulptasksJS(gulp, buildFolder, browserSync) {
                 .pipe(browserSync.stream());
         });
 
-        if (!data.standalone) {
-            // WEB
-
-            gulp.task("js." + variant + ".dev", () => {
-                return gulp
-                    .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackConfig))
-                    .pipe(gulp.dest(buildFolder));
-            });
-
-            gulp.task("js." + variant + ".prod.transpiled", () => {
-                return gulp
-                    .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackProductionConfig))
-                    .pipe(gulpRename("bundle-transpiled.js"))
-                    .pipe(gulp.dest(buildFolder));
-            });
-
-            gulp.task("js." + variant + ".prod.es6", () => {
-                return gulp
-                    .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackProductionConfig))
-                    .pipe(gulp.dest(buildFolder));
-            });
-            gulp.task(
-                "js." + variant + ".prod",
-
-                // transpiled currently not used
-                // gulp.parallel("js." + variant + ".prod.transpiled", "js." + variant + ".prod.es6")
-                gulp.parallel("js." + variant + ".prod.es6")
-            );
-        } else {
-            // STANDALONE
-            gulp.task("js." + variant + ".dev", () => {
-                return gulp
-                    .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackConfig))
-                    .pipe(gulp.dest(buildFolder));
-            });
-            gulp.task("js." + variant + ".prod", () => {
-                return gulp
-                    .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackProductionConfig))
-                    .pipe(gulp.dest(buildFolder));
-            });
-        }
+        // STANDALONE
+        gulp.task("js." + variant + ".dev", () => {
+            return gulp
+                .src("../src/js/main.js")
+                .pipe(webpackStream(webpackConfig))
+                .pipe(gulp.dest(buildFolder));
+        });
+        gulp.task("js." + variant + ".prod", () => {
+            return gulp
+                .src("../src/js/main.js")
+                .pipe(webpackStream(webpackProductionConfig))
+                .pipe(gulp.dest(buildFolder));
+        });
     }
 }

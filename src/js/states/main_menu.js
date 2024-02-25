@@ -50,8 +50,7 @@ export class MainMenuState extends GameState {
             }
         }
 
-        const showDemoAdvertisement =
-            showExternalLinks && this.app.restrictionMgr.getIsStandaloneMarketingActive();
+        const showDemoAdvertisement = false;
 
         const ownsPuzzleDLC =
             WEB_STEAM_SSO_AUTHENTICATED ||
@@ -312,14 +311,6 @@ export class MainMenuState extends GameState {
      * Asks the user to import a savegame
      */
     requestImportSavegame() {
-        if (
-            this.app.savegameMgr.getSavegamesMetaData().length > 0 &&
-            !this.app.restrictionMgr.getHasUnlimitedSavegames()
-        ) {
-            this.showSavegameSlotLimit();
-            return;
-        }
-
         this.app.gameAnalytics.note("startimport");
 
         // Create a 'fake' file-input to accept savegames
@@ -438,7 +429,6 @@ export class MainMenuState extends GameState {
             },
             ".puzzleDlcPlayButton": this.onPuzzleModeButtonClicked,
             ".puzzleDlcGetButton": this.onPuzzleWishlistButtonClicked,
-            ".wegameDisclaimer > .rating": this.onWegameRatingClicked,
             ".editMods": this.onModsClicked,
         };
 
@@ -732,24 +722,22 @@ export class MainMenuState extends GameState {
      * @param {SavegameMetadata} game
      */
     resumeGame(game) {
-        this.app.adProvider.showVideoAd().then(() => {
-            const savegame = this.app.savegameMgr.getSavegameById(game.internalId);
-            savegame
-                .readAsync()
-                .then(() => this.checkForModDifferences(savegame))
-                .then(() => {
-                    this.moveToState("InGameState", {
-                        savegame,
-                    });
-                })
-
-                .catch(err => {
-                    this.dialogs.showWarning(
-                        T.dialogs.gameLoadFailure.title,
-                        T.dialogs.gameLoadFailure.text + "<br><br>" + err
-                    );
+        const savegame = this.app.savegameMgr.getSavegameById(game.internalId);
+        savegame
+            .readAsync()
+            .then(() => this.checkForModDifferences(savegame))
+            .then(() => {
+                this.moveToState("InGameState", {
+                    savegame,
                 });
-        });
+            })
+
+            .catch(err => {
+                this.dialogs.showWarning(
+                    T.dialogs.gameLoadFailure.title,
+                    T.dialogs.gameLoadFailure.text + "<br><br>" + err
+                );
+            });
     }
 
     /**
@@ -843,22 +831,6 @@ export class MainMenuState extends GameState {
         });
     }
 
-    /**
-     * Shows a hint that the slot limit has been reached
-     */
-    showSavegameSlotLimit() {
-        const { getStandalone } = this.dialogs.showWarning(
-            T.dialogs.oneSavegameLimit.title,
-            T.dialogs.oneSavegameLimit.desc,
-            ["cancel:bad", "getStandalone:good"]
-        );
-        getStandalone.add(() => {
-            openStandaloneLink(this.app, "shapez_slotlimit");
-        });
-
-        this.app.gameAnalytics.note("slotlimit");
-    }
-
     onSettingsButtonClicked() {
         this.moveToState("SettingsState");
     }
@@ -870,35 +842,12 @@ export class MainMenuState extends GameState {
     }
 
     onPlayButtonClicked() {
-        if (
-            this.app.savegameMgr.getSavegamesMetaData().length > 0 &&
-            !this.app.restrictionMgr.getHasUnlimitedSavegames()
-        ) {
-            this.app.gameAnalytics.noteMinor("menu.slotlimit");
-            this.showSavegameSlotLimit();
-            return;
-        }
+        this.app.gameAnalytics.noteMinor("menu.play");
+        const savegame = this.app.savegameMgr.createNewSavegame();
 
-        this.app.adProvider.showVideoAd().then(() => {
-            this.app.gameAnalytics.noteMinor("menu.play");
-            const savegame = this.app.savegameMgr.createNewSavegame();
-
-            this.moveToState("InGameState", {
-                savegame,
-            });
+        this.moveToState("InGameState", {
+            savegame,
         });
-    }
-
-    onWegameRatingClicked() {
-        this.dialogs.showInfo(
-            "提示说明：",
-            `
-            1）本游戏是一款休闲建造类单机游戏，画面简洁而乐趣充足。适用于年满8周岁及以上的用户，建议未成年人在家长监护下使用游戏产品。<br>
-            2）本游戏模拟简单的生产流水线，剧情简单且积极向上，没有基于真实历史和现实事件的改编内容。游戏玩法为摆放简单的部件，完成生产目标。游戏为单机作品，没有基于文字和语音的陌生人社交系统。<br>
-            3）本游戏中有用户实名认证系统，认证为未成年人的用户将接受以下管理：未满8周岁的用户不能付费；8周岁以上未满16周岁的未成年人用户，单次充值金额不得超过50元人民币，每月充值金额累计不得超过200元人民币；16周岁以上的未成年人用户，单次充值金额不得超过100元人民币，每月充值金额累计不得超过400元人民币。未成年玩家，仅可在周五、周六、周日和法定节假日每日20时至21时进行游戏。<br>
-            4）游戏功能说明：一款关于传送带自动化生产特定形状产品的工厂流水线模拟游戏，画面简洁而乐趣充足，可以让玩家在轻松愉快的氛围下获得各种游戏乐趣，体验完成目标的成就感。游戏没有失败功能，自动存档，不存在较强的挫折体验。
-        `
-        );
     }
 
     onModsClicked() {
@@ -927,7 +876,6 @@ export class MainMenuState extends GameState {
         this.app.gameAnalytics.noteMinor("menu.continue");
         savegame
             .readAsync()
-            .then(() => this.app.adProvider.showVideoAd())
             .then(() => this.checkForModDifferences(savegame))
             .then(() => {
                 this.moveToState("InGameState", {
