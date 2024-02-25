@@ -78,15 +78,6 @@ declare interface Window {
     FontFace: any;
     TouchEvent: undefined | TouchEvent;
 
-    // Thirdparty
-    XPayStationWidget: any;
-    Sentry: any;
-    LogRocket: any;
-    grecaptcha: any;
-    gtag: any;
-    cpmstarAPI: any;
-    CrazyGames: any;
-
     // Mods
     $shapez_registerMod: any;
     anyModLoaded: any;
