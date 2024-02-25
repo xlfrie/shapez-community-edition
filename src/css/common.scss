@@ -731,20 +731,6 @@ iframe {
     user-select: all;
 }
 
-// Steam overlay fix
-#steamOverlayCanvasFix {
-    position: fixed;
-    top: 0px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.01;
-    pointer-events: none;
-    z-index: -1;
-}
-
 .sentry-error-embed-wrapper {
     z-index: 10000;
     background: rgba(0, 0, 0, 0.9);

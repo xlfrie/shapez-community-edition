@@ -13,26 +13,12 @@ export class PlatformWrapperImplElectron extends PlatformWrapperImplBrowser {
             puzzle: false,
         };
 
-        this.steamOverlayCanvasFix = document.createElement("canvas");
-        this.steamOverlayCanvasFix.width = 1;
-        this.steamOverlayCanvasFix.height = 1;
-        this.steamOverlayCanvasFix.id = "steamOverlayCanvasFix";
-
-        this.steamOverlayContextFix = this.steamOverlayCanvasFix.getContext("2d");
-        document.documentElement.appendChild(this.steamOverlayCanvasFix);
-
-        this.app.ticker.frameEmitted.add(this.steamOverlayFixRedrawCanvas, this);
-
         this.app.storage = new StorageImplElectron(this);
         this.app.achievementProvider = new SteamAchievementProvider(this.app);
 
         return this.initializeAchievementProvider()
             .then(() => this.initializeDlcStatus())
             .then(() => PlatformWrapperInterface.prototype.initialize.call(this));
-    }
-
-    steamOverlayFixRedrawCanvas() {
-        this.steamOverlayContextFix.clearRect(0, 0, 1, 1);
     }
 
     getId() {
