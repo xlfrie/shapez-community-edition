@@ -1,5 +1,4 @@
-import { openStandaloneLink, THIRDPARTY_URLS } from "../core/config";
-import { WEB_STEAM_SSO_AUTHENTICATED } from "../core/steam_sso";
+import { THIRDPARTY_URLS } from "../core/config";
 import { TextualGameState } from "../core/textual_game_state";
 import { MODS } from "../mods/modloader";
 import { T } from "../translations";
@@ -14,10 +13,7 @@ export class ModsState extends TextualGameState {
     }
 
     get modsSupported() {
-        return (
-            !WEB_STEAM_SSO_AUTHENTICATED &&
-            (G_IS_STANDALONE || (G_IS_DEV && !window.location.href.includes("demo")))
-        );
+        return G_IS_STANDALONE || G_IS_DEV;
     }
 
     internalGetFullHtml() {
@@ -53,11 +49,9 @@ export class ModsState extends TextualGameState {
             return `
                 <div class="noModSupport">
 
-                    <p>${WEB_STEAM_SSO_AUTHENTICATED ? T.mods.browserNoSupport : T.mods.noModSupport}</p>
+                    <p>${T.mods.noModSupport}</p>
                     <br>
                     <button class="styledButton browseMods">${T.mods.browseMods}</button>
-                    <a href="#" class="steamLink steam_dlbtn_0" target="_blank">Get on Steam!</a>
-
 
                 </div>
             `;
@@ -107,10 +101,6 @@ export class ModsState extends TextualGameState {
     }
 
     onEnter() {
-        const steamLink = this.htmlElement.querySelector(".steamLink");
-        if (steamLink) {
-            this.trackClicks(steamLink, this.onSteamLinkClicked);
-        }
         const openModsFolder = this.htmlElement.querySelector(".openModsFolder");
         if (openModsFolder) {
             this.trackClicks(openModsFolder, this.openModsFolder);
@@ -140,11 +130,6 @@ export class ModsState extends TextualGameState {
 
     openBrowseMods() {
         this.app.platformWrapper.openExternalLink(THIRDPARTY_URLS.modBrowser);
-    }
-
-    onSteamLinkClicked() {
-        openStandaloneLink(this.app, "shapez_modsettings");
-        return false;
     }
 
     getDefaultPreviousState() {

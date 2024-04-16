@@ -1,10 +1,8 @@
 import { CHANGELOG } from "../changelog";
 import { cachebust } from "../core/cachebust";
-import { globalConfig, THIRDPARTY_URLS } from "../core/config";
+import { globalConfig } from "../core/config";
 import { GameState } from "../core/game_state";
 import { createLogger } from "../core/logging";
-import { queryParamOptions } from "../core/query_parameters";
-import { authorizeViaSSOToken } from "../core/steam_sso";
 import { getLogoSprite, timeoutPromise } from "../core/utils";
 import { getRandomHint } from "../game/hints";
 import { HUDModalDialogs } from "../game/hud/parts/modal_dialogs";
@@ -65,30 +63,7 @@ export class PreloadState extends GameState {
     }
 
     async sendBeacon() {
-        if (G_IS_STANDALONE) {
-            return;
-        }
-        if (queryParamOptions.campaign) {
-            fetch(
-                "https://analytics.shapez.io/campaign/" +
-                    queryParamOptions.campaign +
-                    "?lpurl=nocontent&fbclid=" +
-                    (queryParamOptions.fbclid || "") +
-                    "&gclid=" +
-                    (queryParamOptions.gclid || "")
-            ).catch(err => {
-                console.warn("Failed to send beacon:", err);
-            });
-        }
-        if (queryParamOptions.embedProvider) {
-            fetch(
-                "https://analytics.shapez.io/campaign/embed_" +
-                    queryParamOptions.embedProvider +
-                    "?lpurl=nocontent"
-            ).catch(err => {
-                console.warn("Failed to send beacon:", err);
-            });
-        }
+        // TODO: Get rid of this analytics stuff
     }
 
     onLeave() {
@@ -97,20 +72,7 @@ export class PreloadState extends GameState {
 
     startLoading() {
         this.setStatus("Booting")
-            .then(() => {
-                try {
-                    window.localStorage.setItem("local_storage_feature_detection", "1");
-                } catch (ex) {
-                    throw new Error(
-                        "Could not access local storage. Make sure you are not playing in incognito mode and allow thirdparty cookies!"
-                    );
-                }
-            })
             .then(() => this.setStatus("Creating platform wrapper", 3))
-
-            .then(() => this.sendBeacon())
-            .then(() => authorizeViaSSOToken(this.app, this.dialogs))
-
             .then(() => this.app.platformWrapper.initialize())
 
             .then(() => this.setStatus("Initializing local storage", 6))
@@ -138,10 +100,6 @@ export class PreloadState extends GameState {
             .then(() => {
                 return this.app.storage.initialize();
             })
-
-            .then(() => this.setStatus("Initializing libraries", 12))
-            .then(() => this.app.analytics.initialize())
-            .then(() => this.app.gameAnalytics.initialize())
 
             .then(() => this.setStatus("Connecting to api", 15))
             .then(() => this.fetchDiscounts())
