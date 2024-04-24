@@ -118,7 +118,7 @@ function webserver() {
  */
 async function serveHTML({ version = "web-dev" }) {
     browserSync.init({
-        server: [buildFolder, path.join(baseDir, "mod_examples")],
+        server: buildFolder,
         port: 3005,
         ghostMode: false,
         logLevel: "info",
