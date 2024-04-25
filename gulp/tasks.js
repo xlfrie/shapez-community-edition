@@ -53,7 +53,7 @@ function cleanImageBuildFolder() {
         .pipe(gulpClean({ force: true }));
 }
 
-const cleanup = gulp.series(cleanBuildFolder, cleanImageBuildFolder, cleanBuildTempFolder);
+const cleanup = gulp.parallel(cleanBuildFolder, cleanImageBuildFolder, cleanBuildTempFolder);
 
 // Requires no uncomitted files
 async function requireCleanWorkingTree() {
@@ -116,42 +116,37 @@ function webserver() {
  * @param {object} param0
  * @param {keyof typeof BUILD_VARIANTS} param0.version
  */
-function serveHTML({ version = "web-dev" }) {
+async function serveHTML({ version = "web-dev" }) {
     browserSync.init({
         server: [buildFolder, path.join(baseDir, "mod_examples")],
         port: 3005,
-        ghostMode: {
-            clicks: false,
-            scroll: false,
-            location: false,
-            forms: false,
-        },
+        ghostMode: false,
         logLevel: "info",
         logPrefix: "BS",
         online: false,
-        xip: false,
         notify: false,
         reloadDebounce: 100,
-        reloadOnRestart: true,
         watchEvents: ["add", "change"],
+        open: false,
     });
 
+    gulp.watch("../src/js/**", js[version].dev.build);
+
     // Watch .scss files, those trigger a css rebuild
-    gulp.watch(["../src/**/*.scss"], css.dev);
+    gulp.watch("../src/css/**", css.dev);
 
     // Watch .html files, those trigger a html rebuild
-    gulp.watch("../src/**/*.html", html.dev);
-    gulp.watch("./preloader/*.*", html.dev);
+    gulp.watch(["../src/html/**", "./preloader/*"], html.dev);
 
     // Watch translations
-    gulp.watch("../translations/**/*.yaml", translations.convertToJson);
+    gulp.watch("../translations/*.yaml", translations.convertToJson);
 
     gulp.watch(
-        ["../res_raw/sounds/sfx/*.mp3", "../res_raw/sounds/sfx/*.wav"],
+        ["../res_raw/sounds/sfx/**/*.mp3", "../res_raw/sounds/sfx/**/*.wav"],
         gulp.series(sounds.sfx, sounds.copy)
     );
     gulp.watch(
-        ["../res_raw/sounds/music/*.mp3", "../res_raw/sounds/music/*.wav"],
+        ["../res_raw/sounds/music/**/*.mp3", "../res_raw/sounds/music/**/*.wav"],
         gulp.series(sounds.music, sounds.copy)
     );
 
@@ -165,20 +160,9 @@ function serveHTML({ version = "web-dev" }) {
     gulp.watch("../res_built/atlas/*.json", imgres.atlas);
 
     // Watch the build folder and reload when anything changed
-    const extensions = ["html", "js", "png", "gif", "jpg", "svg", "mp3", "ico", "woff2", "json"];
-    gulp.watch(extensions.map(ext => path.join(buildFolder, "**", "*." + ext))).on("change", p =>
-        gulp
-            .src(pathNative.resolve(p).replaceAll(pathNative.sep, path.sep))
-            .pipe(browserSync.reload({ stream: true }))
+    gulp.watch(path.join(buildFolder, "**")).on("change", p =>
+        gulp.src(pathNative.resolve(p).replaceAll(pathNative.sep, path.sep)).pipe(browserSync.stream())
     );
-
-    gulp.watch("../src/js/built-temp/*.json").on("change", p =>
-        gulp
-            .src(pathNative.resolve(p).replaceAll(pathNative.sep, path.sep))
-            .pipe(browserSync.reload({ stream: true }))
-    );
-
-    gulp.series(js[version].dev.watch)(() => true);
 }
 
 // Pre and postbuild
@@ -199,18 +183,19 @@ export const step = {
 
 // Builds everything (dev)
 const prepare = {
-    dev: gulp.series(
-        utils.cleanup,
-        utils.copyAdditionalBuildFiles,
-        localConfig.findOrCreate,
-        gulp.parallel(
-            gulp.series(imgres.buildAtlas, imgres.atlasToJson, imgres.atlas),
-            sounds.dev,
-            gulp.series(imgres.copyImageResources, css.dev),
-            imgres.copyNonImageResources,
-            translations.fullBuild
-        )
-    ),
+    dev: variant =>
+        gulp.series(
+            utils.cleanup,
+            localConfig.findOrCreate,
+            gulp.parallel(
+                utils.copyAdditionalBuildFiles,
+                gulp.series(imgres.buildAtlas, gulp.parallel(imgres.atlasToJson, imgres.atlas)),
+                gulp.series(imgres.copyImageResources, css.dev),
+                imgres.copyNonImageResources,
+                html.dev,
+                gulp.series(gulp.parallel(sounds.dev, translations.fullBuild), js[variant].dev.build)
+            )
+        ),
 };
 
 /**
@@ -282,7 +267,7 @@ for (const variant in BUILD_VARIANTS) {
     }
 
     // serve
-    serve[variant] = gulp.series(build.prepare.dev, html.dev, () => serveHTML({ version: variant }));
+    serve[variant] = gulp.series(build.prepare.dev(variant), () => serveHTML({ version: variant }));
 }
 
 // Deploying!

@@ -19,7 +19,7 @@ export const imageResourcesGlobs = [
     "../res/**/*.gif",
 ];
 
-export const browserSync = BrowserSync.create({});
+export const browserSync = BrowserSync.create();
 
 // Check environment variables
 

@@ -1,6 +1,7 @@
 import gulp from "gulp";
+import webpack from "webpack";
 import { BUILD_VARIANTS } from "./build_variants.js";
-import { buildFolder, browserSync } from "./config.js";
+import { buildFolder } from "./config.js";
 
 import webpackConfig from "./webpack.config.js";
 import webpackProductionConfig from "./webpack.production.config.js";
@@ -21,23 +22,14 @@ import gulpRename from "gulp-rename";
 
 export default Object.fromEntries(
     Object.entries(BUILD_VARIANTS).map(([variant, data]) => {
-        function watch() {
-            return gulp
-                .src("../src/js/main.js")
-                .pipe(webpackStream(webpackConfig))
-                .pipe(gulp.dest(buildFolder))
-                .pipe(browserSync.stream());
-        }
-
         function build() {
             return gulp
                 .src("../src/js/main.js")
-                .pipe(webpackStream(webpackConfig))
+                .pipe(webpackStream(webpackConfig, webpack))
                 .pipe(gulp.dest(buildFolder));
         }
 
         const dev = {
-            watch,
             build,
         };
 
@@ -48,7 +40,7 @@ export default Object.fromEntries(
             function transpiled() {
                 return gulp
                     .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackProductionConfig))
+                    .pipe(webpackStream(webpackProductionConfig, webpack))
                     .pipe(gulpRename("bundle-transpiled.js"))
                     .pipe(gulp.dest(buildFolder));
             }
@@ -56,7 +48,7 @@ export default Object.fromEntries(
             function es6() {
                 return gulp
                     .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackProductionConfig))
+                    .pipe(webpackStream(webpackProductionConfig, webpack))
                     .pipe(gulp.dest(buildFolder));
             }
 
@@ -73,7 +65,7 @@ export default Object.fromEntries(
             function build() {
                 return gulp
                     .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackProductionConfig))
+                    .pipe(webpackStream(webpackProductionConfig, webpack))
                     .pipe(gulp.dest(buildFolder));
             }
 

@@ -1,7 +1,7 @@
 import path from "path/posix";
 import gulp from "gulp";
 import { getRevision } from "./buildutils.js";
-import { buildFolder, browserSync } from "./config.js";
+import { buildFolder } from "./config.js";
 
 import gulpPostcss from "gulp-postcss";
 import postcssAssets from "postcss-assets";
@@ -78,8 +78,7 @@ function resourcesTask({ isProd }) {
         )
         .pipe(gulpRename("async-resources.css"))
         .pipe(gulpPostcss(postcssPlugins(isProd)))
-        .pipe(gulp.dest(buildFolder))
-        .pipe(browserSync.stream());
+        .pipe(gulp.dest(buildFolder));
 }
 
 export const resources = {
@@ -104,8 +103,7 @@ function mainTask({ isProd }) {
             ])
         )
         .pipe(gulpPostcss(postcssPlugins(isProd)))
-        .pipe(gulp.dest(buildFolder))
-        .pipe(browserSync.stream());
+        .pipe(gulp.dest(buildFolder));
 }
 
 export const main = {

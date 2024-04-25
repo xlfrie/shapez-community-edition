@@ -95,7 +95,6 @@ export default {
         extensions: [".ts", ".js", ".tsx", ".jsx"],
     },
     devtool: "cheap-source-map",
-    watch: true,
     cache: false,
     plugins: [
         new webpack.DefinePlugin(globalDefs),
