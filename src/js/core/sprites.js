@@ -25,7 +25,6 @@ export class BaseSprite {
      * @param {number} h
      */
     draw(context, x, y, w, h) {
-        // eslint-disable-line no-unused-vars
         abstract;
     }
 }

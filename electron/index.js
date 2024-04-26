@@ -1,5 +1,3 @@
-/* eslint-disable quotes,no-undef */
-
 const { app, BrowserWindow, Menu, MenuItem, ipcMain, shell, dialog, session } = require("electron");
 const path = require("path");
 const url = require("url");

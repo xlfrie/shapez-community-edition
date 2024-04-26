@@ -17,7 +17,7 @@ export function convertJsToTs() {
 }
 
 export async function copyTsconfigForHints() {
-    const src = (await fs.readFile(path.join("..", "src", "js", "tsconfig.json"))).toString();
+    const src = (await fs.readFile(path.join("..", "src", "tsconfig.json"))).toString();
     const baseConfig = JSON.parse(stripJsonComments(src));
 
     baseConfig.allowJs = false;

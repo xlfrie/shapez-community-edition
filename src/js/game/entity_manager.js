@@ -195,7 +195,6 @@ export class EntityManager extends BasicSerializableObject {
     }
 
     // Processes the entities to destroy and actually destroys them
-    /* eslint-disable max-statements */
     processDestroyList() {
         for (let i = 0; i < this.destroyList.length; ++i) {
             const entity = this.destroyList[i];
