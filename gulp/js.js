@@ -1,4 +1,7 @@
+import gulp from "gulp";
+import webpack from "webpack";
 import { BUILD_VARIANTS } from "./build_variants.js";
+import { buildFolder } from "./config.js";
 
 import webpackConfig from "./webpack.config.js";
 import webpackProductionConfig from "./webpack.production.config.js";
@@ -15,64 +18,60 @@ import gulpRename from "gulp-rename";
  *
  */
 
-export default function gulptasksJS(gulp, buildFolder, browserSync) {
-    //// DEV
+//// DEV
 
-    for (const variant in BUILD_VARIANTS) {
-        const data = BUILD_VARIANTS[variant];
+export default Object.fromEntries(
+    Object.entries(BUILD_VARIANTS).map(([variant, data]) => {
+        function build() {
+            return gulp
+                .src("../src/js/main.js")
+                .pipe(webpackStream(webpackConfig, webpack))
+                .pipe(gulp.dest(buildFolder));
+        }
 
-        gulp.task("js." + variant + ".dev.watch", () => {
-            gulp.src("../src/js/main.js")
-                .pipe(webpackStream(webpackConfig))
-                .pipe(gulp.dest(buildFolder))
-                .pipe(browserSync.stream());
-        });
+        const dev = {
+            build,
+        };
 
+        let prod;
         if (!data.standalone) {
             // WEB
 
-            gulp.task("js." + variant + ".dev", () => {
+            function transpiled() {
                 return gulp
                     .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackConfig))
-                    .pipe(gulp.dest(buildFolder));
-            });
-
-            gulp.task("js." + variant + ".prod.transpiled", () => {
-                return gulp
-                    .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackProductionConfig))
+                    .pipe(webpackStream(webpackProductionConfig, webpack))
                     .pipe(gulpRename("bundle-transpiled.js"))
                     .pipe(gulp.dest(buildFolder));
-            });
+            }
 
-            gulp.task("js." + variant + ".prod.es6", () => {
+            function es6() {
                 return gulp
                     .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackProductionConfig))
+                    .pipe(webpackStream(webpackProductionConfig, webpack))
                     .pipe(gulp.dest(buildFolder));
-            });
-            gulp.task(
-                "js." + variant + ".prod",
+            }
 
-                // transpiled currently not used
-                // gulp.parallel("js." + variant + ".prod.transpiled", "js." + variant + ".prod.es6")
-                gulp.parallel("js." + variant + ".prod.es6")
-            );
+            prod = {
+                transpiled,
+                es6,
+                build:
+                    // transpiled currently not used
+                    // gulp.parallel("js." + variant + ".prod.transpiled", "js." + variant + ".prod.es6")
+                    es6,
+            };
         } else {
             // STANDALONE
-            gulp.task("js." + variant + ".dev", () => {
+            function build() {
                 return gulp
                     .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackConfig))
+                    .pipe(webpackStream(webpackProductionConfig, webpack))
                     .pipe(gulp.dest(buildFolder));
-            });
-            gulp.task("js." + variant + ".prod", () => {
-                return gulp
-                    .src("../src/js/main.js")
-                    .pipe(webpackStream(webpackProductionConfig))
-                    .pipe(gulp.dest(buildFolder));
-            });
+            }
+
+            prod = { build };
         }
-    }
-}
+
+        return [variant, { dev, prod }];
+    })
+);
