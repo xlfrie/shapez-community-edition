@@ -306,7 +306,6 @@ function _compress(uncompressed, bitsPerChar, getCharFromInt) {
     }
 
     // Flush the last char
-    // eslint-disable-next-line no-constant-condition
     while (true) {
         context_data_val = context_data_val << 1;
         if (context_data_position == bitsPerChar - 1) {
@@ -400,7 +399,6 @@ function _decompress(length, resetValue, getNextValue) {
     w = c;
     result.push(c);
 
-    // eslint-disable-next-line no-constant-condition
     while (true) {
         if (data.index > length) {
             return "";

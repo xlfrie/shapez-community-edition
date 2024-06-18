@@ -51,7 +51,7 @@ const moduleRules = [
                 loader: "ts-loader",
 
                 options: {
-                    configFile: resolve("../src/js/tsconfig.json"),
+                    configFile: resolve("../src/tsconfig.json"),
                     onlyCompileBundledFiles: true,
                     transpileOnly: true,
                     experimentalWatchApi: true,

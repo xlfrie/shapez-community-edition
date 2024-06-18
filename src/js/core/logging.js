@@ -116,18 +116,15 @@ export function globalDebug(context, ...args) {
 }
 
 export function globalLog(context, ...args) {
-    // eslint-disable-next-line no-console
     logInternal(context, console.log, prepareArgsForLogging(args));
 }
 
 export function globalWarn(context, ...args) {
-    // eslint-disable-next-line no-console
     logInternal(context, console.warn, prepareArgsForLogging(args));
 }
 
 export function globalError(context, ...args) {
     args = prepareArgsForLogging(args);
-    // eslint-disable-next-line no-console
     logInternal(context, console.error, args);
 }
 
