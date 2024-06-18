@@ -1,7 +1,7 @@
 import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
 import globals from "globals";
 import path from "path";
+import tseslint from "typescript-eslint";
 import { fileURLToPath } from "url";
 
 const baseConfig = tseslint.config(
@@ -56,11 +56,11 @@ export default [
     },
     ...nodeConfig.map(config => ({
         ...config,
-        files: ["*.ts", "*.js", "electron/**/*.ts", "electron/**/*.js", "gulp/**/*.ts", "gulp/**/*.js"],
+        files: ["*.(ts|js)", "(gulp|electron)/**/*.(ts|js)"],
         ignores: ["gulp/preloader/*.js"],
     })),
     ...runtimeConfig.map(config => ({
         ...config,
-        files: ["js", "ts", "jsx", "tsx"].map(ext => `src/**/*.${ext}`),
+        files: ["src/**/*.(ts|js)x?"],
     })),
 ];
