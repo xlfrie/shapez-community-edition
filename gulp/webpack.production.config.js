@@ -18,8 +18,6 @@ const globalDefs = {
     "G_ALL_UI_IMAGES": JSON.stringify(getAllResourceImages()),
 
     "G_IS_RELEASE": "true",
-    "G_IS_STANDALONE": "true",
-    "G_IS_BROWSER": "false",
     "G_HAVE_ASSERT": "false",
 };
 

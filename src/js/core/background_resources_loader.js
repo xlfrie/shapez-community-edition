@@ -30,10 +30,8 @@ const INGAME_ASSETS = {
     css: ["async-resources.css"],
 };
 
-if (G_IS_STANDALONE) {
-    MAIN_MENU_ASSETS.sounds = [...Array.from(Object.values(MUSIC)), ...Array.from(Object.values(SOUNDS))];
-    INGAME_ASSETS.sounds = [];
-}
+MAIN_MENU_ASSETS.sounds = [...Array.from(Object.values(MUSIC)), ...Array.from(Object.values(SOUNDS))];
+INGAME_ASSETS.sounds = [];
 
 const LOADER_TIMEOUT_PER_RESOURCE = 180000;
 
@@ -170,28 +168,13 @@ export class BackgroundResourcesLoader {
      * Shows an error when a resource failed to load and allows to reload the game
      */
     showLoaderError(dialogs, err) {
-        if (G_IS_STANDALONE) {
-            dialogs
-                .showWarning(
-                    T.dialogs.resourceLoadFailed.title,
-                    T.dialogs.resourceLoadFailed.descSteamDemo + "<br>" + err,
-                    ["retry"]
-                )
-                .retry.add(() => window.location.reload());
-        } else {
-            dialogs
-                .showWarning(
-                    T.dialogs.resourceLoadFailed.title,
-                    T.dialogs.resourceLoadFailed.descWeb.replace(
-                        "<demoOnSteamLinkText>",
-                        `<a href="https://get.shapez.io/resource_timeout" target="_blank">${T.dialogs.resourceLoadFailed.demoLinkText}</a>`
-                    ) +
-                        "<br>" +
-                        err,
-                    ["retry"]
-                )
-                .retry.add(() => window.location.reload());
-        }
+        dialogs
+            .showWarning(
+                T.dialogs.resourceLoadFailed.title,
+                T.dialogs.resourceLoadFailed.descSteamDemo + "<br>" + err,
+                ["retry"]
+            )
+            .retry.add(() => window.location.reload());
     }
 
     preloadWithProgress(src, progressHandler) {

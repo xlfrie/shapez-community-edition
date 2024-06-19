@@ -189,7 +189,7 @@ function initializeSettings() {
             },
             /**
              * @param {Application} app
-             */ app => G_IS_STANDALONE
+             */ app => true
         ),
 
         new BoolSetting(
@@ -288,7 +288,7 @@ function initializeSettings() {
 class SettingsStorage {
     constructor() {
         this.uiScale = "regular";
-        this.fullscreen = G_IS_STANDALONE;
+        this.fullscreen = true;
 
         this.soundVolume = 1.0;
         this.musicVolume = 1.0;

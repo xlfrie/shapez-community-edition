@@ -99,11 +99,6 @@ export class SteamAchievementProvider extends AchievementProviderInterface {
 
     /** @returns {Promise<void>} */
     initialize() {
-        if (!G_IS_STANDALONE) {
-            logger.warn("Steam unavailable. Achievements won't sync.");
-            return Promise.resolve();
-        }
-
         return ipcRenderer.invoke("steam:is-initialized").then(initialized => {
             this.initialized = initialized;
 

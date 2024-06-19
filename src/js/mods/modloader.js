@@ -105,7 +105,7 @@ export class ModLoader {
     }
 
     exposeExports() {
-        if (G_IS_DEV || G_IS_STANDALONE) {
+        if (G_IS_DEV) {
             let exports = {};
             const modules = import.meta.webpackContext("../", {
                 recursive: true,
@@ -140,24 +140,14 @@ export class ModLoader {
     }
 
     async initMods() {
-        if (!G_IS_STANDALONE && !G_IS_DEV) {
-            this.initialized = true;
-            return;
-        }
-
         // Create a storage for reading mod settings
-        const storage = G_IS_STANDALONE
-            ? new StorageImplElectron(this.app)
-            : new StorageImplBrowserIndexedDB(this.app);
+        const storage = new StorageImplElectron(this.app);
         await storage.initialize();
 
         LOG.log("hook:init", this.app, this.app.storage);
         this.exposeExports();
 
-        let mods = [];
-        if (G_IS_STANDALONE) {
-            mods = await ipcRenderer.invoke("get-mods");
-        }
+        let mods = await ipcRenderer.invoke("get-mods");
         if (G_IS_DEV && globalConfig.debug.externalModUrl) {
             const modURLs = Array.isArray(globalConfig.debug.externalModUrl)
                 ? globalConfig.debug.externalModUrl

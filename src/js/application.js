@@ -5,16 +5,14 @@ import { GameState } from "./core/game_state";
 import { GLOBAL_APP, setGlobalApp } from "./core/globals";
 import { InputDistributor } from "./core/input_distributor";
 import { Loader } from "./core/loader";
-import { createLogger, logSection } from "./core/logging";
+import { createLogger } from "./core/logging";
 import { StateManager } from "./core/state_manager";
 import { TrackedState } from "./core/tracked_state";
 import { getPlatformName, waitNextFrame } from "./core/utils";
 import { Vector } from "./core/vector";
 import { NoAchievementProvider } from "./platform/browser/no_achievement_provider";
 import { SoundImplBrowser } from "./platform/browser/sound";
-import { PlatformWrapperImplBrowser } from "./platform/browser/wrapper";
 import { PlatformWrapperImplElectron } from "./platform/electron/wrapper";
-import { PlatformWrapperInterface } from "./platform/wrapper";
 import { ApplicationSettings } from "./profile/application_settings";
 import { SavegameManager } from "./savegame/savegame_manager";
 import { AboutState } from "./states/about";
@@ -92,16 +90,10 @@ export class Application {
         /** @type {StorageInterface} */
         this.storage = null;
 
-        /** @type {SoundInterface} */
-        this.sound = null;
+        this.platformWrapper = new PlatformWrapperImplElectron(this);
 
-        /** @type {PlatformWrapperInterface} */
-        this.platformWrapper = null;
-
-        /** @type {AchievementProviderInterface} */
-        this.achievementProvider = null;
-
-        this.initPlatformDependentInstances();
+        this.sound = new SoundImplBrowser(this);
+        this.achievementProvider = new NoAchievementProvider(this);
 
         // Track if the window is focused (only relevant for browser)
         this.focused = true;
@@ -149,22 +141,6 @@ export class Application {
         window.focus();
 
         MOD_SIGNALS.appBooted.dispatch();
-    }
-
-    /**
-     * Initializes all platform instances
-     */
-    initPlatformDependentInstances() {
-        logger.log("Creating platform dependent instances (standalone=", G_IS_STANDALONE, ")");
-
-        if (G_IS_STANDALONE) {
-            this.platformWrapper = new PlatformWrapperImplElectron(this);
-        } else {
-            this.platformWrapper = new PlatformWrapperImplBrowser(this);
-        }
-
-        this.sound = new SoundImplBrowser(this);
-        this.achievementProvider = new NoAchievementProvider(this);
     }
 
     /**
@@ -312,18 +288,7 @@ export class Application {
     /**
      * Internal before-unload handler
      */
-    onBeforeUnload(event) {
-        logSection("BEFORE UNLOAD HANDLER", "#f77");
-        const currentState = this.stateMgr.getCurrentState();
-
-        if (!G_IS_DEV && currentState && currentState.getHasUnloadConfirmation()) {
-            if (!G_IS_STANDALONE) {
-                // Need to show a "Are you sure you want to exit"
-                event.preventDefault();
-                event.returnValue = "Are you sure you want to exit?";
-            }
-        }
-    }
+    onBeforeUnload(event) {}
 
     /**
      * Deinitializes the application

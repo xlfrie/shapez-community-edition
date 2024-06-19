@@ -13,7 +13,7 @@ export class ModsState extends TextualGameState {
     }
 
     get modsSupported() {
-        return G_IS_STANDALONE || G_IS_DEV;
+        return true;
     }
 
     internalGetFullHtml() {
@@ -23,15 +23,11 @@ export class ModsState extends TextualGameState {
 
                 <div class="actions">
                    ${
-                       this.modsSupported && MODS.mods.length > 0
+                       MODS.mods.length > 0
                            ? `<button class="styledButton browseMods">${T.mods.browseMods}</button>`
                            : ""
                    }
-                   ${
-                       this.modsSupported
-                           ? `<button class="styledButton openModsFolder">${T.mods.openFolder}</button>`
-                           : ""
-                   }
+                   <button class="styledButton openModsFolder">${T.mods.openFolder}</button>
                 </div>
 
             </div>`;
@@ -45,18 +41,6 @@ export class ModsState extends TextualGameState {
     }
 
     getMainContentHTML() {
-        if (!this.modsSupported) {
-            return `
-                <div class="noModSupport">
-
-                    <p>${T.mods.noModSupport}</p>
-                    <br>
-                    <button class="styledButton browseMods">${T.mods.browseMods}</button>
-
-                </div>
-            `;
-        }
-
         if (MODS.mods.length === 0) {
             return `
 
@@ -121,10 +105,6 @@ export class ModsState extends TextualGameState {
     }
 
     openModsFolder() {
-        if (!G_IS_STANDALONE) {
-            this.dialogs.showWarning(T.global.error, T.mods.folderOnlyStandalone);
-            return;
-        }
         ipcRenderer.invoke("open-mods-folder");
     }
 
