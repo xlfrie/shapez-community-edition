@@ -4,7 +4,7 @@ import { Application } from "../application";
 
 export const FILE_NOT_FOUND = "file_not_found";
 
-export class StorageInterface {
+export class Storage {
     constructor(app) {
         /** @type {Application} */
         this.app = app;
@@ -13,11 +13,9 @@ export class StorageInterface {
     /**
      * Initializes the storage
      * @returns {Promise<void>}
-     * @abstract
      */
     initialize() {
-        abstract;
-        return Promise.reject();
+        return Promise.resolve();
     }
 
     /**
@@ -25,22 +23,33 @@ export class StorageInterface {
      * @param {string} filename
      * @param {string} contents
      * @returns {Promise<void>}
-     * @abstract
      */
     writeFileAsync(filename, contents) {
-        abstract;
-        return Promise.reject();
+        return ipcRenderer.invoke("fs-job", {
+            type: "write",
+            filename,
+            contents,
+        });
     }
 
     /**
      * Reads a string asynchronously. Returns Promise<FILE_NOT_FOUND> if file was not found.
      * @param {string} filename
      * @returns {Promise<string>}
-     * @abstract
      */
     readFileAsync(filename) {
-        abstract;
-        return Promise.reject();
+        return ipcRenderer
+            .invoke("fs-job", {
+                type: "read",
+                filename,
+            })
+            .then(res => {
+                if (res && res.error === FILE_NOT_FOUND) {
+                    throw FILE_NOT_FOUND;
+                }
+
+                return res;
+            });
     }
 
     /**
@@ -49,7 +58,9 @@ export class StorageInterface {
      * @returns {Promise<void>}
      */
     deleteFileAsync(filename) {
-        // Default implementation does not allow deleting files
-        return Promise.reject();
+        return ipcRenderer.invoke("fs-job", {
+            type: "delete",
+            filename,
+        });
     }
 }

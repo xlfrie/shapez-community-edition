@@ -10,9 +10,10 @@ import { StateManager } from "./core/state_manager";
 import { TrackedState } from "./core/tracked_state";
 import { getPlatformName, waitNextFrame } from "./core/utils";
 import { Vector } from "./core/vector";
-import { NoAchievementProvider } from "./platform/browser/no_achievement_provider";
-import { SoundImplBrowser } from "./platform/browser/sound";
-import { PlatformWrapperImplElectron } from "./platform/electron/wrapper";
+import { NoAchievementProvider } from "./platform/no_achievement_provider";
+import { Sound } from "./platform/sound";
+import { Storage } from "./platform/storage";
+import { PlatformWrapperImplElectron } from "./platform/wrapper";
 import { ApplicationSettings } from "./profile/application_settings";
 import { SavegameManager } from "./savegame/savegame_manager";
 import { AboutState } from "./states/about";
@@ -33,7 +34,6 @@ import { ModsState } from "./states/mods";
 /**
  * @typedef {import("./platform/achievement_provider").AchievementProviderInterface} AchievementProviderInterface
  * @typedef {import("./platform/sound").SoundInterface} SoundInterface
- * @typedef {import("./platform/storage").StorageInterface} StorageInterface
  */
 
 const logger = createLogger("application");
@@ -87,12 +87,11 @@ export class Application {
 
         // Platform dependent stuff
 
-        /** @type {StorageInterface} */
-        this.storage = null;
+        this.storage = new Storage(this);
 
         this.platformWrapper = new PlatformWrapperImplElectron(this);
 
-        this.sound = new SoundImplBrowser(this);
+        this.sound = new Sound(this);
         this.achievementProvider = new NoAchievementProvider(this);
 
         // Track if the window is focused (only relevant for browser)

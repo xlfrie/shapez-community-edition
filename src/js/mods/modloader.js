@@ -3,8 +3,7 @@ import { Application } from "../application";
 /* typehints:end */
 import { globalConfig } from "../core/config";
 import { createLogger } from "../core/logging";
-import { StorageImplBrowserIndexedDB } from "../platform/browser/storage_indexed_db";
-import { StorageImplElectron } from "../platform/electron/storage";
+import { Storage } from "../platform/storage";
 import { FILE_NOT_FOUND } from "../platform/storage";
 import { Mod } from "./mod";
 import { ModInterface } from "./mod_interface";
@@ -141,7 +140,7 @@ export class ModLoader {
 
     async initMods() {
         // Create a storage for reading mod settings
-        const storage = new StorageImplElectron(this.app);
+        const storage = new Storage(this.app);
         await storage.initialize();
 
         LOG.log("hook:init", this.app, this.app.storage);

@@ -78,7 +78,7 @@ and does not intend to provide compatibility for older clients.
 -   In the root folder, run `yarn package-$PLATFORM-$ARCH` where:
     -   `$PLATFORM` is `win32`, `linux` or `darwin` depending on your system.
     -   `$ARCH` is the target system architecture (`x64` or `arm64`)
--   The build will be found under `build_output/standalone-steam` as `shapez-...`.
+-   The build will be found under `build_output/standalone` as `shapez-...`.
 
 ## Credits
 

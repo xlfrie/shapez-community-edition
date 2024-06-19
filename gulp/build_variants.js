@@ -19,7 +19,7 @@ export const BUILD_VARIANTS = {
         standalone: false,
         environment: "prod",
     },
-    "standalone-steam": {
+    "standalone": {
         standalone: true,
         executableName: "shapez",
     },

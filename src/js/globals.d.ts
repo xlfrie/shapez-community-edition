@@ -30,6 +30,23 @@ declare interface String {
   replaceAll(search: string, replacement: string): string;
 }
 
+declare interface ImportMeta {
+  webpackContext(
+    request: string,
+    options?: {
+      recursive?: boolean;
+      regExp?: RegExp;
+      include?: RegExp;
+      exclude?: RegExp;
+      preload?: boolean | number;
+      prefetch?: boolean | number;
+      chunkName?: string;
+      exports?: string | string[][];
+      mode?: "sync" | "eager" | "weak" | "lazy" | "lazy-once";
+    },
+  ): webpack.Context;
+}
+
 declare interface CanvasRenderingContext2D {
   beginRoundedRect(x: number, y: number, w: number, h: number, r: number): void;
   beginCircle(x: number, y: number, r: number): void;

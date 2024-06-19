@@ -12,13 +12,13 @@
         "lint": "(eslint . && tsc && tsc -p src) || (tsc && tsc -p src) || tsc -p src",
         "prettier-all": "prettier --write src/**/*.* && prettier --write gulp/**/*.*",
         "buildTypes": "tsc src/js/application.js --declaration --allowJs --emitDeclarationOnly --skipLibCheck --out types.js",
-        "package-win32-x64": "gulp --cwd gulp package.standalone-steam.win32-x64",
-        "package-win32-arm64": "gulp --cwd gulp package.standalone-steam.win32-arm64",
-        "package-linux-x64": "gulp --cwd gulp package.standalone-steam.linux-x64",
-        "package-linux-arm64": "gulp --cwd gulp package.standalone-steam.linux-arm64",
-        "package-darwin-x64": "gulp --cwd gulp package.standalone-steam.darwin-x64",
-        "package-darwin-arm64": "gulp --cwd gulp package.standalone-steam.darwin-arm64",
-        "package-all": "gulp --cwd gulp package.standalone-steam.all"
+        "package-win32-x64": "gulp --cwd gulp package.standalone.win32-x64",
+        "package-win32-arm64": "gulp --cwd gulp package.standalone.win32-arm64",
+        "package-linux-x64": "gulp --cwd gulp package.standalone.linux-x64",
+        "package-linux-arm64": "gulp --cwd gulp package.standalone.linux-arm64",
+        "package-darwin-x64": "gulp --cwd gulp package.standalone.darwin-x64",
+        "package-darwin-arm64": "gulp --cwd gulp package.standalone.darwin-arm64",
+        "package-all": "gulp --cwd gulp package.standalone.all"
     },
     "dependencies": {
         "ajv": "^6.10.2",
