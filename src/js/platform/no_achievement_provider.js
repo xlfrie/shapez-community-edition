@@ -1,4 +1,4 @@
-import { AchievementProviderInterface } from "../achievement_provider";
+import { AchievementProviderInterface } from "./achievement_provider";
 
 export class NoAchievementProvider extends AchievementProviderInterface {
     hasAchievements() {

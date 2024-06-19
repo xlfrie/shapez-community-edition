@@ -1,5 +1,5 @@
 import packager from "electron-packager";
-import pj from "../electron/package.json" assert { type: "json" };
+import pj from "../electron/package.json" with { type: "json" };
 import path from "path/posix";
 import { getVersion } from "./buildutils.js";
 import fs from "fs/promises";

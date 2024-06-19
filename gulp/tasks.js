@@ -286,4 +286,4 @@ export const main = {
 };
 
 // Default task (dev, localhost)
-export default gulp.series(serve["standalone-steam"]);
+export default gulp.series(serve["standalone"]);

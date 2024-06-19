@@ -5,7 +5,6 @@ import { createLogger } from "../core/logging";
 import { getLogoSprite, timeoutPromise } from "../core/utils";
 import { getRandomHint } from "../game/hints";
 import { HUDModalDialogs } from "../game/hud/parts/modal_dialogs";
-import { PlatformWrapperImplBrowser } from "../platform/browser/wrapper";
 import { autoDetectLanguageId, T, updateApplicationLanguage } from "../translations";
 
 const logger = createLogger("state/preload");
@@ -73,27 +72,6 @@ export class PreloadState extends GameState {
         this.setStatus("Booting")
             .then(() => this.setStatus("Creating platform wrapper", 3))
             .then(() => this.app.platformWrapper.initialize())
-
-            .then(() => this.setStatus("Initializing local storage", 6))
-            .then(() => {
-                const wrapper = this.app.platformWrapper;
-                if (wrapper instanceof PlatformWrapperImplBrowser) {
-                    try {
-                        window.localStorage.setItem("local_storage_test", "1");
-                        window.localStorage.removeItem("local_storage_test");
-                    } catch (ex) {
-                        logger.error("Failed to read/write local storage:", ex);
-                        return new Promise(() => {
-                            alert(
-                                "Your brower does not support thirdparty cookies or you have disabled it in your security settings.\n\n" +
-                                    "In Chrome this setting is called 'Block third-party cookies and site data'.\n\n" +
-                                    "Please allow third party cookies and then reload the page."
-                            );
-                            // Never return
-                        });
-                    }
-                }
-            })
 
             .then(() => this.setStatus("Creating storage", 9))
             .then(() => {
@@ -169,10 +147,6 @@ export class PreloadState extends GameState {
             .then(() => this.setStatus("Checking changelog", 95))
             .then(() => {
                 if (G_IS_DEV && globalConfig.debug.disableUpgradeNotification) {
-                    return;
-                }
-
-                if (!G_IS_STANDALONE) {
                     return;
                 }
 

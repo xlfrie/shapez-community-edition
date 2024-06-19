@@ -4,15 +4,10 @@ const bigNumberSuffixTranslationKeys = ["thousands", "millions", "billions", "tr
 
 /**
  * Returns a platform name
- * @returns {"android" | "browser" | "ios" | "standalone" | "unknown"}
+ * @returns {"standalone"}
  */
 export function getPlatformName() {
-    if (G_IS_STANDALONE) {
-        return "standalone";
-    } else if (G_IS_BROWSER) {
-        return "browser";
-    }
-    return "unknown";
+    return "standalone";
 }
 
 /**
@@ -421,41 +416,7 @@ export function removeAllChildren(elem) {
  * Returns if the game supports this browser
  */
 export function isSupportedBrowser() {
-    // please note,
-    // that IE11 now returns undefined again for window.chrome
-    // and new Opera 30 outputs true for window.chrome
-    // but needs to check if window.opr is not undefined
-    // and new IE Edge outputs to true now for window.chrome
-    // and if not iOS Chrome check
-    // so use the below updated condition
-
-    if (G_IS_STANDALONE) {
-        return true;
-    }
-
-    // @ts-ignore
-    var isChromium = window.chrome;
-    var winNav = window.navigator;
-    var vendorName = winNav.vendor;
-    // @ts-ignore
-    var isIEedge = winNav.userAgent.indexOf("Edge") > -1;
-    var isIOSChrome = winNav.userAgent.match("CriOS");
-
-    if (isIOSChrome) {
-        // is Google Chrome on IOS
-        return false;
-    } else if (
-        isChromium !== null &&
-        typeof isChromium !== "undefined" &&
-        vendorName === "Google Inc." &&
-        isIEedge === false
-    ) {
-        // is Google Chrome
-        return true;
-    } else {
-        // not Google Chrome
-        return false;
-    }
+    return true;
 }
 
 /**
