@@ -97,7 +97,9 @@
                         @include S(margin, 0, 10px);
                         box-sizing: border-box;
                         border-radius: 50%;
-                        transition: opacity 0.12s ease-in-out, background-color 0.12s ease-in-out;
+                        transition:
+                            opacity 0.12s ease-in-out,
+                            background-color 0.12s ease-in-out;
                         @include IncreasedClickArea(0px);
 
                         &.liked-yes {
