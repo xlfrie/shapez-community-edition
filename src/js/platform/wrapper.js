@@ -3,9 +3,9 @@ import { Application } from "../application";
 /* typehints:end */
 
 import { IS_MOBILE } from "../core/config";
-import { NoAchievementProvider } from "./no_achievement_provider";
 import { createLogger } from "../core/logging";
 import { clamp } from "../core/utils";
+import { NoAchievementProvider } from "./no_achievement_provider";
 
 const logger = createLogger("electron-wrapper");
 
@@ -16,30 +16,10 @@ export class PlatformWrapperImplElectron {
     }
 
     initialize() {
-        this.dlcs = {
-            puzzle: false,
-        };
-
-        this.steamOverlayCanvasFix = document.createElement("canvas");
-        this.steamOverlayCanvasFix.width = 1;
-        this.steamOverlayCanvasFix.height = 1;
-        this.steamOverlayCanvasFix.id = "steamOverlayCanvasFix";
-
-        this.steamOverlayContextFix = this.steamOverlayCanvasFix.getContext("2d");
-        document.documentElement.appendChild(this.steamOverlayCanvasFix);
-
-        this.app.ticker.frameEmitted.add(this.steamOverlayFixRedrawCanvas, this);
-
-        return this.initializeAchievementProvider()
-            .then(() => this.initializeDlcStatus())
-            .then(() => {
-                document.documentElement.classList.add("p-" + this.getId());
-                return Promise.resolve();
-            });
-    }
-
-    steamOverlayFixRedrawCanvas() {
-        this.steamOverlayContextFix.clearRect(0, 0, 1, 1);
+        return this.initializeAchievementProvider().then(() => {
+            document.documentElement.classList.add("p-" + this.getId());
+            return Promise.resolve();
+        });
     }
 
     getId() {
@@ -87,20 +67,6 @@ export class PlatformWrapperImplElectron {
 
             this.app.achievementProvider = new NoAchievementProvider(this.app);
         });
-    }
-
-    initializeDlcStatus() {
-        logger.log("Checking DLC ownership ...");
-        // @todo: Don't hardcode the app id
-        return ipcRenderer.invoke("steam:check-app-ownership", 1625400).then(
-            res => {
-                logger.log("Got DLC ownership:", res);
-                this.dlcs.puzzle = Boolean(res);
-            },
-            err => {
-                logger.error("Failed to get DLC ownership:", err);
-            }
-        );
     }
 
     /**
