@@ -298,8 +298,8 @@ export class RangeSetting extends BaseSetting {
                 <div class="value rangeInputContainer noPressEffect" data-setting="${this.id}">
                     <label>${this.defaultValue}</label>
                     <input class="rangeInput" type="range" value="${this.defaultValue}" min="${
-            this.minValue
-        }" max="${this.maxValue}" step="${this.stepSize}">
+                        this.minValue
+                    }" max="${this.maxValue}" step="${this.stepSize}">
                 </div>
             </div>
             <div class="desc">
