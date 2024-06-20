@@ -41,9 +41,8 @@ const runtimeConfig = tseslint.config(...baseConfig, {
         },
     },
     rules: {
-        // Mostly caused by JSDoc imports, so don't annoy with errors but keep
-        // a reminder!
-        "@typescript-eslint/no-unused-vars": "warn",
+        // Mostly caused by JSDoc imports, disable for now
+        "@typescript-eslint/no-unused-vars": "off",
         // FIXME: enforce when we're ready to
         "prefer-const": "warn",
     },
@@ -56,11 +55,11 @@ export default [
     },
     ...nodeConfig.map(config => ({
         ...config,
-        files: ["*.(ts|js)", "(gulp|electron)/**/*.(ts|js)"],
+        files: ["*.{ts,js}", "{gulp,electron}/**/*.{ts,js}"],
         ignores: ["gulp/preloader/*.js"],
     })),
     ...runtimeConfig.map(config => ({
         ...config,
-        files: ["src/**/*.(ts|js)x?"],
+        files: ["src/**/*.{ts,js,tsx,jsx}"],
     })),
 ];

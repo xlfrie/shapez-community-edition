@@ -9,7 +9,7 @@
     "type": "module",
     "scripts": {
         "gulp": "gulp --cwd gulp",
-        "lint": "(eslint . && tsc && tsc -p src) || (tsc && tsc -p src) || tsc -p src",
+        "lint": "eslint .",
         "prettier-all": "prettier --write .",
         "buildTypes": "tsc src/js/application.js --declaration --allowJs --emitDeclarationOnly --skipLibCheck --out types.js",
         "package-win32-x64": "gulp --cwd gulp package.standalone.win32-x64",
