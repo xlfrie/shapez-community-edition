@@ -367,8 +367,8 @@ export class AtlasSprite extends BaseSprite {
                 height: ${round3Digits(heightRelative * 100.0)}%;
                 background-repeat: repeat;
                 background-position: ${round3Digits(bgXRelative * 100.0)}% ${round3Digits(
-            bgYRelative * 100.0
-        )}%;
+                    bgYRelative * 100.0
+                )}%;
                 background-size: ${round3Digits(bgW * 100.0)}% ${round3Digits(bgH * 100.0)}%;
             "></span>
         `;

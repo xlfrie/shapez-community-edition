@@ -177,7 +177,7 @@ export class Dialog<T extends string = never, U extends unknown[] = []> {
                 const [buttonId, buttonStyle, rawParams] = this.buttonIds[i].split(":") as [
                     T,
                     string,
-                    string?
+                    string?,
                 ]; // @TODO: some button strings omit `buttonStyle`
 
                 const button = document.createElement("button");
@@ -287,7 +287,10 @@ export class Dialog<T extends string = never, U extends unknown[] = []> {
  * Dialog which simply shows a loading spinner
  */
 export class DialogLoading extends Dialog {
-    constructor(app: Application, public text = "") {
+    constructor(
+        app: Application,
+        public text = ""
+    ) {
         super({
             app,
             title: "",
@@ -352,8 +355,8 @@ export class DialogOptionChooser extends Dialog<"optionSelected", [string]> {
             const iconHtml = iconPrefix ? `<span class="icon icon-${iconPrefix}-${value}"></span>` : "";
             html += `
                 <div class='option ${value === options.active ? "active" : ""} ${
-                iconPrefix ? "hasIcon" : ""
-            }' data-optionvalue='${value}'>
+                    iconPrefix ? "hasIcon" : ""
+                }' data-optionvalue='${value}'>
                     ${iconHtml}
                     <span class='title'>${text}</span>
                     ${descHtml}

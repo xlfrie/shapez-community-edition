@@ -10,7 +10,7 @@
     "scripts": {
         "gulp": "gulp --cwd gulp",
         "lint": "eslint .",
-        "prettier-all": "prettier --write src/**/*.* && prettier --write gulp/**/*.*",
+        "prettier-all": "prettier --write .",
         "buildTypes": "tsc src/js/application.js --declaration --allowJs --emitDeclarationOnly --skipLibCheck --out types.js",
         "package-win32-x64": "gulp --cwd gulp package.standalone.win32-x64",
         "package-win32-arm64": "gulp --cwd gulp package.standalone.win32-arm64",
@@ -81,7 +81,7 @@
         "postcss-critical-split": "^2.5.3",
         "postcss-preset-env": "^6.5.0",
         "postcss-round-subpixels": "^1.2.0",
-        "prettier": "^2.0.4",
+        "prettier": "^3.3.2",
         "strip-json-comments": "^3.0.1",
         "terser-webpack-plugin": "^5.3.6",
         "ts-loader": "^9.4.2",

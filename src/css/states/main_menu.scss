@@ -723,7 +723,9 @@
                 font-weight: bold;
                 color: #fff;
                 background-color: $colorGreenBright;
-                transition: transform 0.12s ease-in-out, background-color 0.12s ease-in-out;
+                transition:
+                    transform 0.12s ease-in-out,
+                    background-color 0.12s ease-in-out;
 
                 grid-column: 1 / 2;
                 min-width: auto;

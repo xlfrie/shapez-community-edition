@@ -16,7 +16,10 @@ import { Signal } from "./signal";
 export abstract class FormElement<T = string> {
     public valueChosen = new Signal<[T]>();
 
-    constructor(public id: string, public label: string) {}
+    constructor(
+        public id: string,
+        public label: string
+    ) {}
 
     abstract getHtml(): string;
 
