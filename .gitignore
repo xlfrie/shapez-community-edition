@@ -54,3 +54,7 @@ config.local.js
 
 build_output
 tmp
+
+src/js/built-temp
+translations/tmp
+gulp/additional_build_files
