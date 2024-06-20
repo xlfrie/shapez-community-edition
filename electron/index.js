@@ -149,7 +149,7 @@ function createWindow() {
 
     //// END SECURITY
 
-    win.webContents.on("new-window", (event, pth) => {
+    win.webContents.on("will-navigate", (event, pth) => {
         event.preventDefault();
 
         if (pth.startsWith("https://")) {

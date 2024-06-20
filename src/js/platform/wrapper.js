@@ -36,7 +36,7 @@ export class PlatformWrapperImplElectron {
      */
     openExternalLink(url) {
         logger.log(this, "Opening external:", url);
-        window.open(url, "about:blank");
+        location.replace(url);
     }
 
     /**
