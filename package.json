@@ -81,7 +81,7 @@
         "postcss-critical-split": "^2.5.3",
         "postcss-preset-env": "^6.5.0",
         "postcss-round-subpixels": "^1.2.0",
-        "prettier": "^2.0.4",
+        "prettier": "^3.3.2",
         "strip-json-comments": "^3.0.1",
         "terser-webpack-plugin": "^5.3.6",
         "ts-loader": "^9.4.2",
