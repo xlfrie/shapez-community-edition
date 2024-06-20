@@ -36,14 +36,11 @@ body {
     text-decoration: none;
     text-size-adjust: 100%;
     letter-spacing: normal;
-    scrollbar-width: 6px;
     -webkit-font-smoothing: antialiased;
     -webkit-touch-callout: none;
     /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;
     /* prevent webkit from resizing text to fit */
-    scrollbar-face-color: #888;
-    scrollbar-track-color: rgba(255, 255, 255, 0.1);
 }
 
 #ll_fp {
