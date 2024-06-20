@@ -1,37 +1,35 @@
-import gulp from "gulp";
-import path from "path/posix";
-import pathNative from "path";
-import delEmpty from "delete-empty";
 import childProcess from "child_process";
+import delEmpty from "delete-empty";
+import gulp from "gulp";
+import pathNative from "path";
+import path from "path/posix";
 import { promisify } from "util";
-const exec = promisify(childProcess.exec);
 import { BUILD_VARIANTS } from "./build_variants.js";
 import {
-    baseDir,
+    browserSync,
     buildFolder,
     buildOutputFolder,
-    browserSync,
-    rawImageResourcesGlobs,
-    nonImageResourcesGlobs,
     imageResourcesGlobs,
+    nonImageResourcesGlobs,
+    rawImageResourcesGlobs,
 } from "./config.js";
+const exec = promisify(childProcess.exec);
 
 // Load other plugins
 import gulpClean from "gulp-clean";
 import gulpWebserver from "gulp-webserver";
 
-import * as imgres from "./image-resources.js";
 import * as css from "./css.js";
-import * as sounds from "./sounds.js";
-import * as localConfig from "./local-config.js";
-import js from "./js.js";
-import * as html from "./html.js";
-import * as ftp from "./ftp.js";
 import * as docs from "./docs.js";
+import * as html from "./html.js";
+import * as imgres from "./image-resources.js";
+import js from "./js.js";
+import * as localConfig from "./local-config.js";
+import * as sounds from "./sounds.js";
 import standalone from "./standalone.js";
 import * as translations from "./translations.js";
 
-export { imgres, css, sounds, localConfig, js, html, ftp, docs, standalone, translations };
+export { css, docs, html, imgres, js, localConfig, sounds, standalone, translations };
 
 /////////////////////  BUILD TASKS  /////////////////////
 
@@ -272,12 +270,8 @@ for (const variant in BUILD_VARIANTS) {
 
 // Deploying!
 export const deploy = {
-    staging: gulp.series(
-        utils.requireCleanWorkingTree,
-        build["web-shapezio-beta"].full,
-        ftp.upload.staging.all
-    ),
-    prod: gulp.series(utils.requireCleanWorkingTree, build["web-shapezio"].full, ftp.upload.prod.all),
+    staging: gulp.series(utils.requireCleanWorkingTree, build["web-shapezio-beta"].full),
+    prod: gulp.series(utils.requireCleanWorkingTree, build["web-shapezio"].full),
 };
 
 export const main = {
