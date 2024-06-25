@@ -1,6 +1,3 @@
-/* typehints:start */
-/* typehints:end */
-
 import debug from "./config.local";
 
 export const IS_DEBUG =
