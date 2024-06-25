@@ -1,7 +1,3 @@
-/* typehints:start */
-import { Application } from "../application";
-/* typehints:end */
-
 import debug from "./config.local";
 
 export const IS_DEBUG =
@@ -24,8 +20,6 @@ export const THIRDPARTY_URLS = {
     twitter: "https://twitter.com/tobspr",
     patreon: "https://www.patreon.com/tobsprgames",
     privacyPolicy: "https://tobspr.io/privacy.html",
-
-    puzzleDlcStorePage: "https://get.shapez.io/mm_puzzle_dlc?target=dlc",
 
     levelTutorialVideos: {
         21: "https://www.youtube.com/watch?v=0nUfRLMCcgo&",

@@ -1,6 +1,5 @@
 import { AnimationFrame } from "./core/animation_frame";
 import { BackgroundResourcesLoader } from "./core/background_resources_loader";
-import { IS_MOBILE } from "./core/config";
 import { GameState } from "./core/game_state";
 import { GLOBAL_APP, setGlobalApp } from "./core/globals";
 import { InputDistributor } from "./core/input_distributor";
@@ -10,6 +9,9 @@ import { StateManager } from "./core/state_manager";
 import { TrackedState } from "./core/tracked_state";
 import { getPlatformName, waitNextFrame } from "./core/utils";
 import { Vector } from "./core/vector";
+import { MOD_SIGNALS } from "./mods/mod_signals";
+import { MODS } from "./mods/modloader";
+import { ClientAPI } from "./platform/api";
 import { NoAchievementProvider } from "./platform/no_achievement_provider";
 import { Sound } from "./platform/sound";
 import { Storage } from "./platform/storage";
@@ -20,16 +22,12 @@ import { AboutState } from "./states/about";
 import { ChangelogState } from "./states/changelog";
 import { InGameState } from "./states/ingame";
 import { KeybindingsState } from "./states/keybindings";
-import { MainMenuState } from "./states/main_menu";
-import { MobileWarningState } from "./states/mobile_warning";
-import { PreloadState } from "./states/preload";
-import { SettingsState } from "./states/settings";
-import { PuzzleMenuState } from "./states/puzzle_menu";
-import { ClientAPI } from "./platform/api";
 import { LoginState } from "./states/login";
-import { MODS } from "./mods/modloader";
-import { MOD_SIGNALS } from "./mods/mod_signals";
+import { MainMenuState } from "./states/main_menu";
 import { ModsState } from "./states/mods";
+import { PreloadState } from "./states/preload";
+import { PuzzleMenuState } from "./states/puzzle_menu";
+import { SettingsState } from "./states/settings";
 
 /**
  * @typedef {import("./platform/achievement_provider").AchievementProviderInterface} AchievementProviderInterface
@@ -125,12 +123,7 @@ export class Application {
 
         Loader.linkAppAfterBoot(this);
 
-        // Check for mobile
-        if (IS_MOBILE) {
-            this.stateMgr.moveToState("MobileWarningState");
-        } else {
-            this.stateMgr.moveToState("PreloadState");
-        }
+        this.stateMgr.moveToState("PreloadState");
 
         // Starting rendering
         this.ticker.frameEmitted.add(this.onFrameEmitted, this);
@@ -149,7 +142,6 @@ export class Application {
         /** @type {Array<typeof GameState>} */
         const states = [
             PreloadState,
-            MobileWarningState,
             MainMenuState,
             InGameState,
             SettingsState,

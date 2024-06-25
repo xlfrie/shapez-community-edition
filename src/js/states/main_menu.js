@@ -255,7 +255,6 @@ export class MainMenuState extends GameState {
                 this.app.platformWrapper.openExternalLink(THIRDPARTY_URLS.github);
             },
             ".puzzleDlcPlayButton": this.onPuzzleModeButtonClicked,
-            ".puzzleDlcGetButton": this.onPuzzleWishlistButtonClicked,
             ".editMods": this.onModsClicked,
         };
 
@@ -331,10 +330,6 @@ export class MainMenuState extends GameState {
         this.moveToState("LoginState", {
             nextStateId: "PuzzleMenuState",
         });
-    }
-
-    onPuzzleWishlistButtonClicked() {
-        this.app.platformWrapper.openExternalLink(THIRDPARTY_URLS.puzzleDlcStorePage);
     }
 
     onBackButtonClicked() {

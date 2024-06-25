@@ -1,5 +1,5 @@
-import path from "path/posix";
 import BrowserSync from "browser-sync";
+import path from "path/posix";
 
 export const baseDir = path.resolve("..");
 export const buildFolder = path.join(baseDir, "build");
@@ -25,12 +25,6 @@ export const browserSync = BrowserSync.create();
 
 const envVars = [
     "SHAPEZ_CLI_SERVER_HOST",
-    "SHAPEZ_CLI_ALPHA_FTP_USER",
-    "SHAPEZ_CLI_ALPHA_FTP_PW",
-    "SHAPEZ_CLI_STAGING_FTP_USER",
-    "SHAPEZ_CLI_STAGING_FTP_PW",
-    "SHAPEZ_CLI_LIVE_FTP_USER",
-    "SHAPEZ_CLI_LIVE_FTP_PW",
     "SHAPEZ_CLI_APPLE_ID",
     "SHAPEZ_CLI_APPLE_CERT_NAME",
     "SHAPEZ_CLI_GITHUB_USER",

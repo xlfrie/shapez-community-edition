@@ -5,7 +5,6 @@ the performance when animated. Use only transform and opacity in animations! */
     will-change: transform, opacity, filter;
     // transform: translateZ(0);
     backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
 }
 
 // Helper which includes the translateZ webkit fix, use together with Fast animation
