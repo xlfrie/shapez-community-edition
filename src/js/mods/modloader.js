@@ -3,14 +3,13 @@ import { Application } from "../application";
 /* typehints:end */
 import { globalConfig } from "../core/config";
 import { createLogger } from "../core/logging";
-import { Storage } from "../platform/storage";
-import { FILE_NOT_FOUND } from "../platform/storage";
+import { FILE_NOT_FOUND, Storage } from "../platform/storage";
 import { Mod } from "./mod";
 import { ModInterface } from "./mod_interface";
 import { MOD_SIGNALS } from "./mod_signals";
 
-import semverValidRange from "semver/ranges/valid";
 import semverSatisifies from "semver/functions/satisfies";
+import semverValidRange from "semver/ranges/valid";
 
 const LOG = createLogger("mods");
 
@@ -104,38 +103,33 @@ export class ModLoader {
     }
 
     exposeExports() {
-        if (G_IS_DEV) {
-            let exports = {};
-            const modules = import.meta.webpackContext("../", {
-                recursive: true,
-                regExp: /\.[jt]s$/,
-                exclude: /\.d\.ts$/,
-            });
-            Array.from(modules.keys()).forEach(key => {
-                /** @type {object} */
-                const module = modules(key);
-                for (const member in module) {
-                    if (member === "default" || member === "__$S__") {
-                        // Setter
-                        continue;
-                    }
-                    if (exports[member]) {
-                        throw new Error("Duplicate export of " + member);
-                    }
+        const exports = {};
+        const modules = import.meta.webpackContext("../", {
+            recursive: true,
+            regExp: /\.[jt]sx?$/,
+            exclude: /\.d\.ts$/,
+        });
 
-                    Object.defineProperty(exports, member, {
-                        get() {
-                            return module[member];
-                        },
-                        set(v) {
-                            module.__$S__(member, v);
-                        },
-                    });
+        Array.from(modules.keys()).forEach(key => {
+            /** @type {object} */
+            const module = modules(key);
+            for (const member in module) {
+                if (member === "default") {
+                    continue;
                 }
-            });
+                if (exports[member]) {
+                    throw new Error("Duplicate export of " + member);
+                }
 
-            window.shapez = exports;
-        }
+                Object.defineProperty(exports, member, {
+                    get() {
+                        return module[member];
+                    },
+                });
+            }
+        });
+
+        window.shapez = exports;
     }
 
     async initMods() {
