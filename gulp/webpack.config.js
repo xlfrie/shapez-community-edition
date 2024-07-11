@@ -88,6 +88,7 @@ export default {
         alias: {
             "global-compression": resolve("../src/js/core/lzstring.js"),
             "root": resolve("../src/js/"),
+            "@/jsx-runtime": resolve("../src/js/jsx-runtime.ts"),
         },
         fullySpecified: false,
         extensions: [".ts", ".js", ".tsx", ".jsx"],
