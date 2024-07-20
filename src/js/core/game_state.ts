@@ -3,13 +3,13 @@ import { Application } from "../application";
 import { StateManager } from "./state_manager";
 /* typehints:end */
 
-import { globalConfig } from "./config";
-import { ClickDetector } from "./click_detector";
-import { logSection, createLogger } from "./logging";
-import { InputReceiver } from "./input_receiver";
-import { waitNextFrame } from "./utils";
-import { RequestChannel } from "./request_channel";
 import { MUSIC } from "../platform/sound";
+import { ClickDetector } from "./click_detector";
+import { globalConfig } from "./config";
+import { InputReceiver } from "./input_receiver";
+import { createLogger, logSection } from "./logging";
+import { RequestChannel } from "./request_channel";
+import { waitNextFrame } from "./utils";
 
 const logger = createLogger("game_state");
 
@@ -38,8 +38,8 @@ export class GameState {
         this.clickDetectors = [];
 
         // Every state captures keyboard events by default
-        this.inputReciever = new InputReceiver("state-" + key);
-        this.inputReciever.backButton.add(this.onBackButton, this);
+        this.inputReceiver = new InputReceiver("state-" + key);
+        this.inputReceiver.backButton.add(this.onBackButton, this);
 
         // A channel we can use to perform async ops
         this.asyncChannel = new RequestChannel();
@@ -267,7 +267,7 @@ export class GameState {
      */
     internalEnterCallback(payload, callCallback = true) {
         logSection(this.key, "#26a69a");
-        this.app.inputMgr.pushReciever(this.inputReciever);
+        this.app.inputMgr.pushReceiver(this.inputReceiver);
 
         this.htmlElement = this.getDivElement();
         this.htmlElement.classList.add("active");
@@ -293,7 +293,7 @@ export class GameState {
         this.onLeave();
 
         this.htmlElement.classList.remove("active");
-        this.app.inputMgr.popReciever(this.inputReciever);
+        this.app.inputMgr.popReceiver(this.inputReceiver);
         this.internalCleanUpClickDetectors();
         this.asyncChannel.cancelAll();
     }
