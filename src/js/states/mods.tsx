@@ -1,6 +1,6 @@
-import { THIRDPARTY_URLS } from "../core/config";
+import { Mod } from "@/mods/mod";
+import { MODS } from "@/mods/modloader";
 import { TextualGameState } from "../core/textual_game_state";
-import { MODS } from "../mods/modloader";
 import { T } from "../translations";
 
 export class ModsState extends TextualGameState {
@@ -12,104 +12,35 @@ export class ModsState extends TextualGameState {
         return T.mods.title;
     }
 
-    get modsSupported() {
-        return true;
-    }
+    protected getInitialContent() {
+        const modElements = MODS.mods.map(mod => this.getModElement(mod));
 
-    internalGetFullHtml() {
-        let headerHtml = `
-            <div class="headerBar">
-                <h1><button class="backButton"></button> ${this.getStateHeaderTitle()}</h1>
-
-                <div class="actions">
-                   ${
-                       MODS.mods.length > 0
-                           ? `<button class="styledButton browseMods">${T.mods.browseMods}</button>`
-                           : ""
-                   }
-                   <button class="styledButton openModsFolder">${T.mods.openFolder}</button>
+        return (
+            <div class="content">
+                <div class={`modsGrid${MODS.anyModsActive() ? "" : " noMods"}`}>
+                    {MODS.anyModsActive() ? modElements : this.getNoModsMessage()}
                 </div>
-
-            </div>`;
-
-        return `
-            ${headerHtml}
-            <div class="container">
-                    ${this.getInnerHTML()}
             </div>
-        `;
+        );
     }
 
-    getMainContentHTML() {
-        if (MODS.mods.length === 0) {
-            return `
-
-            <div class="modsStats noMods">
-                ${T.mods.modsInfo}
-
-                <button class="styledButton browseMods">${T.mods.browseMods}</button>
-            </div>
-
-            `;
-        }
-
-        let modsHtml = ``;
-
-        MODS.mods.forEach(mod => {
-            modsHtml += `
-                <div class="mod">
-                    <div class="mainInfo">
-                        <span class="name">${mod.metadata.name}</span>
-                        <span class="description">${mod.metadata.description}</span>
-                        <a class="website" href="${mod.metadata.website}" target="_blank">${T.mods.modWebsite}</a>
-                    </div>
-                    <span class="version"><strong>${T.mods.version}</strong>${mod.metadata.version}</span>
-                    <span class="author"><strong>${T.mods.author}</strong>${mod.metadata.author}</span>
-                    <div class="value checkbox checked">
-                        <span class="knob"></span>
-                    </div>
-
+    private getModElement(mod: Mod): HTMLElement {
+        // TODO: Ensure proper design and localization once mods are reworked
+        return (
+            <div class="mod">
+                <div class="title">
+                    <b>{mod.metadata.name}</b> by <i>{mod.metadata.author}</i>
                 </div>
-            `;
-        });
-        return `
-
-            <div class="modsStats">
-                ${T.mods.modsInfo}
+                <div class="description">{mod.metadata.description}</div>
+                <div class="advanced">
+                    {mod.metadata.id} @ {mod.metadata.version}
+                </div>
             </div>
-
-            <div class="modsList">
-                ${modsHtml}
-           </div>
-        `;
+        );
     }
 
-    onEnter() {
-        const openModsFolder = this.htmlElement.querySelector(".openModsFolder");
-        if (openModsFolder) {
-            this.trackClicks(openModsFolder, this.openModsFolder);
-        }
-        const browseMods = this.htmlElement.querySelector(".browseMods");
-        if (browseMods) {
-            this.trackClicks(browseMods, this.openBrowseMods);
-        }
-
-        const checkboxes = this.htmlElement.querySelectorAll(".checkbox");
-        Array.from(checkboxes).forEach(checkbox => {
-            this.trackClicks(checkbox, this.showModTogglingComingSoon);
-        });
-    }
-
-    showModTogglingComingSoon() {
-        this.dialogs.showWarning(T.mods.togglingComingSoon.title, T.mods.togglingComingSoon.description);
-    }
-
-    openModsFolder() {
-        ipcRenderer.invoke("open-mods-folder");
-    }
-
-    openBrowseMods() {
-        this.app.platformWrapper.openExternalLink(THIRDPARTY_URLS.modBrowser);
+    private getNoModsMessage(): HTMLElement {
+        return <div class="noModsMessage">No mods are currently installed.</div>;
     }
 
     getDefaultPreviousState() {
