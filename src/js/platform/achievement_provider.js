@@ -5,10 +5,10 @@ import { GameRoot } from "../game/root";
 import { THEMES } from "../game/theme";
 /* typehints:end */
 
+import { globalConfig } from "../core/config";
+import { ShapeItem } from "../game/items/shape_item";
 import { enumAnalyticsDataSource } from "../game/production_analytics";
 import { ShapeDefinition } from "../game/shape_definition";
-import { ShapeItem } from "../game/items/shape_item";
-import { globalConfig } from "../core/config";
 
 export const ACHIEVEMENTS = {
     belt500Tiles: "belt500Tiles",
@@ -423,7 +423,8 @@ export class AchievementCollection {
         return {
             init: ({ key }) => this.unlock(key, ShapeDefinition.fromShortKey(SHAPE_BP)),
             isValid: definition =>
-                definition.cachedHash === SHAPE_BP && this.root.hubGoals.storedShapes[SHAPE_BP] >= count,
+                definition.cachedHash === SHAPE_BP &&
+                this.root.hubGoals.getShapesStoredByKey(SHAPE_BP) >= count,
             signal: "shapeDelivered",
         };
     }
