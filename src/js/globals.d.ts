@@ -22,11 +22,6 @@ declare const shapez: any;
 
 declare const ipcRenderer: any;
 
-// Polyfills
-declare interface String {
-    replaceAll(search: string, replacement: string): string;
-}
-
 declare interface ImportMeta {
     webpackContext(
         request: string,
