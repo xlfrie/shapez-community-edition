@@ -114,18 +114,10 @@ export const globalConfig = {
     rendering: {},
     debug,
 
-    currentDiscount: 0,
-
     // Secret vars
     info: {
         // Binary file salt
         file: "Ec'])@^+*9zMevK3uMV4432x9%iK'=",
-
-        // Savegame salt
-        sgSalt: "}95Q3%8/.837Lqym_BJx%q7)pAHJbF",
-
-        // Analytics key
-        analyticsApiKey: "baf6a50f0cc7dfdec5a0e21c88a1c69a4b34bc4a",
     },
 };
 
