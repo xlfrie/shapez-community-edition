@@ -108,7 +108,7 @@ export const globalConfig = {
 
     smoothing: {
         smoothMainCanvas: smoothCanvas && true,
-        quality: "low", // Low is CRUCIAL for mobile performance!
+        quality: "low" as ImageSmoothingQuality, // Low is CRUCIAL for mobile performance!
     },
 
     rendering: {},

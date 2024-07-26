@@ -1,6 +1,6 @@
 import { globalConfig } from "./config";
-import { fastArrayDelete } from "./utils";
 import { createLogger } from "./logging";
+import { fastArrayDelete } from "./utils";
 
 const logger = createLogger("buffer_utils");
 
@@ -10,9 +10,6 @@ const logger = createLogger("buffer_utils");
  */
 export function enableImageSmoothing(context) {
     context.imageSmoothingEnabled = true;
-    context.webkitImageSmoothingEnabled = true;
-
-    // @ts-ignore
     context.imageSmoothingQuality = globalConfig.smoothing.quality;
 }
 
@@ -22,7 +19,6 @@ export function enableImageSmoothing(context) {
  */
 export function disableImageSmoothing(context) {
     context.imageSmoothingEnabled = false;
-    context.webkitImageSmoothingEnabled = false;
 }
 
 /**
