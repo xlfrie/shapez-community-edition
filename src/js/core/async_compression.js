@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error FIXME: missing typings
 import CompressionWorker from "../webworkers/compression.worker";
 
 import { createLogger } from "./logging";
@@ -6,26 +6,7 @@ import { round2Digits } from "./utils";
 
 const logger = createLogger("async_compression");
 
-export let compressionPrefix = String.fromCodePoint(1);
-
-function checkCryptPrefix(prefix) {
-    try {
-        window.localStorage.setItem("prefix_test", prefix);
-        window.localStorage.removeItem("prefix_test");
-        return true;
-    } catch (ex) {
-        logger.warn("Prefix '" + prefix + "' not available");
-        return false;
-    }
-}
-
-if (!checkCryptPrefix(compressionPrefix)) {
-    logger.warn("Switching to basic prefix");
-    compressionPrefix = " ";
-    if (!checkCryptPrefix(compressionPrefix)) {
-        logger.warn("Prefix not available, ls seems to be unavailable");
-    }
-}
+export const compressionPrefix = String.fromCodePoint(1);
 
 /**
  * @typedef {{
