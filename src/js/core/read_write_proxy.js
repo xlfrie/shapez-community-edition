@@ -9,7 +9,7 @@ import { IS_DEBUG, globalConfig } from "./config";
 import { ExplainedResult } from "./explained_result";
 import { createLogger } from "./logging";
 import { compressX64, decompressX64 } from "./lzstring";
-import { CRC_PREFIX, computeCrc, sha1 } from "./sensitive_utils.encrypt";
+import { computeCrc } from "./sensitive_utils.encrypt";
 
 import debounce from "debounce-promise";
 
@@ -109,9 +109,7 @@ export class ReadWriteProxy {
         const checksum = decompressed.substring(0, 40);
         const jsonString = decompressed.substr(40);
 
-        const desiredChecksum = checksum.startsWith(CRC_PREFIX)
-            ? computeCrc(jsonString + salt)
-            : sha1(jsonString + salt);
+        const desiredChecksum = computeCrc(jsonString + salt);
 
         if (desiredChecksum !== checksum) {
             // Checksum mismatch
@@ -198,11 +196,9 @@ export class ReadWriteProxy {
 
                         // Compare stored checksum with actual checksum
                         const checksum = decompressed.substring(0, 40);
-                        const jsonString = decompressed.substr(40);
+                        const jsonString = decompressed.slice(40);
 
-                        const desiredChecksum = checksum.startsWith(CRC_PREFIX)
-                            ? computeCrc(jsonString + salt)
-                            : sha1(jsonString + salt);
+                        const desiredChecksum = computeCrc(jsonString + salt);
 
                         if (desiredChecksum !== checksum) {
                             // Checksum mismatch
