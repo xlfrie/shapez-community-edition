@@ -22,11 +22,6 @@ declare const shapez: any;
 
 declare const ipcRenderer: any;
 
-// Polyfills
-declare interface String {
-    replaceAll(search: string, replacement: string): string;
-}
-
 declare interface ImportMeta {
     webpackContext(
         request: string,
@@ -47,10 +42,6 @@ declare interface ImportMeta {
 declare interface CanvasRenderingContext2D {
     beginRoundedRect(x: number, y: number, w: number, h: number, r: number): void;
     beginCircle(x: number, y: number, r: number): void;
-
-    msImageSmoothingEnabled: boolean;
-    mozImageSmoothingEnabled: boolean;
-    webkitImageSmoothingEnabled: boolean;
 }
 
 // Just for compatibility with the shared code

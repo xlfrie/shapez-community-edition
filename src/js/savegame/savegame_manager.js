@@ -1,11 +1,9 @@
+import { globalConfig } from "../core/config";
 import { ExplainedResult } from "../core/explained_result";
 import { createLogger } from "../core/logging";
 import { ReadWriteProxy } from "../core/read_write_proxy";
-import { globalConfig } from "../core/config";
 import { Savegame } from "./savegame";
 const logger = createLogger("savegame_manager");
-
-import Rusha from "rusha";
 
 /**
  * @typedef {import("./savegame_typedefs").SavegamesData} SavegamesData
@@ -217,9 +215,7 @@ export class SavegameManager extends ReadWriteProxy {
      * Helper method to generate a new internal savegame id
      */
     generateInternalId() {
-        return Rusha.createHash()
-            .update(Date.now() + "/" + Math.random())
-            .digest("hex");
+        return self.crypto.randomUUID();
     }
 
     // End

@@ -7,7 +7,7 @@ const logger = createLogger("translations");
 // @ts-ignore
 import baseTranslations from "./built-temp/base-en.json";
 
-export let T = baseTranslations;
+export const T = baseTranslations;
 
 if (G_IS_DEV && globalConfig.debug.testTranslations) {
     // Replaces all translations by fake translations to see whats translated and what not
@@ -67,18 +67,11 @@ function mapLanguageCodeToId(languageKey) {
  * @returns {string}
  */
 export function autoDetectLanguageId() {
-    let languages = [];
-    if (navigator.languages) {
-        languages = navigator.languages.slice();
-    } else if (navigator.language) {
-        languages = [navigator.language];
-    } else {
-        logger.warn("Navigator has no languages prop");
-    }
+    const languages = navigator.languages;
 
-    for (let i = 0; i < languages.length; ++i) {
-        logger.log("Trying to find language target for", languages[i]);
-        const trans = mapLanguageCodeToId(languages[i]);
+    for (const language of languages) {
+        logger.log("Trying to find language target for", language);
+        const trans = mapLanguageCodeToId(language);
         if (trans) {
             return trans;
         }

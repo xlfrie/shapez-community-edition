@@ -41,19 +41,6 @@ export function randomInt(start, end) {
 }
 
 /**
- * Access an object in a very annoying way, used for obsfuscation.
- * @param {any} obj
- * @param {Array<string>} keys
- */
-export function accessNestedPropertyReverse(obj, keys) {
-    let result = obj;
-    for (let i = keys.length - 1; i >= 0; --i) {
-        result = result[keys[i]];
-    }
-    return result;
-}
-
-/**
  * Chooses a random entry of an array
  * @template T
  * @param {T[]} arr
@@ -406,7 +393,7 @@ export function makeButton(parent, classes = [], innerHTML = "") {
  */
 export function removeAllChildren(elem) {
     if (elem) {
-        var range = document.createRange();
+        const range = document.createRange();
         range.selectNodeContents(elem);
         range.deleteContents();
     }
@@ -618,7 +605,7 @@ export function fillInLinkIntoTranslation(translation, link) {
  * @param {string} text
  */
 export function generateFileDownload(filename, text) {
-    var element = document.createElement("a");
+    const element = document.createElement("a");
     element.setAttribute("href", "data:text/plain;charset=utf-8," + encodeURIComponent(text));
     element.setAttribute("download", filename);
 
@@ -634,7 +621,7 @@ export function generateFileDownload(filename, text) {
  * @param {string} acceptedType
  */
 export function startFileChoose(acceptedType = ".bin") {
-    var input = document.createElement("input");
+    const input = document.createElement("input");
     input.type = "file";
     input.accept = acceptedType;
 

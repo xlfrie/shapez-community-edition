@@ -2,10 +2,10 @@ import { CHANGELOG } from "../changelog";
 import { globalConfig } from "../core/config";
 import { GameState } from "../core/game_state";
 import { createLogger } from "../core/logging";
-import { getLogoSprite, timeoutPromise } from "../core/utils";
+import { getLogoSprite } from "../core/utils";
 import { getRandomHint } from "../game/hints";
 import { HUDModalDialogs } from "../game/hud/parts/modal_dialogs";
-import { autoDetectLanguageId, T, updateApplicationLanguage } from "../translations";
+import { T, autoDetectLanguageId, updateApplicationLanguage } from "../translations";
 
 const logger = createLogger("state/preload");
 
@@ -44,22 +44,6 @@ export class PreloadState extends GameState {
         this.startLoading();
     }
 
-    async fetchDiscounts() {
-        await timeoutPromise(
-            fetch("https://analytics.shapez.io/v1/discounts")
-                .then(res => res.json())
-                .then(data => {
-                    globalConfig.currentDiscount = Number(
-                        data["1318690"].data.price_overview.discount_percent
-                    );
-                    logger.log("Fetched current discount:", globalConfig.currentDiscount);
-                }),
-            2000
-        ).catch(err => {
-            logger.warn("Failed to fetch current discount:", err);
-        });
-    }
-
     async sendBeacon() {
         // TODO: Get rid of this analytics stuff
     }
@@ -77,9 +61,6 @@ export class PreloadState extends GameState {
             .then(() => {
                 return this.app.storage.initialize();
             })
-
-            .then(() => this.setStatus("Connecting to api", 15))
-            .then(() => this.fetchDiscounts())
 
             .then(() => this.setStatus("Initializing settings", 20))
             .then(() => {
@@ -256,7 +237,7 @@ export class PreloadState extends GameState {
 
         subElement.innerHTML = `
                 <div class="logo">
-                    <img src="res/getLogoSprite()" alt="Shapez.io Logo">
+                    <img src="res/${getLogoSprite()}" alt="Shapez.io Logo">
                 </div>
                 <div class="failureInner">
                     <div class="errorHeader">

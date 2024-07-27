@@ -36,22 +36,6 @@ import { SettingsState } from "./states/settings";
 
 const logger = createLogger("application");
 
-// Set the name of the hidden property and the change event for visibility
-let pageHiddenPropName, pageVisibilityEventName;
-if (typeof document.hidden !== "undefined") {
-    // Opera 12.10 and Firefox 18 and later support
-    pageHiddenPropName = "hidden";
-    pageVisibilityEventName = "visibilitychange";
-    // @ts-ignore
-} else if (typeof document.msHidden !== "undefined") {
-    pageHiddenPropName = "msHidden";
-    pageVisibilityEventName = "msvisibilitychange";
-    // @ts-ignore
-} else if (typeof document.webkitHidden !== "undefined") {
-    pageHiddenPropName = "webkitHidden";
-    pageVisibilityEventName = "webkitvisibilitychange";
-}
-
 export class Application {
     /**
      * Boots the application
@@ -176,7 +160,7 @@ export class Application {
         // Unload events
         window.addEventListener("beforeunload", this.onBeforeUnload.bind(this), true);
 
-        document.addEventListener(pageVisibilityEventName, this.handleVisibilityChange.bind(this), false);
+        document.addEventListener("visibilitychange", this.handleVisibilityChange.bind(this), false);
 
         // Track touches so we can update the focus appropriately
         document.addEventListener("touchstart", this.updateFocusAfterUserInteraction.bind(this), true);
@@ -217,7 +201,7 @@ export class Application {
      */
     handleVisibilityChange(event) {
         window.focus();
-        const pageVisible = !document[pageHiddenPropName];
+        const pageVisible = !document.hidden;
         if (pageVisible !== this.pageVisible) {
             this.pageVisible = pageVisible;
             logger.log("Visibility changed:", this.pageVisible);
