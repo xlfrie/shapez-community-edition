@@ -1,11 +1,11 @@
 /* typehints:start */
-import { GameRoot } from "./root";
-import { InputReceiver } from "../core/input_receiver";
 import { Application } from "../application";
+import { InputReceiver } from "../core/input_receiver";
+import { GameRoot } from "./root";
 /* typehints:end */
 
-import { Signal, STOP_PROPAGATION } from "../core/signal";
 import { IS_MOBILE } from "../core/config";
+import { Signal, STOP_PROPAGATION } from "../core/signal";
 import { T } from "../translations";
 
 export function keyToKeyCode(str) {
@@ -386,7 +386,7 @@ export class Keybinding {
         if (IS_MOBILE) {
             return null;
         }
-        const spacer = document.createElement("code");
+        const spacer = document.createElement("kbd");
         spacer.classList.add("keybinding");
         spacer.innerHTML = getStringForKeyCode(this.keyCode);
         elem.appendChild(spacer);

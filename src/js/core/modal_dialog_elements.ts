@@ -1,15 +1,15 @@
 import type { Application } from "../application";
 
+import { getStringForKeyCode } from "../game/key_action_mapper";
+import { SOUNDS } from "../platform/sound";
+import { T } from "../translations";
+import { ClickDetector, ClickDetectorConstructorArgs } from "./click_detector";
+import { globalConfig } from "./config";
+import { InputReceiver, KeydownEvent } from "./input_receiver";
+import { createLogger } from "./logging";
+import { FormElement } from "./modal_dialog_forms";
 import { Signal, STOP_PROPAGATION } from "./signal";
 import { arrayDeleteValue, waitNextFrame } from "./utils";
-import { ClickDetector, ClickDetectorConstructorArgs } from "./click_detector";
-import { SOUNDS } from "../platform/sound";
-import { InputReceiver, KeydownEvent } from "./input_receiver";
-import { FormElement } from "./modal_dialog_forms";
-import { globalConfig } from "./config";
-import { getStringForKeyCode } from "../game/key_action_mapper";
-import { createLogger } from "./logging";
-import { T } from "../translations";
 
 /*
  * ***************************************************
@@ -207,7 +207,7 @@ export class Dialog<T extends string = never, U extends unknown[] = []> {
                 if (isEnter || isEscape) {
                     // if (this.app.settings.getShowKeyboardShortcuts()) {
                     // Show keybinding
-                    const spacer = document.createElement("code");
+                    const spacer = document.createElement("kbd");
                     spacer.classList.add("keybinding");
                     spacer.innerHTML = getStringForKeyCode(isEnter ? kbEnter : kbCancel);
                     button.appendChild(spacer);
