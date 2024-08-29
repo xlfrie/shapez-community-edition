@@ -94,7 +94,7 @@ export async function buildAtlas() {
             const escapedLink = JSON.stringify(runnableTPSource);
 
             try {
-                execute(`curl -o runnable-texturepacker.jar ${escapedLink}`);
+                await execute(`curl -o runnable-texturepacker.jar ${escapedLink}`);
             } catch {
                 throw new Error("Failed to download runnable-texturepacker.jar!");
             }
