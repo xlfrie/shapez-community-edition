@@ -200,10 +200,12 @@ export class GameState {
 
     /**
      * Should return the element(s) to be displayed in the state.
-     * If null, {@link getInnerHTML} will be used instead.
+     * If not overridden, {@link getInnerHTML} will be used to provide the layout.
      */
     protected getContentLayout(): Node {
-        return null;
+        const template = document.createElement("template");
+        template.innerHTML = this.getInnerHTML();
+        return template.content;
     }
 
     /**
@@ -320,9 +322,6 @@ export class GameState {
      */
     internalGetWrappedContent(): Node {
         const elements = this.getContentLayout();
-        if (elements instanceof Node) {
-            return elements;
-        }
 
         if (Array.isArray(elements)) {
             const fragment = document.createDocumentFragment();
@@ -330,10 +329,7 @@ export class GameState {
             return fragment;
         }
 
-        // Fall back to deprecated HTML strings solution
-        const template = document.createElement("template");
-        template.innerHTML = this.getInnerHTML();
-        return template.content;
+        return elements;
     }
 
     /**

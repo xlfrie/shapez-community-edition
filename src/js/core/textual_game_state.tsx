@@ -30,6 +30,11 @@ export abstract class TextualGameState extends GameState {
         return "";
     }
 
+    /**
+     * Should return the element(s) to be displayed in the state.
+     * If not overridden, a default layout consisting of a back button,
+     * title, and content returned by {@link getInitialContent}.
+     */
     protected override getContentLayout(): Node {
         let content = this.getInitialContent();
 
@@ -44,9 +49,7 @@ export abstract class TextualGameState extends GameState {
                 `;
             }
 
-            const template = document.createElement("template");
-            template.innerHTML = html;
-            content = template.content;
+            content = super.getContentLayout();
         }
 
         return (
