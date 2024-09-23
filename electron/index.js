@@ -1,9 +1,8 @@
-const { app, BrowserWindow, Menu, MenuItem, ipcMain, shell, dialog, session } = require("electron");
-const path = require("path");
-const url = require("url");
-const fs = require("fs");
-const asyncLock = require("async-lock");
-const windowStateKeeper = require("electron-window-state");
+import asyncLock from "async-lock";
+import { BrowserWindow, Menu, MenuItem, app, dialog, ipcMain, session, shell } from "electron";
+import windowStateKeeper from "electron-window-state";
+import * as fs from "fs";
+import * as path from "path";
 
 // Disable hardware key handling, i.e. being able to pause/resume the game music
 // with hardware keys
@@ -19,8 +18,8 @@ const userData = app.getPath("userData");
 const storePath = path.join(userData, "saves");
 const modsPath = path.join(userData, "mods");
 
-fs.mkdirSync(storePath, { recursive: true });
-fs.mkdirSync(modsPath, { recursive: true });
+await fs.promises.mkdir(storePath, { recursive: true });
+await fs.promises.mkdir(modsPath, { recursive: true });
 
 /** @type {BrowserWindow} */
 let win = null;
@@ -48,13 +47,11 @@ function createWindow() {
         minWidth: 800,
         minHeight: 600,
         title: "shapez",
-        transparent: false,
-        icon: path.join(__dirname, "favicon" + faviconExtension),
+        icon: path.join(import.meta.dirname, "favicon" + faviconExtension),
         // fullscreen: true,
         autoHideMenuBar: !isDev,
         webPreferences: {
-            disableBlinkFeatures: "Auxclick",
-            preload: path.join(__dirname, "preload.js"),
+            preload: path.join(import.meta.dirname, "preload.cjs"),
         },
     });
 
@@ -63,13 +60,7 @@ function createWindow() {
     if (!app.isPackaged) {
         win.loadURL("http://localhost:3005");
     } else {
-        win.loadURL(
-            url.format({
-                pathname: path.join(__dirname, "index.html"),
-                protocol: "file:",
-                slashes: true,
-            })
-        );
+        win.loadURL(new URL("index.html", import.meta.url).href);
     }
     win.webContents.session.clearCache();
     win.webContents.session.clearStorageData();
@@ -86,11 +77,11 @@ function createWindow() {
 
     app.on("web-contents-created", (event, contents) => {
         // Disable vewbiew
-        contents.on("will-attach-webview", (event, webPreferences, params) => {
+        contents.on("will-attach-webview", event => {
             event.preventDefault();
         });
         // Disable navigation
-        contents.on("will-navigate", (event, navigationUrl) => {
+        contents.on("will-navigate", event => {
             event.preventDefault();
         });
     });

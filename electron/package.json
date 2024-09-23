@@ -4,6 +4,7 @@
     "main": "index.js",
     "license": "MIT",
     "private": true,
+    "type": "module",
     "scripts": {
         "start": "electron .",
         "startDev": "electron . --dev"
