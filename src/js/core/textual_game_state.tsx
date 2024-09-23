@@ -19,7 +19,11 @@ export abstract class TextualGameState extends GameState {
      * @deprecated
      */
     getInnerHTML(): string {
-        return "";
+        return `
+            <div class="content mainContent">
+                ${this.getMainContentHTML()}
+            </div>
+        `;
     }
 
     /**
@@ -36,21 +40,8 @@ export abstract class TextualGameState extends GameState {
      * title, and content returned by {@link getInitialContent}.
      */
     protected override getContentLayout(): Node {
-        let content = this.getInitialContent();
-
-        if (content === null) {
-            // Fall back either to getMainContentHTML or getInnerHTML (if not "")
-            let html = this.getInnerHTML();
-            if (html === "") {
-                html = `
-                    <div class="content mainContent">
-                        ${this.getMainContentHTML()}
-                    </div>
-                `;
-            }
-
-            content = super.getContentLayout();
-        }
+        const initialContent = this.getInitialContent();
+        const content = initialContent !== null && <div class="content mainContent">{initialContent}</div>;
 
         return (
             <>
@@ -60,7 +51,7 @@ export abstract class TextualGameState extends GameState {
                         {this.getStateHeaderTitle() ?? ""}
                     </h1>
                 </div>
-                <div class="container">{content}</div>
+                <div class="container">{content || super.getContentLayout()}</div>
             </>
         );
     }
