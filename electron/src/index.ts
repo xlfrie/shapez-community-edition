@@ -47,11 +47,11 @@ function createWindow() {
         minWidth: 800,
         minHeight: 600,
         title: "shapez",
-        icon: path.join(import.meta.dirname, "favicon" + faviconExtension),
+        icon: path.join(import.meta.dirname, "../favicon" + faviconExtension),
         // fullscreen: true,
         autoHideMenuBar: !isDev,
         webPreferences: {
-            preload: path.join(import.meta.dirname, "preload.cjs"),
+            preload: path.join(import.meta.dirname, "../preload.cjs"),
         },
     });
 
@@ -60,7 +60,7 @@ function createWindow() {
     if (!app.isPackaged) {
         win.loadURL("http://localhost:3005");
     } else {
-        win.loadURL(new URL("index.html", import.meta.url).href);
+        win.loadURL(new URL("../index.html", import.meta.url).href);
     }
     win.webContents.session.clearCache();
     win.webContents.session.clearStorageData();
