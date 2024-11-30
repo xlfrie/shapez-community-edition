@@ -2,8 +2,8 @@ import { globalConfig } from "../core/config";
 import { DrawParameters } from "../core/draw_parameters";
 import { findNiceIntegerValue } from "../core/utils";
 import { Vector } from "../core/vector";
-import { Entity } from "./entity";
 import { ACHIEVEMENTS } from "../platform/achievement_provider";
+import { Entity } from "./entity";
 import { GameRoot } from "./root";
 
 export class Blueprint {
@@ -93,7 +93,7 @@ export class Blueprint {
                 staticComp.getBlueprintSprite(),
                 0,
                 newPos,
-                true
+                false
             );
         }
         parameters.context.globalAlpha = 1;
